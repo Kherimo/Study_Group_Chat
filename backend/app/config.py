@@ -1,0 +1,4 @@
+# app/config.py
+SUPABASE_URL = "https://ealemtafdzulyyexzlru.supabase.co"
+SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVhbGVtdGFmZHp1bHl5ZXh6bHJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc2NDE4MjgsImV4cCI6MjA2MzIxNzgyOH0.g2d4q80nlPrl42oeVV7O_kFQQ-fgtXB2TmWpmD72jTk"
+JWT_SECRET_KEY = "NOK9JqDxnaZue/PwiUhq6KZLQlgsW+z1ki+UL4mD4Q7FIjVCLhOBDCmpOy5pFIAl5gONxCk5c2HhHxxGWSPhOA=="
