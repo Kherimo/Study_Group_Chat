@@ -1,0 +1,5 @@
+flask
+flask-cors
+supabase==1.0.33
+bcrypt
+pyjwt
