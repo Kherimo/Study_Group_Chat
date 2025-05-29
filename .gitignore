@@ -17,3 +17,4 @@ local.properties
 .kotlin
 __pycache__/
 /backend/venv
+/backend/__pycache__/

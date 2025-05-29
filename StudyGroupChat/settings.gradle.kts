@@ -21,4 +21,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "Study Group Chat"
 include(":app")
- 
