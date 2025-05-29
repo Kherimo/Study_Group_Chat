@@ -52,7 +52,7 @@ fun AppNavGraph(
             RegisterScreen(navController)
         }
         composable("home") {
-            HomeScreen()
+            HomeScreen(navController = navController)
         }
     }
 }

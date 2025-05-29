@@ -70,6 +70,9 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview:1.5.1")
     debugImplementation("androidx.compose.ui:ui-tooling:1.5.1")
 
+//jitsi meet
+    implementation("org.jitsi.react:jitsi-meet-sdk:9.2.1") { isTransitive = true } // Thay 9.2.1 bằng phiên bản mới nhất
+
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
