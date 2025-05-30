@@ -1,5 +1,5 @@
 flask
 flask-cors
-supabase==1.0.33
+supabase==1.0.3
 bcrypt
 pyjwt
