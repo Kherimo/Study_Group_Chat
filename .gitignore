@@ -18,3 +18,4 @@ local.properties
 __pycache__/
 /backend/venv
 /backend/__pycache__/
+.env
