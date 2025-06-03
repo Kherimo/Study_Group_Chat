@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_launcher_background"
+        android:title="Trang chủ" />
+
+    <item
+        android:id="@+id/navigation_classroom"
+        android:icon="@drawable/ic_launcher_background"
+        android:title="Phòng học" />
+
+    <item
+        android:id="@+id/navigation_chat"
+        android:icon="@drawable/ic_launcher_background"
+        android:title="Chat" />
+
+    <item
+        android:id="@+id/navigation_profile"
+        android:icon="@drawable/ic_launcher_background"
+        android:title="Hồ sơ" />
+
+</menu>
