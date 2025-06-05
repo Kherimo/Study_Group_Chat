@@ -7,5 +7,7 @@
     <color name="md_theme_outline_dark">#938F99</color>
     <color name="nav_selected">#6200EE</color> <!-- Màu tím đậm -->
     <color name="nav_unselected">#9E9E9E</color> <!-- Màu xám nhạt -->
+    <color name="orange_600">#D97706</color>
+    <color name="green_600">#16A34A</color>
 
 </resources>

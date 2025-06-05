@@ -9,6 +9,7 @@ import android.os.Looper
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.example.studygroupchat.MainActivity
 import com.example.studygroupchat.R
 import com.example.studygroupchat.viewmodel.AuthViewModel
 import com.example.studygroupchat.ui.onboarding.OnboardingActivity // Đảm bảo import đúng
@@ -50,7 +51,7 @@ class SplashActivity : AppCompatActivity() {
             val userData = viewModel.getUserData().first()
             val targetActivity = if (userData.userId.isNotEmpty()) {
                 // Đã đăng nhập -> Vào Home
-                HomeActivity::class.java
+                MainActivity::class.java
             } else {
                 // Chưa đăng nhập -> Vào Login
                 LoginActivity::class.java

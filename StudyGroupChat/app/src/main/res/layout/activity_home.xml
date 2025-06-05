@@ -3,50 +3,68 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingTop="20dp">
 
     <!-- Nội dung chính -->
     <LinearLayout
         android:id="@+id/contentLayout"
         android:orientation="vertical"
-        android:padding="16dp"
+        android:padding="15dp"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
-
         <TextView
-            android:id="@+id/tvWelcome"
-            android:text="Welcome User"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:id="@+id/searchClass"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Tìm kiếm phòng học..."
+            android:textSize="14sp"
+            android:padding="15dp"
+            android:drawableStart="@drawable/search_icon"
+            android:drawablePadding="10dp"
+            android:background="@drawable/bg_search"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_marginTop="25dp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Phòng học của tôi"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#1E293B"
+                android:layout_weight="1"
+                />
+            <TextView
+                android:id="@+id/viewAllMyCourse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Xem tất cả"
+                android:textColor="#4F46E5"
+                android:textStyle="bold"
+                />
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/tvEmail"
-            android:text="user@example.com"
-            android:textSize="16sp"
-            android:layout_marginTop="16dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/item_course"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:layout_marginTop="20dp"
+            android:clipToPadding="false"
+            tools:itemCount="3"
 
-        <TextView
-            android:id="@+id/tvPhone"
-            android:text="0123456789"
-            android:textSize="16sp"
-            android:layout_marginTop="8dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            />
 
-        <Button
-            android:id="@+id/btnLogout"
-            android:text="Logout"
-            android:layout_marginTop="24dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
     </LinearLayout>
 
     <!-- Bottom Navigation View -->
@@ -62,4 +80,5 @@
         app:labelVisibilityMode="labeled"
         app:itemIconTint="@color/nav_item_color"
         app:itemTextColor="@color/nav_item_color" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

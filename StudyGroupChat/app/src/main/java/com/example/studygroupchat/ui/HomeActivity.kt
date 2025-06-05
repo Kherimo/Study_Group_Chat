@@ -22,29 +22,29 @@ class HomeActivity : AppCompatActivity() {
 
         Log.d("HomeActivity", "HomeActivity created")
 
-        setupViews()
-        observeUserData()
+//        setupViews()
+//        observeUserData()
     }
 
     private fun setupViews() {
-        binding.btnLogout.setOnClickListener {
-            viewModel.logout()
-            // Navigate back to LoginActivity
-            val intent = Intent(this, LoginActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            }
-            startActivity(intent)
-            finish()
-        }
+//        binding.btnLogout.setOnClickListener {
+//            viewModel.logout()
+//            // Navigate back to LoginActivity
+//            val intent = Intent(this, LoginActivity::class.java).apply {
+//                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+//            }
+//            startActivity(intent)
+//            finish()
+//        }
     }
 
-    private fun observeUserData() {
-        lifecycleScope.launch {
-            viewModel.getUserData().collect { userData ->
-                binding.tvWelcome.text = "Welcome, ${userData.userName}!"
-                binding.tvEmail.text = "Email: ${userData.email}"
-                binding.tvPhone.text = "Phone: ${userData.phoneNumber}"
-            }
-        }
-    }
+//    private fun observeUserData() {
+//        lifecycleScope.launch {
+//            viewModel.getUserData().collect { userData ->
+//                binding.tvWelcome.text = "Welcome, ${userData.userName}!"
+//                binding.tvEmail.text = "Email: ${userData.email}"
+//                binding.tvPhone.text = "Phone: ${userData.phoneNumber}"
+//            }
+//        }
+//    }
 } 

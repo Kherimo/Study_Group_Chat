@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.example.studygroupchat.MainActivity
 import com.example.studygroupchat.databinding.ActivityRegisterBinding
 import com.example.studygroupchat.viewmodel.AuthViewModel
 import com.google.android.material.tabs.TabLayout
@@ -49,23 +50,10 @@ class RegisterActivity : AppCompatActivity() {
         // BỎ logic cũ cho TextView
         // binding.tvLogin.setOnClickListener { finish() }
 
-        // --- BỔ SUNG: LOGIC MỚI CHO TABLAYOUT ---
-        // Mặc định chọn tab "Register" (vị trí 1)
-        binding.tabLayout.getTabAt(1)?.select()
-
-        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                // Khi tab "Login" (vị trí 0) được chọn
-                if (tab?.position == 0) {
-                    // Đóng màn hình hiện tại để quay về LoginActivity
-                    finish()
-                }
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab?) {}
-            override fun onTabReselected(tab: TabLayout.Tab?) {}
-        })
-        // --- KẾT THÚC BỔ SUNG ---
+        binding.textLogin.setOnClickListener {
+            val intent = Intent(this@RegisterActivity, LoginActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun observeViewModel() {
@@ -77,7 +65,7 @@ class RegisterActivity : AppCompatActivity() {
         viewModel.registerResult.observe(this) { result ->
             result.onSuccess { response ->
                 Toast.makeText(this, "Registration successful", Toast.LENGTH_SHORT).show()
-                val intent = Intent(this, HomeActivity::class.java).apply {
+                val intent = Intent(this, MainActivity::class.java).apply {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 }
                 startActivity(intent)

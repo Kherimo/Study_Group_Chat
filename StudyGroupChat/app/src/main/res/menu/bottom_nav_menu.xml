@@ -3,22 +3,26 @@
 
     <item
         android:id="@+id/navigation_home"
-        android:icon="@drawable/ic_launcher_background"
+        android:icon="@drawable/home"
         android:title="Trang chủ" />
 
     <item
         android:id="@+id/navigation_classroom"
-        android:icon="@drawable/ic_launcher_background"
+        android:icon="@drawable/resource_class"
         android:title="Phòng học" />
+    <item
+        android:id="@+id/fab"
+        android:title=""
+        android:enabled="false"/>
 
     <item
         android:id="@+id/navigation_chat"
-        android:icon="@drawable/ic_launcher_background"
+        android:icon="@drawable/chat"
         android:title="Chat" />
 
     <item
         android:id="@+id/navigation_profile"
-        android:icon="@drawable/ic_launcher_background"
+        android:icon="@drawable/account"
         android:title="Hồ sơ" />
 
 </menu>
