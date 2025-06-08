@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {
 
-    private val SPLASH_DELAY: Long = 1500
+    private val SPLASH_DELAY: Long = 1000
     private val viewModel: AuthViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,8 +48,8 @@ class SplashActivity : AppCompatActivity() {
 
     private fun checkUserLoginStatus() {
         lifecycleScope.launch {
-            val userData = viewModel.getUserData().first()
-            val targetActivity = if (userData.userId.isNotEmpty()) {
+            val userData = viewModel.getTokenData().first()
+            val targetActivity = if (userData.accessToken.isNotEmpty()) {
                 // Đã đăng nhập -> Vào Home
                 MainActivity::class.java
             } else {

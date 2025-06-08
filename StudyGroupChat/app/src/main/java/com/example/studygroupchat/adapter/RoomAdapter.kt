@@ -9,9 +9,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.studygroupchat.R
-import com.example.studygroupchat.model.Room
-import com.example.studygroupchat.model.RoomWithExtras
-
+import com.example.studygroupchat.model.room.Room
 
 
 class RoomAdapter(
@@ -29,24 +27,24 @@ class RoomAdapter(
         val tvMember: TextView = itemView.findViewById(R.id.tvmember)
         val tvTime: TextView = itemView.findViewById(R.id.tvtime)
 
-        fun bind(room: Room) {
-            courseTitle.text = room.roomName
-            courseDescription.text = room.description
-            courseStatus.text = if (room.isActive) "Đang học" else "Tạm dừng"
-            courseStatus.setBackgroundResource(if (room.isActive) R.drawable.bg_status_active else R.drawable.bg_status_pause)
-            courseStatus.setTextColor(
-                ContextCompat.getColor(
-                    itemView.context,
-                    if (room.isActive) R.color.green_600 else R.color.orange_600
-                )
-            )
-            courseMember.text = room.memberCount.toString()
-            courseMember.visibility = if (room.showMemberCount) View.VISIBLE else View.GONE
-
-            btnJoin.setOnClickListener {
-                // xử lý khi click vào nút tham gia
-            }
-        }
+//        fun bind(room: Room) {
+//            courseTitle.text = room.roomName
+//            courseDescription.text = room.description
+//            courseStatus.text = if (room.isActive) "Đang học" else "Tạm dừng"
+//            courseStatus.setBackgroundResource(if (room.isActive) R.drawable.bg_status_active else R.drawable.bg_status_pause)
+//            courseStatus.setTextColor(
+//                ContextCompat.getColor(
+//                    itemView.context,
+//                    if (room.isActive) R.color.green_600 else R.color.orange_600
+//                )
+//            )
+//            courseMember.text = room.memberCount.toString()
+//            courseMember.visibility = if (room.showMemberCount) View.VISIBLE else View.GONE
+//
+//            btnJoin.setOnClickListener {
+//                // xử lý khi click vào nút tham gia
+//            }
+//        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RoomViewHolder {

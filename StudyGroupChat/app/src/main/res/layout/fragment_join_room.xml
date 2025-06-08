@@ -9,7 +9,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="25dp">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -26,16 +26,15 @@
                 android:orientation="horizontal">
 
                 <EditText
-                    android:id="@+id/editTextText4"
+                    android:id="@+id/searchClass"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_search"
                     android:drawableStart="@drawable/search_icon"
-                    android:ems="10"
+                    android:drawablePadding="10dp"
                     android:hint="Tìm kiếm phòng học..."
-                    android:inputType="text"
                     android:padding="15dp"
-                    android:textSize="16sp" />
+                    android:textSize="14sp" />
             </LinearLayout>
 
             <LinearLayout

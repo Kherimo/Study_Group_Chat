@@ -33,7 +33,7 @@ class LoginActivity : BaseActivity() {
             val password = binding.etPassword.text.toString()
 
             if (emailOrPhone.isBlank() || password.isBlank()) {
-                Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -61,7 +61,7 @@ class LoginActivity : BaseActivity() {
         viewModel.loginResult.observe(this) { result ->
             result.onSuccess { response ->
                 Log.d("LoginActivity", "Login successful, navigating to HomeActivity")
-                Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show()
 
                 val intent = Intent(this, MainActivity::class.java).apply {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -70,7 +70,7 @@ class LoginActivity : BaseActivity() {
                 finish()
             }.onFailure { error ->
                 Log.e("LoginActivity", "Login failed: ${error.message}")
-                Toast.makeText(this, error.message ?: "Login failed", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Username hoặc Mật khẩu không đúng", Toast.LENGTH_SHORT).show()
             }
         }
     }

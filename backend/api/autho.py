@@ -11,7 +11,7 @@ autho_bp = Blueprint("autho", __name__, url_prefix="/autho")
 def generate_access_token(user_id):
     payload = {
         'user_id': user_id,
-        'exp': datetime.utcnow() + timedelta(minutes=1),
+        'exp': datetime.utcnow() + timedelta(hours=4),
         'iat': datetime.utcnow()
     }
     return jwt.encode(payload, JWT_SECRET_KEY, algorithm='HS256')

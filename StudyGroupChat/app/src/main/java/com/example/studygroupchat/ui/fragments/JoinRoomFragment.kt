@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.studygroupchat.R
 import com.example.studygroupchat.adapter.RoomAdapter
-import com.example.studygroupchat.model.Room
-import com.example.studygroupchat.model.RoomWithExtras
+import com.example.studygroupchat.model.room.Room
+import com.example.studygroupchat.model.user.User
 
 class JoinRoomFragment : Fragment() {
 
@@ -33,10 +33,74 @@ class JoinRoomFragment : Fragment() {
     }
 
     private fun getFakeRooms(): List<Room> {
+        val ownerD = User(
+            userId = 4,
+            userName = "ms.d",
+            fullName = "Ms. D",
+            email = "d@example.com",
+            phoneNumber = "0123456701",
+            passwordHash = "",
+            avatarUrl = null,
+            createdAt = "2025-06-01T10:00:00"
+        )
+
+        val ownerE = User(
+            userId = 5,
+            userName = "mr.e",
+            fullName = "Mr. E",
+            email = "e@example.com",
+            phoneNumber = "0123456702",
+            passwordHash = "",
+            avatarUrl = null,
+            createdAt = "2025-06-01T10:00:00"
+        )
+
+        val ownerF = User(
+            userId = 6,
+            userName = "ms.f",
+            fullName = "Ms. F",
+            email = "f@example.com",
+            phoneNumber = "0123456703",
+            passwordHash = "",
+            avatarUrl = null,
+            createdAt = "2025-06-01T10:00:00"
+        )
+
         return listOf(
-            Room("4", "Node.js Server", "Xây dựng backend API", "Ms. D", 10, true, false),
-            Room("5", "Mobile Android", "Kotlin + Jetpack", "Mr. E", 18, true, false),
-            Room("6", "Thiết kế UI/UX", "Figma + Prototype", "Ms. F", 7, false, false)
+            Room(
+                roomId = 4,
+                ownerId = ownerD.userId,
+                roomName = "Node.js Server",
+                description = "Xây dựng backend API",
+                inviteCode = "NODE123",
+                expiredAt = "2025-12-31T23:59:59",
+                createdAt = "2025-06-01T10:00:00",
+                owner = ownerD,
+                members = listOf()
+            ),
+            Room(
+                roomId = 5,
+                ownerId = ownerE.userId,
+                roomName = "Mobile Android",
+                description = "Kotlin + Jetpack",
+                inviteCode = "ANDROID456",
+                expiredAt = "2025-11-30T23:59:59",
+                createdAt = "2025-06-01T10:00:00",
+                owner = ownerE,
+                members = listOf()
+            ),
+            Room(
+                roomId = 6,
+                ownerId = ownerF.userId,
+                roomName = "Thiết kế UI/UX",
+                description = "Figma + Prototype",
+                inviteCode = "UX789",
+                expiredAt = "2025-10-15T23:59:59",
+                createdAt = "2025-06-01T10:00:00",
+                owner = ownerF,
+                members = listOf()
+            )
         )
     }
+
 }
