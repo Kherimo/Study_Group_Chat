@@ -65,18 +65,16 @@ def register():
         refresh_token = generate_refresh_token(user['user_id'])
         
         return jsonify({
-            'message': 'User registered successfully',
-            'user': {
-                'userId': user['user_id'],
-                'userName': user['user_name'],
-                'fullName': user['full_name'],
-                'email': user['email'],
-                'phoneNumber': user['phone_number'],
-                'avatarUrl': user['avatar_url']
-            },
+            'userId': user['user_id'],
+            'userName': user['user_name'],
+            'fullName': user['full_name'],
+            'email': user['email'],
+            'phoneNumber': user['phone_number'],
+            'avatarUrl': user['avatar_url'],
             'access_token': access_token,
             'refresh_token': refresh_token
         }), 201
+
         
     except Exception as e:
         logger.error('Registration error: %s', str(e), exc_info=True)
@@ -116,18 +114,10 @@ def login():
         
         logger.debug('Login successful for user: %s', data['userName'])
         return jsonify({
-            'message': 'Login successful',
-            'user': {
-                'userId': user['user_id'],
-                'userName': user['user_name'],
-                'fullName': user['full_name'],
-                'email': user['email'],
-                'phoneNumber': user['phone_number'],
-                'avatarUrl': user['avatar_url']
-            },
             'access_token': access_token,
             'refresh_token': refresh_token
         })
+
         
     except Exception as e:
         logger.error('Login error: %s', str(e), exc_info=True)

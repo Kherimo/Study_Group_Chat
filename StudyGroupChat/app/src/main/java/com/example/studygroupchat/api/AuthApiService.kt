@@ -1,8 +1,10 @@
 package com.example.studygroupchat.api
 
-import com.example.studygroupchat.model.AuthResponse
-import com.example.studygroupchat.model.LoginRequest
-import com.example.studygroupchat.model.RegisterRequest
+import com.example.studygroupchat.model.auth.AccessTokenResponse
+import com.example.studygroupchat.model.auth.AuthResponse
+import com.example.studygroupchat.model.user.LoginRequest
+import com.example.studygroupchat.model.user.RegisterRequest
+import com.example.studygroupchat.model.auth.RefreshTokenRequest
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -13,4 +15,9 @@ interface AuthApiService {
 
     @POST("authen/register")
     suspend fun register(@Body request: RegisterRequest): Response<AuthResponse>
+
+    @POST("autho/refresh")
+    suspend fun refreshToken(@Body request: RefreshTokenRequest): Response<AccessTokenResponse>
+
+
 } 

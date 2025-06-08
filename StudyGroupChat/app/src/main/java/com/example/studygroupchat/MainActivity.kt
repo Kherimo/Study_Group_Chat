@@ -21,6 +21,7 @@ import kotlinx.coroutines.launch
 
 class MainActivity : BaseActivity() {
     private val viewModel: AuthViewModel by viewModels()
+
     private lateinit var bottomNavigation: BottomNavigationView
     private lateinit var fab: FloatingActionButton
     private lateinit var bottomAppBar: BottomAppBar
@@ -30,8 +31,8 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 
         lifecycleScope.launch {
-            val userData = viewModel.getUserData().first()
-            if (userData.userId.isEmpty()) {
+            val userData = viewModel.getTokenData().first()
+            if (userData.accessToken.isEmpty()) {
                 // Nếu chưa đăng nhập => sang LoginActivity
                 startActivity(Intent(this@MainActivity, LoginActivity::class.java).apply {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -41,6 +42,8 @@ class MainActivity : BaseActivity() {
                 // Đã đăng nhập => hiển thị giao diện chính
                 setContentView(R.layout.activity_main)
                 setupMainUI()
+
+                viewModel.startAutoRefreshToken()
 
                 // Ánh xạ view sau setContentView
                 fab = findViewById(R.id.floatingActionButton)

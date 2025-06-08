@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.studygroupchat.R
 import com.example.studygroupchat.adapter.RoomAdapter
-import com.example.studygroupchat.model.Room
-import com.example.studygroupchat.model.RoomWithExtras
+import com.example.studygroupchat.model.room.Room
+import com.example.studygroupchat.model.user.User
 
 class HomeFragment : Fragment() {
 
@@ -44,10 +44,74 @@ class HomeFragment : Fragment() {
 
 
     private fun getFakeRooms(): List<Room> {
+        val ownerA = User(
+            userId = 1,
+            userName = "mr.a",
+            fullName = "Mr. A",
+            email = "a@example.com",
+            phoneNumber = "0123456789",
+            passwordHash = "",
+            avatarUrl = null,
+            createdAt = "2025-06-01T10:00:00"
+        )
+
+        val ownerB = User(
+            userId = 2,
+            userName = "ms.b",
+            fullName = "Ms. B",
+            email = "b@example.com",
+            phoneNumber = "0123456790",
+            passwordHash = "",
+            avatarUrl = null,
+            createdAt = "2025-06-01T10:00:00"
+        )
+
+        val ownerC = User(
+            userId = 3,
+            userName = "mr.c",
+            fullName = "Mr. C",
+            email = "c@example.com",
+            phoneNumber = "0123456791",
+            passwordHash = "",
+            avatarUrl = null,
+            createdAt = "2025-06-01T10:00:00"
+        )
+
         return listOf(
-            Room("1", "Lập trình Java", "Học Java cơ bản đến nâng cao", "Mr. A", 12, true, true),
-            Room("2", "Web Frontend", "HTML, CSS, JS, React", "Ms. B", 24, true, true),
-            Room("3", "Python Cơ bản", "Từ cơ bản đến ứng dụng", "Mr. C", 15, false, true)
+            Room(
+                roomId = 1,
+                ownerId = ownerA.userId,
+                roomName = "Lập trình Java",
+                description = "Học Java cơ bản đến nâng cao",
+                inviteCode = "ABC123",
+                expiredAt = "2025-12-31T23:59:59",
+                createdAt = "2025-06-01T10:00:00",
+                owner = ownerA,
+                members = listOf()
+            ),
+            Room(
+                roomId = 2,
+                ownerId = ownerB.userId,
+                roomName = "Web Frontend",
+                description = "HTML, CSS, JS, React",
+                inviteCode = "XYZ456",
+                expiredAt = "2025-11-30T23:59:59",
+                createdAt = "2025-06-01T10:00:00",
+                owner = ownerB,
+                members = listOf()
+            ),
+            Room(
+                roomId = 3,
+                ownerId = ownerC.userId,
+                roomName = "Python Cơ bản",
+                description = "Từ cơ bản đến ứng dụng",
+                inviteCode = "PY789",
+                expiredAt = "2025-10-15T23:59:59",
+                createdAt = "2025-06-01T10:00:00",
+                owner = ownerC,
+                members = listOf()
+            )
         )
     }
+
 }

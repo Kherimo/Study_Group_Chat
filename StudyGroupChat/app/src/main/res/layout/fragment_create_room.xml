@@ -9,8 +9,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
-        >
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/textView15"
@@ -120,11 +119,11 @@
             android:layout_marginTop="6dp"
             android:layout_marginEnd="15dp"
             android:background="@drawable/bg_edittext"
+            android:clickable="true"
             android:drawableEnd="@drawable/outline_calendar_month_24"
             android:focusable="false"
-            android:clickable="true"
             android:padding="15dp"
-            android:text="03/06/2025"
+            android:text="_ _ /_ _ /_ _ _ _"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

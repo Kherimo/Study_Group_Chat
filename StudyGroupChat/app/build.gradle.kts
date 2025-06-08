@@ -45,6 +45,9 @@ dependencies {
     // ... các thư viện khác
 
     implementation("com.google.android.material:material:1.12.0")
+    implementation("androidx.fragment:fragment-ktx:1.6.1")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+
 
     // Thư viện cho Lottie Animation
     implementation("com.airbnb.android:lottie:6.4.0")
@@ -78,4 +81,7 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+
+    // OkHttp logging interceptor
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 }
