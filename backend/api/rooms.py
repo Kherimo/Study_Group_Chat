@@ -38,7 +38,22 @@ def get_my_rooms(current_user_id):
         all_rooms = owned_rooms.data + member_rooms_data
         unique_rooms = {room['room_id']: room for room in all_rooms}.values()
 
-        return jsonify(list(unique_rooms))
+        result_rooms = []
+        for room in unique_rooms:
+            try:
+                members_resp = (
+                    supabase
+                    .table('room_members')
+                    .select('users(user_id, user_name, full_name, avatar_url)')
+                    .eq('room_id', room['room_id'])
+                    .execute()
+                )
+                room['members'] = [m['users'] for m in members_resp.data]
+            except Exception:
+                room['members'] = []
+            result_rooms.append(room)
+
+        return jsonify(result_rooms)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 

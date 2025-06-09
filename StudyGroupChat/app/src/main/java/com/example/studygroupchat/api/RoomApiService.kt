@@ -3,6 +3,7 @@ package com.example.studygroupchat.api
 import com.example.studygroupchat.model.room.CreateRoomRequest
 import com.example.studygroupchat.model.room.Room
 import com.example.studygroupchat.model.room.RoomMember
+import com.example.studygroupchat.model.room.JoinRoomResponse
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -23,7 +24,7 @@ interface RoomApiService {
     suspend fun deleteRoom(@Path("roomId") roomId: String): Response<Unit>
 
     @POST("api/rooms/join")
-    suspend fun joinRoom(@Body request: Map<String, String>): Response<Room>
+    suspend fun joinRoom(@Body request: Map<String, String>): Response<JoinRoomResponse>
 
     @GET("api/rooms/{roomId}/members")
     suspend fun getRoomMembers(@Path("roomId") roomId: String): Response<List<RoomMember>>
