@@ -31,7 +31,7 @@ data class Room(
     val createdAt: String,
 
     // JOIN từ bảng users
-    @SerializedName("owner")
+    @SerializedName("users")
     val owner: User?,
 
     // JOIN từ bảng room_members (nếu API cung cấp)
@@ -52,6 +52,22 @@ data class Room(
             }
         }
 }
+
+//{
+//    // ✅ Tính toán trạng thái hoạt động
+//    val isActive: Boolean
+//        @RequiresApi(Build.VERSION_CODES.O)
+//        get() {
+//            if (expiredAt.isNullOrBlank()) return true
+//            return try {
+//                val formatter = DateTimeFormatter.ISO_DATE_TIME
+//                val expiry = LocalDateTime.parse(expiredAt, formatter)
+//                expiry.isAfter(LocalDateTime.now())
+//            } catch (e: Exception) {
+//                true // Nếu lỗi parse, coi như đang hoạt động
+//            }
+//        }
+//}
 
 
 //data class Room(
