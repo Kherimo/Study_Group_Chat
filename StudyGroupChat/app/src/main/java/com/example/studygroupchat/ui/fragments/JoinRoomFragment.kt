@@ -17,6 +17,7 @@ import com.example.studygroupchat.api.ApiConfig
 import com.example.studygroupchat.repository.RoomRepository
 import com.example.studygroupchat.viewmodel.RoomViewModel
 import com.example.studygroupchat.viewmodel.RoomViewModelFactory
+import com.google.android.material.button.MaterialButton
 
 class JoinRoomFragment : Fragment() {
 
@@ -39,7 +40,7 @@ class JoinRoomFragment : Fragment() {
         recyclerView = view.findViewById(R.id.recyclerView)
         progressBar = view.findViewById(R.id.progressBar)
         editCodeRoom = view.findViewById(R.id.editcodeRoom)
-        val btnJoin = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnJoin)
+        val btnJoin = view.findViewById<MaterialButton>(R.id.btnJoin)
 
         adapter = RoomAdapter(emptyList(), isJoinRoom = true)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
