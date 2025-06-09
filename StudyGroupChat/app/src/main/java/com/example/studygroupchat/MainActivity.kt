@@ -12,6 +12,7 @@ import com.example.studygroupchat.ui.LoginActivity
 import com.example.studygroupchat.ui.fragments.CreateRoomFragment
 import com.example.studygroupchat.ui.fragments.HomeFragment
 import com.example.studygroupchat.ui.fragments.JoinRoomFragment
+import com.example.studygroupchat.ui.fragments.ProfileFragment
 import com.example.studygroupchat.viewmodel.AuthViewModel
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -90,8 +91,7 @@ class MainActivity : BaseActivity() {
             when (item.itemId) {
                 R.id.navigation_home -> loadFragment(HomeFragment())
                 R.id.navigation_classroom -> loadFragment(JoinRoomFragment())
-                // Thêm các fragment khác nếu có
-            }
+                R.id.navigation_profile -> loadFragment(ProfileFragment()) }
             true
         }
     }

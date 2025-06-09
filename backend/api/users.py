@@ -13,7 +13,11 @@ users_bp = Blueprint("users", __name__, url_prefix="/api")
 def get_current_user(current_user_id):
     try:
         response = supabase.table('users').select('user_id, user_name, full_name, email, phone_number, avatar_url, created_at').eq('user_id', current_user_id).execute()
-        return jsonify(response.data[0])
+        user = response.data[0]
+        avatar_path = user.get('avatar_url')
+        if avatar_path and not avatar_path.startswith('htp'):
+            user['avatar_url'] = supabase.storage.from_('avatars').get_public_url(avatar_path)
+        return jsonify(user)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 

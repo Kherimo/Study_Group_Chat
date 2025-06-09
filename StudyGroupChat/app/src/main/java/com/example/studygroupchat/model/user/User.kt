@@ -14,11 +14,28 @@ data class User(
     @SerializedName("phone_number")
     val phoneNumber: String,
     @SerializedName("password_hash")
-    val passwordHash: String,
+    val passwordHash: String?,
     @SerializedName("avatar_url")
     val avatarUrl: String?,
     @SerializedName("created_at")
     val createdAt: String
+)
+data class UpdateUserRequest(
+    @SerializedName("full_name")
+    val fullName: String? = null,
+    @SerializedName("email")
+    val email: String? = null,
+    @SerializedName("phone_number")
+    val phoneNumber: String? = null,
+    @SerializedName("avatar_url")
+    val avatarUrl: String? = null,
+)
+
+data class ChangePasswordRequest(
+    @SerializedName("current_password")
+    val currentPassword: String,
+    @SerializedName("new_password")
+    val newPassword: String,
 )
 
 //data class User(
