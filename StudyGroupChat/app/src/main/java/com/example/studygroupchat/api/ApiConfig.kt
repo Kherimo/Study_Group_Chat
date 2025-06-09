@@ -13,7 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiConfig {
     // Thay đổi BASE_URL tại đây
-    private const val BASE_URL = "https://susan-comes-rise-wa.trycloudflare.com/"
+    private const val BASE_URL = "https://opponent-noon-schedule-indirect.trycloudflare.com/"
 
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
@@ -46,6 +46,10 @@ object ApiConfig {
 
     val roomApiService: RoomApiService by lazy {
         getRetrofit(context).create(RoomApiService::class.java)
+    }
+
+    val userApiService: UserApiService by lazy {
+        getRetrofit(context).create(UserApiService::class.java)
     }
 }
 
