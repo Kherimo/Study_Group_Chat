@@ -36,13 +36,18 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan"
+            />
         <activity
             android:name=".ui.LoginActivity"
             android:exported="false" />
         <activity
             android:name=".ui.RegisterActivity"
             android:exported="false" />
+        <activity
+            android:name=".ui.fragments.GroupChatActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

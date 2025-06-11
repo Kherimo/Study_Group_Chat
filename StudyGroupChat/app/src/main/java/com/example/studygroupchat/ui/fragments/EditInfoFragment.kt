@@ -1,60 +1,95 @@
 package com.example.studygroupchat.ui.fragments
 
+import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.ImageView
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import com.bumptech.glide.Glide
 import com.example.studygroupchat.R
+import com.example.studygroupchat.api.ApiConfig
+import com.example.studygroupchat.repository.UserRepository
+import com.example.studygroupchat.viewmodel.UserViewModel
+import com.example.studygroupchat.viewmodel.UserViewModelFactory
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import java.io.File
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [EditInfoFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class EditInfoFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+    private val viewModel: UserViewModel by viewModels({ requireParentFragment() }) {
+        UserViewModelFactory(UserRepository(ApiConfig.userApiService))
     }
 
+    private var selectedPart: MultipartBody.Part? = null
+
+    private lateinit var editFullName: EditText
+    private lateinit var editEmail: EditText
+    private lateinit var editPhone: EditText
+    private lateinit var imgAvatar: ImageView
+
+    private val pickImageLauncher =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            uri?.let { handleImageSelected(it) }
+        }
+
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
+    ): View {
         return inflater.inflate(R.layout.fragment_edit_info, container, false)
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment EditInfoFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            EditInfoFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        editFullName = view.findViewById(R.id.editFullName)
+//        editUserName = view.findViewById(R.id.editUserName)
+        editEmail = view.findViewById(R.id.editEmail)
+        editPhone = view.findViewById(R.id.editPhone)
+        imgAvatar = view.findViewById(R.id.imgAvatar)
+
+        viewModel.user.observe(viewLifecycleOwner) { user ->
+            editFullName.setText(user.fullName)
+            editEmail.setText(user.email)
+            editPhone.setText(user.phoneNumber)
+            user.avatarUrl?.let {
+                Glide.with(this).load(it)
+                    .placeholder(R.drawable.baseline_account_circle_24)
+                    .into(imgAvatar)
             }
+        }
+
+        imgAvatar.setOnClickListener {
+            pickImageLauncher.launch("image/*")
+        }
+
+        viewModel.fetchCurrentUser()
+    }
+
+    private fun handleImageSelected(uri: Uri) {
+        imgAvatar.setImageURI(uri)
+        val file = File(requireContext().cacheDir, "avatar")
+        val input = requireContext().contentResolver.openInputStream(uri)
+        file.outputStream().use { out ->
+            input?.copyTo(out)
+        }
+        val requestBody = file.asRequestBody("image/*".toMediaTypeOrNull())
+        selectedPart = MultipartBody.Part.createFormData("avatar", file.name, requestBody)
+    }
+
+    fun saveChanges() {
+        viewModel.updateCurrentUser(
+            selectedPart,
+            editFullName.text.toString(),
+            editEmail.text.toString(),
+            editPhone.text.toString()
+        )
     }
 }

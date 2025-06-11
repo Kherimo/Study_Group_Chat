@@ -2,6 +2,8 @@ from flask import Blueprint, request, jsonify
 from supabase_client import supabase 
 from decorators import token_required
 from api.authen import generate_password_hash, check_password
+import uuid
+import os
 
 
 users_bp = Blueprint("users", __name__, url_prefix="/api")
@@ -25,17 +27,42 @@ def get_current_user(current_user_id):
 @token_required
 def update_current_user(current_user_id):
     try:
-        data = request.get_json()
-        allowed_fields = ['full_name', 'email', 'phone_number', 'avatar_url']
+        if request.content_type.startswith('multipart/form-data'):
+            data = request.form.to_dict()
+            avatar_file = request.files.get('avatar')
+        else:
+            data = request.get_json() or {}
+            avatar_file = None
+
+        allowed_fields = ['full_name', 'email', 'phone_number']
         update_data = {k: v for k, v in data.items() if k in allowed_fields}
-        
+
+        if avatar_file:
+            ext = os.path.splitext(avatar_file.filename)[1] or '.jpg'
+            unique_name = f"{current_user_id}_{uuid.uuid4().hex}{ext}"
+            file_bytes = avatar_file.read()
+            supabase.storage.from_('avatars').upload(unique_name, file_bytes, {
+                "content-type": avatar_file.mimetype
+            })
+            update_data['avatar_url'] = unique_name
+
         if not update_data:
             return jsonify({'error': 'No valid fields to update'}), 400
-        
+
         response = supabase.table('users').update(update_data).eq('user_id', current_user_id).execute()
-        return jsonify(response.data[0])
+        if not response.data:
+            return jsonify({'error': 'User not found or no changes made'}), 404
+
+        user = response.data[0]
+        avatar_path = user.get('avatar_url')
+        if avatar_path and not avatar_path.startswith('http'):
+            user['avatar_url'] = supabase.storage.from_('avatars').get_public_url(avatar_path)
+
+        return jsonify(user)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+
 
 @users_bp.route('/users/me/password', methods=['PUT'])
 @token_required

@@ -8,7 +8,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.studygroupchat.ui.LoginActivity
+import com.example.studygroupchat.ui.fragments.ChatFragment
 import com.example.studygroupchat.ui.fragments.CreateRoomFragment
+import com.example.studygroupchat.ui.fragments.EditProfileFragment
 import com.example.studygroupchat.ui.fragments.HomeFragment
 import com.example.studygroupchat.ui.fragments.JoinRoomFragment
 import com.example.studygroupchat.ui.fragments.ProfileFragment
@@ -52,13 +54,21 @@ class MainActivity : BaseActivity() {
 
                 // Lắng nghe back stack để hiện lại bottom khi quay về
                 supportFragmentManager.addOnBackStackChangedListener {
-                    val isCreateRoomFragmentVisible = supportFragmentManager.fragments.any { it is CreateRoomFragment }
-                    if (!isCreateRoomFragmentVisible) {
+                    val isFullScreenFragmentVisible = supportFragmentManager.fragments.any {
+                        it is CreateRoomFragment || it is EditProfileFragment
+                    }
+
+                    if (isFullScreenFragmentVisible) {
+                        fab.visibility = View.GONE
+                        bottomAppBar.visibility = View.GONE
+                        bottomNav.visibility = View.GONE
+                    } else {
                         fab.visibility = View.VISIBLE
                         bottomAppBar.visibility = View.VISIBLE
                         bottomNav.visibility = View.VISIBLE
                     }
                 }
+
 
                 fab.setOnClickListener {
                     fab.visibility = View.GONE
@@ -90,7 +100,9 @@ class MainActivity : BaseActivity() {
             when (item.itemId) {
                 R.id.navigation_home -> loadFragment(HomeFragment())
                 R.id.navigation_classroom -> loadFragment(JoinRoomFragment())
-                R.id.navigation_profile -> loadFragment(ProfileFragment()) }
+                R.id.navigation_profile -> loadFragment(ProfileFragment())
+                R.id.navigation_chat -> loadFragment(ChatFragment())
+            }
             true
         }
     }
