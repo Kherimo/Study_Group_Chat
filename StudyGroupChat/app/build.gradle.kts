@@ -76,6 +76,8 @@ dependencies {
     // DataStore Preferences
     implementation("androidx.datastore:datastore-preferences:1.0.0")
     implementation(libs.androidx.activity)
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
 
     // Testing
     testImplementation("junit:junit:4.13.2")

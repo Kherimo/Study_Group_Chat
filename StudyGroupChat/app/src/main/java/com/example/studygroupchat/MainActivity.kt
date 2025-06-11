@@ -7,7 +7,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.example.studygroupchat.ui.HomeActivity
 import com.example.studygroupchat.ui.LoginActivity
 import com.example.studygroupchat.ui.fragments.CreateRoomFragment
 import com.example.studygroupchat.ui.fragments.HomeFragment

@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import android.widget.ImageView
 import androidx.fragment.app.activityViewModels
@@ -38,7 +39,7 @@ class ProfileFragment : Fragment() {
         val tvEmail = view.findViewById<TextView>(R.id.tvEmail)
         val tvPhone = view.findViewById<TextView>(R.id.tvPhone)
         val imgAvatar = view.findViewById<ImageView>(R.id.imgAvatar)
-        val btnLogout = view.findViewById<TextView>(R.id.btnLogout)
+        val btnLogout = view.findViewById<Button>(R.id.btnLogout)
         val btnEdit = view.findViewById<TextView>(R.id.btnEditProfile)
 
         viewModel.user.observe(viewLifecycleOwner) { user ->
@@ -48,7 +49,12 @@ class ProfileFragment : Fragment() {
         }
 
         viewModel.fetchCurrentUser()
-
+        btnEdit.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, EditProfileFragment())
+                .addToBackStack(null)
+                .commit()
+        }
         btnLogout.setOnClickListener {
             authViewModel.logout()
         }

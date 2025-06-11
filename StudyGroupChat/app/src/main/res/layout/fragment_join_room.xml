@@ -9,15 +9,16 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="25dp">
+        android:paddingTop="20dp">
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="15dp"
+            android:padding="20dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
                 android:id="@+id/linearLayout"
@@ -41,8 +42,8 @@
                 android:id="@+id/linearLayout2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="20dp">
+                android:layout_marginTop="20dp"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/textView20"
@@ -56,8 +57,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="6dp">
+                    android:layout_marginTop="6dp"
+                    android:orientation="horizontal">
 
                     <EditText
                         android:id="@+id/editcodeRoom"
@@ -89,11 +90,11 @@
                 android:id="@+id/textView21"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Phòng học"
                 android:layout_marginTop="20dp"
+                android:text="Phòng học"
                 android:textColor="#111827"
                 android:textSize="20sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView"
