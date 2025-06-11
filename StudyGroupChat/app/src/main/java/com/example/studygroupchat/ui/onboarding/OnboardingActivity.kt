@@ -9,7 +9,6 @@ import androidx.lifecycle.lifecycleScope
 import com.example.studygroupchat.MainActivity
 import com.example.studygroupchat.adapter.OnboardingViewPagerAdapter
 import com.example.studygroupchat.databinding.ActivityOnboardingBinding
-import com.example.studygroupchat.ui.HomeActivity
 import com.example.studygroupchat.ui.LoginActivity
 import com.example.studygroupchat.ui.SplashActivity
 import com.example.studygroupchat.viewmodel.AuthViewModel

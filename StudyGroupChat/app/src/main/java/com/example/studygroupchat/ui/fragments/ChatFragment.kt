@@ -8,10 +8,15 @@ import android.view.ViewGroup
 import com.example.studygroupchat.R
 
 import android.content.Intent
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.studygroupchat.adapter.GroupAdapter
+import com.example.studygroupchat.api.ApiConfig
 import com.example.studygroupchat.model.Group
+import com.example.studygroupchat.repository.RoomRepository
+import com.example.studygroupchat.viewmodel.RoomViewModel
+import com.example.studygroupchat.viewmodel.RoomViewModelFactory
 
 class ChatFragment : Fragment() {
 
@@ -19,20 +24,18 @@ class ChatFragment : Fragment() {
     private lateinit var groupAdapter: GroupAdapter
     private val groupList = mutableListOf<Group>()
 
+    private val viewModel: RoomViewModel by viewModels {
+        RoomViewModelFactory(RoomRepository(ApiConfig.roomApiService))
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_chat, container, false)
 
         recyclerView = view.findViewById(R.id.recyclerGroupList)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-
-        // Dummy data – thay bằng dữ liệu từ server nếu cần
-        groupList.add(Group("1", "Gia đình", "Mẹ: Ăn cơm chưa con?"))
-        groupList.add(Group("2", "Bạn bè", "Hùng: Tối đi chơi không?"))
-        groupList.add(Group("3", "Công ty", "Sếp: Sáng mai họp lúc 9h"))
 
         groupAdapter = GroupAdapter(groupList) { group ->
             val intent = Intent(requireContext(), GroupChatActivity::class.java)
@@ -42,6 +45,17 @@ class ChatFragment : Fragment() {
         }
 
         recyclerView.adapter = groupAdapter
+
+        viewModel.rooms.observe(viewLifecycleOwner) { rooms ->
+            groupList.clear()
+            groupList.addAll(rooms.map { room ->
+                Group(room.roomId.toString(), room.roomName, room.description ?: "")
+            })
+            groupAdapter.notifyDataSetChanged()
+        }
+
+
+        viewModel.fetchMyRooms()
 
         return view
     }

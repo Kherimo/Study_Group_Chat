@@ -10,6 +10,13 @@ import com.example.studygroupchat.R
 import com.example.studygroupchat.adapter.ViewPagerAdapter
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.example.studygroupchat.api.ApiConfig
+import com.example.studygroupchat.repository.UserRepository
+import com.example.studygroupchat.viewmodel.UserViewModel
+import com.example.studygroupchat.viewmodel.UserViewModelFactory
+import androidx.fragment.app.viewModels
+import com.example.studygroupchat.MainActivity
+import com.example.studygroupchat.ui.fragments.ChangePasswordFragment
 
 
 class EditProfileFragment : Fragment() {
@@ -17,6 +24,9 @@ class EditProfileFragment : Fragment() {
     private lateinit var tabLayout: TabLayout
     private lateinit var viewPager: ViewPager2
     private lateinit var adapter: ViewPagerAdapter
+    private val userViewModel: UserViewModel by viewModels {
+        UserViewModelFactory(UserRepository(ApiConfig.userApiService))
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -56,7 +66,14 @@ class EditProfileFragment : Fragment() {
         }
 
         btnSave.setOnClickListener {
+            val tag = "f" + viewPager.currentItem
+            val fragment = childFragmentManager.findFragmentByTag(tag)
+            if (fragment is EditInfoFragment) {
+                fragment.saveChanges()
 
+            } else if (fragment is ChangePasswordFragment) {
+                fragment.changePassword()
+            }
         }
     }
     private fun handleCancel() {

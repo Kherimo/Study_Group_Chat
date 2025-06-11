@@ -78,3 +78,11 @@ CREATE TABLE IF NOT EXISTS public.chat_group_messages (
     FOREIGN KEY (group_id) REFERENCES public.chat_groups(group_id),
     FOREIGN KEY (sender_id) REFERENCES public.users(user_id)
 );
+ALTER TABLE public.rooms
+ADD COLUMN is_active BOOLEAN DEFAULT FALSE;
+
+CREATE POLICY "Allow authenticated uploads for avatars"
+ON storage.objects -- Bảng được chỉ định rõ ràng ở đây
+FOR INSERT
+WITH CHECK ( bucket_id = 'avatars' );
+

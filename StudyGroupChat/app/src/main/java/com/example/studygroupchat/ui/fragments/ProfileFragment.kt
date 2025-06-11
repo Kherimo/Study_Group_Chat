@@ -11,6 +11,7 @@ import android.widget.ImageView
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.example.studygroupchat.R
+import com.bumptech.glide.Glide
 import com.example.studygroupchat.api.ApiConfig
 import com.example.studygroupchat.repository.UserRepository
 import com.example.studygroupchat.viewmodel.UserViewModel
@@ -46,6 +47,12 @@ class ProfileFragment : Fragment() {
             tvUsername.text = user.fullName ?: user.userName
             tvEmail.text = user.email
             tvPhone.text = user.phoneNumber
+            user.avatarUrl?.let {
+                Glide.with(this)
+                    .load(it)
+                    .placeholder(R.drawable.baseline_account_circle_24)
+                    .into(imgAvatar)
+            }
         }
 
         viewModel.fetchCurrentUser()
@@ -55,6 +62,7 @@ class ProfileFragment : Fragment() {
                 .addToBackStack(null)
                 .commit()
         }
+
         btnLogout.setOnClickListener {
             authViewModel.logout()
         }
