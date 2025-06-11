@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.studygroupchat.adapter.MessageAdapter
 import com.example.studygroupchat.model.Message
+import com.google.android.material.appbar.MaterialToolbar
 
 class GroupChatActivity : AppCompatActivity() {
 
@@ -26,11 +27,17 @@ class GroupChatActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_group_chat)
 
+        val toolbar = findViewById<MaterialToolbar>(R.id.toolbarGroupChat)
+        setSupportActionBar(toolbar)
+
+// Lấy dữ liệu từ Intent
         groupId = intent.getStringExtra("groupId")
         groupName = intent.getStringExtra("groupName")
 
-        supportActionBar?.title = groupName
+        supportActionBar?.title = groupName ?: "Tên nhóm"
+        supportActionBar?.subtitle = "Lớp học Toán 10A"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
 
         recyclerMessages = findViewById(R.id.recyclerMessages)
         etMessage = findViewById(R.id.etMessage)

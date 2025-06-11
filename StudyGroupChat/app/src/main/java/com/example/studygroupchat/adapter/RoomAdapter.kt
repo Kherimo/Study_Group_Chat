@@ -61,13 +61,17 @@ class RoomAdapter(
         holder.courseDescription.text = room.description ?: ""
         holder.courseStatus.text = if (room.isActive) "Đang học" else "Đã dừng"
 
-        // Xử lý trạng thái màu chữ status
-        holder.courseStatus.setTextColor(
-            ContextCompat.getColor(
-                holder.itemView.context,
-                if (room.isActive) R.color.green_600 else R.color.orange_600
+        // Xử lý trạng thái màu chữ và background
+        val textColorRes = if (room.isActive) R.color.green_600 else R.color.orange_600
+        val backgroundRes = if (room.isActive) R.drawable.bg_status_active else R.drawable.bg_status_pause
+
+    // Áp dụng màu chữ cho textStatus
+            holder.courseStatus.setTextColor(
+                ContextCompat.getColor(holder.itemView.context, textColorRes)
             )
-        )
+
+    // Áp dụng background cho courseStatus
+        holder.courseStatus.setBackgroundResource(backgroundRes)
 
         // Hiển thị các view theo điều kiện
         if (isJoinRoom) {

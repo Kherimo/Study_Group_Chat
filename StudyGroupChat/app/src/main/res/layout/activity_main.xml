@@ -1,52 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F1F5F9"
+    android:background="#8080FF"
+    android:fitsSystemWindows="true"
     tools:context=".MainActivity">
 
+    <!-- Container cho fragment -->
+    <!-- BottomAppBar chứa BottomNavigationView -->
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_weight="1"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
-        android:layout_marginTop="45dp"
-        />
+        tools:layout_editor_absoluteX="-16dp"
+        tools:layout_editor_absoluteY="57dp" />
 
-    <com.google.android.material.bottomappbar.BottomAppBar
-        android:id="@+id/bottomAppBar"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        app:backgroundTint="#FFFFFF"
-        style="@style/Widget.MaterialComponents.BottomAppBar">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottom_nav"
-            style="@style/Widget.MaterialComponents.BottomNavigationView"
+        <com.google.android.material.bottomappbar.BottomAppBar
+            android:id="@+id/bottomAppBar"
+            style="@style/Widget.MaterialComponents.BottomAppBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:itemIconTint="@color/nav_item_color"
-            app:labelVisibilityMode="labeled"
-            app:menu="@menu/bottom_nav_menu"
-            android:paddingRight="10dp"
-            app:backgroundTint="@android:color/transparent"
-            app:elevation="0dp"/>
-    </com.google.android.material.bottomappbar.BottomAppBar>
+            android:layout_gravity="bottom"
+            app:backgroundTint="#FFFFFF">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="Create Course"
-        app:backgroundTint="?attr/colorPrimary"
-        app:layout_anchor="@id/bottomAppBar"
-        app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Full"
-        app:srcCompat="@drawable/baseline_add_24"
-        app:tint="@android:color/white"
-        />
+            <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/bottom_nav"
+                style="@style/Widget.MaterialComponents.BottomNavigationView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingRight="10dp"
+                app:backgroundTint="@android:color/transparent"
+                app:elevation="0dp"
+                app:itemIconTint="@color/nav_item_color"
+                app:labelVisibilityMode="labeled"
+                app:menu="@menu/bottom_nav_menu" />
+        </com.google.android.material.bottomappbar.BottomAppBar>
+        <!-- FloatingActionButton gắn với BottomAppBar -->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floatingActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:contentDescription="Create Course"
+            app:backgroundTint="?attr/colorPrimary"
+            app:layout_anchor="@id/bottomAppBar"
+            app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Full"
+            app:srcCompat="@drawable/baseline_add_24"
+            app:tint="@android:color/white" /> <!-- Thêm khoảng cách giữa FAB và BottomAppBar -->
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
