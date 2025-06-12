@@ -7,8 +7,8 @@ from api.autho import autho_bp
 from api.rooms import rooms_bp
 from api.users import users_bp
 from api.room_messages import room_messages_bp
-from api.chat_group import chat_group_bp
-from api.chat_group_messages import chat_group_messages_bp
+# from api.chat_group import chat_group_bp
+# from api.chat_group_messages import chat_group_messages_bp
 
 # Configure logging
 # logging.basicConfig(level=logging.DEBUG)
@@ -34,8 +34,8 @@ app.register_blueprint(authen_bp)
 app.register_blueprint(rooms_bp)  
 app.register_blueprint(users_bp)  
 app.register_blueprint(room_messages_bp)  
-app.register_blueprint(chat_group_bp)  
-app.register_blueprint(chat_group_messages_bp)  
+# app.register_blueprint(chat_group_bp)  
+# app.register_blueprint(chat_group_messages_bp)  
 
 # Add request logging middleware
 # @app.before_request

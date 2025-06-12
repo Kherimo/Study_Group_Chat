@@ -3,14 +3,15 @@ package com.example.studygroupchat.ui.onboarding
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import androidx.viewpager2.widget.ViewPager2
 import com.example.studygroupchat.MainActivity
 import com.example.studygroupchat.adapter.OnboardingViewPagerAdapter
 import com.example.studygroupchat.databinding.ActivityOnboardingBinding
 import com.example.studygroupchat.ui.LoginActivity
-import com.example.studygroupchat.ui.SplashActivity
 import com.example.studygroupchat.viewmodel.AuthViewModel
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.flow.first
@@ -31,17 +32,49 @@ class OnboardingActivity : AppCompatActivity() {
 
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { _, _ -> }.attach()
 
-        binding.btnNext.setOnClickListener {
-            if (binding.viewPager.currentItem < viewPagerAdapter.itemCount - 1) {
-                binding.viewPager.currentItem += 1
-            } else {
-                onOnboardingFinished()
+        // Khối logic được cập nhật để quản lý tất cả các nút
+        binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+
+                val isLastPage = position == viewPagerAdapter.itemCount - 1
+                val isFirstPage = position == 0
+
+                // Cập nhật nút "Tiếp theo" và "Bỏ qua"
+                binding.btnNext.visibility = if (isLastPage) View.VISIBLE else View.GONE
+                binding.btnSkip.visibility = if (isLastPage) View.GONE else View.VISIBLE
+
+                // Cập nhật nút điều hướng trái (ẩn ở trang đầu)
+                binding.btnPrev.visibility = if (isFirstPage) View.GONE else View.VISIBLE
+
+                // Cập nhật nút điều hướng phải (ẩn ở trang cuối)
+                binding.btnRight.visibility = if (isLastPage) View.GONE else View.VISIBLE
             }
+        })
+
+        binding.btnNext.setOnClickListener {
+            onOnboardingFinished()
         }
 
         binding.btnSkip.setOnClickListener {
             onOnboardingFinished()
         }
+
+        binding.btnRight.setOnClickListener {
+            val currentItem = binding.viewPager.currentItem
+            if (currentItem < viewPagerAdapter.itemCount - 1) {
+                binding.viewPager.currentItem = currentItem + 1
+            }
+        }
+
+        binding.btnPrev.setOnClickListener {
+            val currentItem = binding.viewPager.currentItem
+            if (currentItem > 0) {
+                binding.viewPager.currentItem = currentItem - 1
+            }
+        }
+        // Ẩn nút "trái" vì màn hình bắt đầu ở trang đầu tiên.
+        binding.btnPrev.visibility = View.GONE
     }
 
     private fun onOnboardingFinished() {

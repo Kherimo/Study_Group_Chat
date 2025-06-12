@@ -5,24 +5,26 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.fragments.ProfileFragment"
-    android:background="#F8FAFC">
+    android:background="@drawable/background_root">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true">
 
+        <!-- Thay đổi ở đây: LinearLayout này sẽ có chiều cao match_parent -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
+
+            <!-- Khối thông tin người dùng -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingTop="35dp"
-                android:paddingBottom="15dp"
-                android:background="#FFFFFF">
+                android:paddingTop="55dp"
+                >
                 <FrameLayout
                     android:layout_width="110dp"
                     android:layout_height="110dp"
@@ -33,6 +35,7 @@
                         android:id="@+id/imgAvatar"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+
                         android:scaleType="centerCrop"
                         android:src="@drawable/baseline_account_circle_24"
                         android:background="@drawable/bg_circle" />
@@ -56,6 +59,7 @@
                     android:text="Nguyễn Thành"
                     android:textSize="20sp"
                     android:textStyle="bold"
+                    android:textColor="#FFFF"
                     android:layout_gravity="center_horizontal" />
                 <TextView
                     android:id="@+id/tvStatusUser"
@@ -63,6 +67,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:text="Đang hoạt động"
+                    android:textStyle="bold"
                     android:paddingVertical="4dp"
                     android:paddingHorizontal="15dp"
                     android:textSize="11sp"
@@ -87,15 +92,14 @@
                     android:drawableStart="@drawable/baseline_border_color_24" />
             </LinearLayout>
 
-
-
-            <!-- Thông tin liên hệ -->
+            <!-- Khối thông tin, thống kê và đăng xuất (sẽ lấp đầy không gian còn lại) -->
+            <!-- Thay đổi ở đây: layout_height="0dp" và layout_weight="1" -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:paddingVertical="15dp"
-                android:paddingHorizontal="20dp">
+                android:padding="20dp"
+                android:background="@drawable/background_block">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -103,25 +107,27 @@
                     android:layout_marginBottom="15dp"
                     android:text="Thông tin cá nhân"
                     android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textColor="#1E293B"/>
 
                 <!-- Email -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:gravity="center_vertical"
                     android:padding="12dp"
                     android:background="@drawable/bg_item"
                     android:layout_marginBottom="12dp">
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
                         android:src="@drawable/outline_mail_24"
-                        android:scaleType="centerCrop"
+                        android:scaleType="centerInside"
                         android:background="@drawable/bg_circle"
                         android:padding="10dp"
-                        android:layout_marginRight="8dp" />
+                        android:layout_marginEnd="12dp" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -142,7 +148,8 @@
                             android:layout_height="wrap_content"
                             android:text="nguyenthanh@gmail.com"
                             android:textSize="15sp"
-                            android:textStyle="bold"/>
+                            android:textStyle="bold"
+                            android:textColor="#1E293B"/>
                     </LinearLayout>
                 </LinearLayout>
 
@@ -151,17 +158,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:gravity="center_vertical"
                     android:background="@drawable/bg_item"
                     android:padding="12dp">
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
                         android:src="@drawable/baseline_phone_24"
-                        android:scaleType="centerCrop"
+                        android:scaleType="centerInside"
                         android:background="@drawable/bg_circle"
                         android:padding="10dp"
-                        android:layout_marginRight="8dp" />
+                        android:layout_marginEnd="12dp" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -182,33 +190,31 @@
                             android:layout_height="wrap_content"
                             android:text="0123456789"
                             android:textStyle="bold"
-                            android:textSize="15sp" />
+                            android:textSize="15sp"
+                            android:textColor="#1E293B"/>
                     </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingHorizontal="20dp">
+
+                <!-- Thống kê học tập -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textStyle="bold"
                     android:text="Thống kê học tập"
                     android:textSize="18sp"
+                    android:textColor="#1E293B"
+                    android:layout_marginTop="20dp"
                     android:layout_marginBottom="15dp"/>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:background="@drawable/bg_item"
-                    android:paddingVertical="10dp"
-                    android:paddingHorizontal="35dp"
+                    android:padding="20dp"
                     android:gravity="center_horizontal">
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
                         android:src="@drawable/resource_class"
                         android:background="@drawable/bg_circle"
                         android:padding="10dp"/>
@@ -216,8 +222,10 @@
                         android:id="@+id/tvCountClass"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
                         android:text="5"
                         android:textSize="24sp"
+                        android:textColor="#1E293B"
                         android:textStyle="bold"/>
                     <TextView
                         android:id="@+id/tvLableCountClass"
@@ -226,31 +234,30 @@
                         android:text="Phòng học"
                         android:textColor="#64748B"
                         android:textSize="14sp"
-
                         />
                 </LinearLayout>
+
+                <!-- Nút đăng xuất -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnLogout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="Đăng xuất"
+                    android:textAllCaps="false"
+                    android:textColor="#EF4444"
+                    android:textSize="16sp"
+                    app:icon="@drawable/outline_logout_24"
+                    app:iconTint="#EF4444"
+                    app:iconGravity="textStart"
+                    app:iconPadding="10dp"
+                    app:cornerRadius="12dp"
+                    app:strokeWidth="1dp"
+                    app:strokeColor="#FEE2E2"
+                    android:backgroundTint="#FFF1F2"
+                    android:paddingVertical="14dp"/>
+
             </LinearLayout>
-
-            <!-- Nút đăng xuất -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnLogout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginTop="16dp"
-                android:text="Đăng xuất"
-                android:textAllCaps="false"
-                android:textColor="#EF4444"
-                android:textSize="16sp"
-                app:icon="@drawable/outline_logout_24"
-                app:iconTint="#EF4444"
-                app:iconGravity="textStart"
-                app:iconPadding="5dp"
-                app:cornerRadius="12dp"
-                app:strokeWidth="1dp"
-                app:strokeColor="#EF4444"
-                android:backgroundTint="#FFFFFF"/>
-
 
         </LinearLayout>
     </ScrollView>
