@@ -4,68 +4,97 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="#F8FAFC"
-    tools:context=".ui.fragments.EditProfileFragment">
+    tools:context=".ui.fragments.EditProfileFragment"
+    android:background="@drawable/background_root">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingTop="0dp"
-        >
-        <!-- Đây là thanh tab để chọn -->
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:tabMode="fixed"
-            app:tabGravity="fill" />
+        android:orientation="vertical">
 
-        <!-- Đây là nơi hiển thị nội dung tương ứng với mỗi tab -->
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/viewPager"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
+        <!-- Header -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="55dp"
             android:orientation="horizontal"
             android:paddingHorizontal="20dp"
-            android:paddingVertical="15dp"
-            android:background="#FFFFFF">
-            <com.google.android.material.button.MaterialButton
+            android:gravity="center_vertical">
+
+            <!-- Thêm nút Back/Close nếu cần -->
+            <ImageView
                 android:id="@+id/btnCancel"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="@drawable/bg_circle"
+                android:padding="6dp"
+                android:src="@drawable/ic_arrow_left" />
+
+            <TextView
+                android:id="@+id/textViewTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:text="Hủy bỏ"
-                android:textAllCaps="false"
-                android:textColor="#64748B"
-                android:textSize="16sp"
-                app:cornerRadius="12dp"
-                app:strokeWidth="1dp"
-                app:strokeColor="#64748B"
-                android:backgroundTint="#FFFFFF"/>
-            <View
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_weight="1"/>
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnSave"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:text="Lưu thay đổi"
-                android:textAllCaps="false"
+                android:layout_weight="1"
+                android:text="Chỉnh sửa hồ sơ"
                 android:textColor="#FFFFFF"
-                android:textSize="16sp"
-                app:cornerRadius="12dp"
-                app:strokeWidth="1dp"
-                app:strokeColor="#64748B"
-                android:backgroundTint="@color/md_theme_primary"/>
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:gravity="center" />
+
+            <!-- Spacer để căn giữa tiêu đề khi có nút back -->
+            <View
+                android:layout_width="32dp"
+                android:layout_height="32dp"/>
+
+        </LinearLayout>
+
+        <!-- Khối nội dung chính -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/background_block">
+
+            <!-- Thanh tab -->
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_block"
+                app:tabMode="fixed"
+                app:tabGravity="fill" />
+
+            <!-- ViewPager để hiển thị nội dung tab -->
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/viewPager"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <!-- Khối button -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="15dp"
+                android:background="@android:color/transparent">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSave"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:text="Lưu thay đổi"
+                    android:textAllCaps="false"
+                    android:textSize="16sp"
+                    app:cornerRadius="12dp"
+                    android:backgroundTint="@color/md_theme_primary"/>
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-
 
 </FrameLayout>

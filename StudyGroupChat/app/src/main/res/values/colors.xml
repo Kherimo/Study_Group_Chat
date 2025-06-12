@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="md_theme_primary">#6750A4</color>
+    <color name="md_theme_primary">#3A227E</color>
     <color name="md_theme_onPrimary">#FFFFFF</color>
+    <color name="white">#FFFFFF</color>
 
     <color name="md_theme_surface_light">#FFFBFE</color> <color name="md_theme_onSurface_light">#1C1B1F</color> <color name="md_theme_surface_dark">#1C1B1F</color> <color name="md_theme_onSurface_dark">#E6E1E5</color> <color name="md_theme_outline_light">#79747E</color>
     <color name="md_theme_outline_dark">#938F99</color>

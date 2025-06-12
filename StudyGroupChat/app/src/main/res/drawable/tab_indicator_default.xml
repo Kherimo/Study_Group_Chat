@@ -4,5 +4,5 @@
     android:innerRadius="0dp"
     android:thickness="4dp"
     android:useLevel="false">
-    <solid android:color="?attr/colorPrimary" android:alpha="0.3"/>
+    <solid android:color="@color/md_theme_outline_light" android:alpha="0.3"/>
 </shape>

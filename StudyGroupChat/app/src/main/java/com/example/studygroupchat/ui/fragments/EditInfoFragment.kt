@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -33,6 +34,8 @@ class EditInfoFragment : Fragment() {
     private lateinit var editEmail: EditText
     private lateinit var editPhone: EditText
     private lateinit var imgAvatar: ImageView
+    private lateinit var tvChangePhoto: TextView
+    private lateinit var editUserName: TextView
 
     private val pickImageLauncher =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
@@ -50,14 +53,16 @@ class EditInfoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         editFullName = view.findViewById(R.id.editFullName)
-//        editUserName = view.findViewById(R.id.editUserName)
+        editUserName = view.findViewById(R.id.editUserName)
         editEmail = view.findViewById(R.id.editEmail)
         editPhone = view.findViewById(R.id.editPhone)
         imgAvatar = view.findViewById(R.id.imgAvatar)
+        tvChangePhoto = view.findViewById(R.id.tvChangePhoto)
 
         viewModel.user.observe(viewLifecycleOwner) { user ->
             editFullName.setText(user.fullName)
             editEmail.setText(user.email)
+            editUserName.setText(user.userName)
             editPhone.setText(user.phoneNumber)
             user.avatarUrl?.let {
                 Glide.with(this).load(it)
@@ -70,8 +75,13 @@ class EditInfoFragment : Fragment() {
             pickImageLauncher.launch("image/*")
         }
 
+        tvChangePhoto.setOnClickListener {
+            pickImageLauncher.launch("image/*")
+        }
+
         viewModel.fetchCurrentUser()
     }
+
 
     private fun handleImageSelected(uri: Uri) {
         imgAvatar.setImageURI(uri)

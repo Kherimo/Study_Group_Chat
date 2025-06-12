@@ -4,80 +4,91 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
     tools:context=".ui.fragments.HomeFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@drawable/background_root">
 
-        <!-- Nội dung chính -->
+        <!-- Thay đổi ở đây: contentLayout sẽ lấp đầy không gian -->
         <LinearLayout
             android:id="@+id/contentLayout"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:orientation="vertical"
-
+            android:layout_marginTop="55dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-            <LinearLayout
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <EditText
+                android:id="@+id/searchClass"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/bg_search"
+                android:drawableStart="@drawable/search_icon"
+                android:drawablePadding="10dp"
+                android:hint="Tìm kiếm phòng học..."
+                android:padding="15dp"
+                android:textSize="14sp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+
+                />
+
+            <!-- Thay đổi ở đây: LinearLayout này sẽ chiếm hết không gian còn lại -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginTop="26dp"
                 android:orientation="vertical"
-                android:paddingVertical="25dp"
-                android:background="#8080FF"
-                android:paddingHorizontal="15dp">
-                <EditText
-                    android:id="@+id/searchClass"
+                android:background="@drawable/background_block">
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bg_search"
-                    android:drawableStart="@drawable/search_icon"
-                    android:drawablePadding="10dp"
-                    android:hint="Tìm kiếm phòng học..."
-                    android:padding="15dp"
-                    android:textSize="14sp" />
+                    android:layout_marginTop="25dp"
+                    android:gravity="center_vertical"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Phòng học của tôi"
+                        android:textColor="#1E293B"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/viewAllMyCourse"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Xem tất cả"
+                        android:textColor="#4F46E5"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <!-- RecyclerView bây giờ sẽ lấp đầy LinearLayout cha của nó -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:clipToPadding="false"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
+                    android:paddingBottom="10dp"
+                    tools:itemCount="3"
+                    tools:listitem="@layout/item_course" />
+
             </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
-                android:paddingHorizontal="15dp"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Phòng học của tôi"
-                    android:textColor="#1E293B"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/viewAllMyCourse"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Xem tất cả"
-                    android:textColor="#4F46E5"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:clipToPadding="false"
-                android:paddingStart="15dp"
-                android:paddingEnd="15dp"
-                android:paddingBottom="10dp"
-                tools:itemCount="3"
-                tools:listitem="@layout/item_course" />
-
 
         </LinearLayout>
 
@@ -92,6 +103,5 @@
             app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 </FrameLayout>

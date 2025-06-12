@@ -4,220 +4,237 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.fragments.CreateRoomFragment">
+    tools:context=".ui.fragments.CreateRoomFragment"
+    android:background="@drawable/background_root">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingTop="5dp"
-        android:paddingHorizontal="20dp">
+        android:orientation="vertical">
 
         <!-- Header -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="55dp"
             android:orientation="horizontal"
-            android:gravity="center_vertical|center_horizontal">
-
-            <TextView
-                android:id="@+id/textView15"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Tạo phòng học mới"
-                android:textColor="#111827"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_weight="1" />
+            android:paddingHorizontal="20dp"
+            android:gravity="center_vertical">
 
             <ImageView
                 android:id="@+id/btnClose"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:background="@drawable/bg_circle"
-                android:padding="8dp"
-                android:src="@drawable/baseline_close_24" />
+                android:padding="6dp"
+                android:src="@drawable/ic_arrow_left" />
+
+            <TextView
+                android:id="@+id/textView15"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Tạo phòng học mới"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:gravity="center_horizontal"
+                />
+
+
         </LinearLayout>
 
-        <!-- Nội dung scroll -->
-        <ScrollView
+        <!-- Khối nội dung chính -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical"
+            android:background="@drawable/background_block">
 
-            <LinearLayout
+            <!-- Nội dung scroll -->
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:fillViewport="true"
+                android:clipToPadding="false"
+                android:paddingBottom="15dp">
 
-                <!-- Tên phòng -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:text="Tên phòng" />
-
-                <EditText
-                    android:id="@+id/edit_nameRoom"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:background="@drawable/bg_edittext"
-                    android:hint="Nhập tên phòng học"
-                    android:inputType="text"
-                    android:padding="15dp"
-                    android:textSize="16sp" />
-
-                <!-- Mô tả -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:text="Mô tả" />
-
-                <EditText
-                    android:id="@+id/editdescribe"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:background="@drawable/bg_edittext"
-                    android:hint="Mô tả chi tiết về phòng học và nội dung..."
-                    android:inputType="textMultiLine"
-                    android:maxLines="5"
-                    android:minLines="4"
-                    android:padding="15dp"
-                    android:scrollbars="vertical"
-                    android:textSize="16sp" />
-
-                <!-- Chế độ phòng -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:text="Chế độ phòng"
-                    android:textSize="14sp" />
-
-                <RadioGroup
-                    android:id="@+id/radioGroupRoomMode"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:orientation="horizontal">
-
-                    <RadioButton
-                        android:id="@+id/radioPublic"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Công khai"
-                        android:checked="true"
-                        android:paddingHorizontal="5dp" />
-
-                    <RadioButton
-                        android:id="@+id/radioPrivate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Riêng tư"
-                        android:paddingHorizontal="5dp"
-                        android:layout_marginStart="15dp" />
-                </RadioGroup>
-
-                <!-- Ngày hết hạn -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:text="Ngày hết hạn" />
-
-                <EditText
-                    android:id="@+id/editdate"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:background="@drawable/bg_edittext"
-                    android:clickable="true"
-                    android:focusable="false"
-                    android:drawableEnd="@drawable/outline_calendar_month_24"
-                    android:padding="15dp"
-                    android:text="_ _ /_ _ /_ _ _ _"
-                    android:textSize="16sp" />
-
-                <!-- Mã mời -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:background="@drawable/bg_item"
                     android:orientation="vertical"
-                    android:padding="25dp">
+                    android:paddingHorizontal="20dp"
+                    android:paddingTop="20dp">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <!-- Tên phòng -->
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical">
+                        android:text="Tên phòng"
+                        android:textStyle="bold"/>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Mã mời sẽ được tạo tự động"
-                            android:textColor="#64748B"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
-
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="1dp"
-                            android:layout_weight="1" />
-
-                        <ImageView
-                            android:id="@+id/ivChangeCode"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/outline_sync_24" />
-                    </LinearLayout>
-
-                    <LinearLayout
+                    <EditText
+                        android:id="@+id/edit_nameRoom"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="6dp"
-                        android:background="#F3F4F6"
-                        android:orientation="horizontal"
-                        android:paddingHorizontal="10dp"
-                        android:gravity="center">
+                        android:background="@drawable/bg_edittext"
+                        android:hint="Nhập tên phòng học"
+                        android:inputType="text"
+                        android:padding="15dp"
+                        android:textSize="16sp" />
 
-                        <TextView
-                            android:id="@+id/tvCode"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:padding="15dp"
-                            android:text="ABC123XYZ"
-                            android:textAlignment="center"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
+                    <!-- Mô tả -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:text="Mô tả"
+                        android:textStyle="bold"/>
 
-                        <ImageView
-                            android:id="@+id/tvCopyCode"
+                    <EditText
+                        android:id="@+id/editdescribe"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:background="@drawable/bg_edittext"
+                        android:gravity="top"
+                        android:hint="Mô tả chi tiết về phòng học và nội dung..."
+                        android:inputType="textMultiLine"
+                        android:maxLines="5"
+                        android:minLines="4"
+                        android:padding="15dp"
+                        android:scrollbars="vertical"
+                        android:textSize="16sp" />
+
+                    <!-- Chế độ phòng -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:text="Chế độ phòng"
+                        android:textSize="14sp"
+                        android:textStyle="bold"/>
+
+                    <RadioGroup
+                        android:id="@+id/radioGroupRoomMode"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:orientation="horizontal">
+
+                        <RadioButton
+                            android:id="@+id/radioPublic"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:padding="5dp"
-                            android:src="@drawable/baseline_content_copy_24" />
+                            android:text="Công khai"
+                            android:checked="true"
+                            android:paddingHorizontal="5dp" />
+
+                        <RadioButton
+                            android:id="@+id/radioPrivate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Riêng tư"
+                            android:paddingHorizontal="5dp"
+                            android:layout_marginStart="15dp" />
+                    </RadioGroup>
+
+                    <!-- Ngày hết hạn -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:text="Ngày hết hạn"
+                        android:textStyle="bold"/>
+
+                    <EditText
+                        android:id="@+id/editdate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:background="@drawable/bg_edittext"
+                        android:clickable="true"
+                        android:focusable="false"
+                        android:drawableEnd="@drawable/outline_calendar_month_24"
+                        android:padding="15dp"
+                        android:text="_ _ /_ _ /_ _ _ _"
+                        android:textSize="16sp" />
+
+                    <!-- Mã mời -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:background="@drawable/bg_item"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Mã mời sẽ được tạo tự động"
+                                android:textColor="#64748B"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <ImageView
+                                android:id="@+id/ivChangeCode"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/outline_sync_24" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:background="#F3F4F6"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="10dp"
+                            android:gravity="center">
+
+                            <TextView
+                                android:id="@+id/tvCode"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:padding="15dp"
+                                android:text="ABC123XYZ"
+                                android:textAlignment="center"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                            <ImageView
+                                android:id="@+id/tvCopyCode"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="5dp"
+                                android:src="@drawable/baseline_content_copy_24" />
+                        </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
+            </ScrollView>
 
-                <!-- Button tạo phòng -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/bt_create_room"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:text="Tạo phòng"
-                    app:cornerRadius="8dp" />
-            </LinearLayout>
-        </ScrollView>
+            <!-- Button tạo phòng -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/bt_create_room"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:paddingVertical="14dp"
+                android:text="Tạo phòng"
+                app:cornerRadius="8dp" />
+        </LinearLayout>
     </LinearLayout>
 </FrameLayout>

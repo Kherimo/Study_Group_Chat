@@ -14,7 +14,8 @@
         android:paddingVertical="10dp"
         android:paddingHorizontal="15dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_root_item">
 
         <!-- Tiêu đề và trạng thái -->
         <RelativeLayout
@@ -38,9 +39,10 @@
             <TextView
                 android:id="@+id/course_status"
                 android:text="Đang học"
+                android:textStyle="bold"
                 android:textSize="12sp"
                 android:background="@drawable/bg_status_active"
-                android:textColor="#16A34A"
+                android:textColor="#013B17"
                 android:paddingVertical="6dp"
                 android:paddingHorizontal="8dp"
                 android:layout_alignParentEnd="true"

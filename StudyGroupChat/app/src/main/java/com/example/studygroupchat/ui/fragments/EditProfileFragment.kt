@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.viewpager2.widget.ViewPager2
 import com.example.studygroupchat.R
 import com.example.studygroupchat.adapter.ViewPagerAdapter
@@ -57,7 +58,7 @@ class EditProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val btnCancel = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCancel)
+        val btnCancel = view.findViewById<ImageView>(R.id.btnCancel)
         val btnSave = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnSave)
 
         btnCancel.setOnClickListener {
