@@ -1,23 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/background_root"
+    >
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="#8080FF">
-        <TextView
-            android:id="@+id/tvTitle"
-            android:text="Danh sách nhóm chat"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:textColor="#FFFFFF"
-            android:layout_marginLeft="15dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- Header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="55dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="20dp">
+
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:text="Danh sách nhóm chat"
+                android:textColor="#FFFFFF"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <!-- Thanh tìm kiếm -->
         <EditText
             android:id="@+id/searchClass"
             android:layout_width="match_parent"
@@ -25,26 +42,38 @@
             android:background="@drawable/bg_search"
             android:drawableStart="@drawable/search_icon"
             android:drawablePadding="10dp"
-            android:hint="Tìm kiếm phòng học..."
+            android:hint="Tìm kiếm nhóm chat..."
             android:padding="15dp"
-            android:layout_marginVertical="15dp"
-            android:layout_marginHorizontal="15dp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="22dp"
             android:textSize="14sp" />
+
+        <!-- Khối nội dung chính -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="20dp"
+            android:layout_weight="1"
+            android:background="@drawable/background_block"
+            android:orientation="vertical"
+
+            >
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerGroupList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+
+                tools:listitem="@layout/item_chat_group" />
+
+        </LinearLayout>
     </LinearLayout>
-
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerGroupList"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#F3F4F6"
-       />
 
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
-</LinearLayout>
+</FrameLayout>

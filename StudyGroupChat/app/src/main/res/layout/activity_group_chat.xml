@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background="@color/md_theme_primary"
+    android:background="@drawable/background_root"
     android:layout_width="match_parent"
     android:fitsSystemWindows="true"
     android:layout_height="match_parent">
@@ -11,7 +11,7 @@
         android:id="@+id/toolbarGroupChat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/md_theme_primary"
+        android:background="@drawable/background_root"
         android:title="Thành viên"
         android:subtitle="Lớp học Toán 10A"
         android:titleTextColor="@android:color/white"
@@ -24,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="#FFFFFF">
+            android:background="@drawable/background_root_item">
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerMessages"
                 android:layout_width="match_parent"

@@ -1,11 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/tvMessage"
-    android:layout_width="wrap_content"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#503B82F6"
-    android:padding="10dp"
-    android:textColor="#000000"
-    android:layout_margin="4dp"
-    android:text="Tin nhắn mẫu"/>
+    android:orientation="horizontal"
+    android:padding="8dp">
+
+    <ImageView
+        android:id="@+id/imgAvatar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="bottom"
+        android:src="@drawable/baseline_account_circle_24"
+        android:scaleType="centerCrop"
+        android:background="@drawable/bg_circle"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginStart="8dp">
+
+        <TextView
+            android:id="@+id/tvSenderName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Đỗ Nguyễn Thiên"
+            android:textSize="12sp"
+            android:textColor="#64748B"
+            android:layout_marginBottom="2dp"
+            android:layout_marginStart="10dp"/>
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_chat"
+            android:paddingVertical="8dp"
+            android:paddingHorizontal="12dp">
+
+            <!-- 1. Nội dung tin nhắn VĂN BẢN -->
+<!--            android:visibility="visible" hiện thị mặc định-->
+<!--            android:visibility="gone" ẩn hiện thị-->
+            <TextView
+                android:id="@+id/tvMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Đây là một tin nhắn mẫu."
+                android:textColor="#1E293B"
+                android:textSize="15sp"
+                android:visibility="gone"/> <!-- Hiển thị  -->
+
+            <!-- 2. Nội dung tin nhắn HÌNH ẢNH / VIDEO THUMBNAIL -->
+            <ImageView
+                android:id="@+id/imgContent"
+                android:layout_width="240dp"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:visibility="gone"
+                tools:src="@tools:sample/backgrounds/scenic" />
+
+            <!-- 3. Nội dung tin nhắn dạng FILE (PDF, DOCX, etc.) -->
+            <LinearLayout
+                android:id="@+id/fileContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:minWidth="200dp"
+                android:visibility="visible">
+
+                <ImageView
+                    android:id="@+id/ivFileIcon"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/outline_insert_drive_file_24" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginStart="12dp">
+
+                    <TextView
+                        android:id="@+id/tvFileName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="tailieu.pdf"
+                        android:textColor="#1E293B"
+                        android:textStyle="bold"
+                        android:ellipsize="middle"
+                        android:singleLine="true"/>
+
+                    <TextView
+                        android:id="@+id/tvFileSize"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1.2 MB"
+                        android:textSize="12sp"
+                        android:textColor="#64748B"/>
+                </LinearLayout>
+            </LinearLayout>
+        </FrameLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
