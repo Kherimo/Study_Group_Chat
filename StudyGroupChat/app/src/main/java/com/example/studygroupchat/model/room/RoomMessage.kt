@@ -15,7 +15,7 @@ data class RoomMessage(
     @SerializedName("sent_at")
     val sentAt: String,
 
-    // Optional: dùng khi JOIN bảng users
-    @SerializedName("sender")
+    // Thông tin người gửi (khi JOIN bảng users)
+    @SerializedName("users")
     val sender: User? = null
 )

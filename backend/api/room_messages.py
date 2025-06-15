@@ -21,8 +21,17 @@ def get_room_messages(current_user_id, room_id):
         limit = int(request.args.get('limit', 50))
         offset = (page - 1) * limit
         
-        response = supabase.table('room_messages').select('*, users(user_name, full_name, avatar_url)').eq('room_id', room_id).order('sent_at', desc=True).range(offset, offset + limit - 1).execute()
-        return jsonify(response.data)
+        response = supabase.table('room_messages').select('*, users(user_name, full_name, avatar_url)').eq('room_id', room_id).order('sent_at', desc=False).range(offset, offset + limit - 1).execute()
+
+        messages = response.data
+        for msg in messages:
+            user = msg.get('users') or {}
+            avatar_path = user.get('avatar_url')
+            if avatar_path and not avatar_path.startswith('http'):
+                user['avatar_url'] = supabase.storage.from_('avatars').get_public_url(avatar_path)
+                msg['users'] = user
+
+        return jsonify(messages)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
@@ -51,8 +60,15 @@ def send_room_message(current_user_id, room_id):
         # Get message with user info
         message_id = response.data[0]['message_id']
         full_message = supabase.table('room_messages').select('*, users(user_name, full_name, avatar_url)').eq('message_id', message_id).execute()
-        
-        return jsonify(full_message.data[0]), 201
+
+        message = full_message.data[0]
+        user = message.get('users') or {}
+        avatar_path = user.get('avatar_url')
+        if avatar_path and not avatar_path.startswith('http'):
+            user['avatar_url'] = supabase.storage.from_('avatars').get_public_url(avatar_path)
+            message['users'] = user
+
+        return jsonify(message), 201
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 

@@ -4,22 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="8dp">
-
-    <ImageView
-        android:id="@+id/imgAvatar"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_gravity="bottom"
-        android:src="@drawable/baseline_account_circle_24"
-        android:scaleType="centerCrop"
-        android:background="@drawable/bg_circle"/>
+    android:padding="8dp"
+    android:gravity="end">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginStart="8dp">
+        android:layout_marginEnd="8dp">
 
         <TextView
             android:id="@+id/tvSenderName"
@@ -39,8 +31,8 @@
             android:paddingHorizontal="12dp">
 
             <!-- 1. Nội dung tin nhắn VĂN BẢN -->
-<!--            android:visibility="visible" hiện thị mặc định-->
-<!--            android:visibility="gone" ẩn hiện thị-->
+            <!--            android:visibility="visible" hiện thị mặc định-->
+            <!--            android:visibility="gone" ẩn hiện thị-->
             <TextView
                 android:id="@+id/tvMessage"
                 android:layout_width="wrap_content"
@@ -104,5 +96,14 @@
         </FrameLayout>
 
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imgAvatar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="bottom"
+        android:src="@drawable/baseline_account_circle_24"
+        android:scaleType="centerCrop"
+        android:background="@drawable/bg_circle"/>
 
 </LinearLayout>
