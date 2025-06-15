@@ -18,6 +18,12 @@ data class Room(
     @SerializedName("room_name")
     val roomName: String,
 
+    @SerializedName("room_mode")
+    val roomMode: String?,
+
+    @SerializedName("avatar_url")
+    val avatarUrl: String?,
+
     @SerializedName("description")
     val description: String?,
 

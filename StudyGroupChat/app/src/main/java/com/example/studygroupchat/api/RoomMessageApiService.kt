@@ -16,6 +16,11 @@ interface RoomMessageApiService {
         @Query("limit") limit: Int? = null
     ): Response<List<RoomMessage>>
 
+    @GET("api/rooms/{roomId}/messages/latest")
+    suspend fun getLastMessage(
+        @Path("roomId") roomId: String
+    ): Response<RoomMessage>
+
     @POST("api/rooms/{roomId}/messages")
     suspend fun sendRoomMessage(
         @Path("roomId") roomId: String,

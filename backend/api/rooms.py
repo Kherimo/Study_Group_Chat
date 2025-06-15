@@ -4,6 +4,8 @@ from decorators import token_required
 from datetime import datetime
 import secrets
 import string
+import uuid
+import os
 
 rooms_bp = Blueprint("rooms", __name__, url_prefix="/api")
 
@@ -51,6 +53,77 @@ def get_my_rooms(current_user_id):
                 room['members'] = [m['users'] for m in members_resp.data]
             except Exception:
                 room['members'] = []
+
+            avatar_path = room.get('avatar_url')
+            if avatar_path and not avatar_path.startswith('http'):
+                room['avatar_url'] = supabase.storage.from_('avatars').get_public_url(avatar_path)
+
+            result_rooms.append(room)
+
+        return jsonify(result_rooms)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@rooms_bp.route('/rooms/public', methods=['GET'])
+@token_required
+def get_public_rooms(current_user_id):
+    """Return public rooms that the current user has not joined."""
+    try:
+        member_resp = (
+            supabase
+            .table('room_members')
+            .select('room_id')
+            .eq('user_id', current_user_id)
+            .execute()
+        )
+        joined_ids = {item['room_id'] for item in member_resp.data}
+
+        owned_resp = (
+            supabase
+            .table('rooms')
+            .select('room_id')
+            .eq('owner_id', current_user_id)
+            .execute()
+        )
+        joined_ids.update({item['room_id'] for item in owned_resp.data})
+
+        response = (
+            supabase
+            .table('rooms')
+            .select('*, users!rooms_owner_id_fkey(user_name, full_name)')
+            .eq('room_mode', 'public')
+            .execute()
+        )
+
+        result_rooms = []
+        for room in response.data:
+            if room['room_id'] in joined_ids:
+                continue
+            expired_at = room.get('expired_at')
+            if expired_at:
+                try:
+                    exp = datetime.fromisoformat(expired_at.replace('Z', '+00:00'))
+                    if exp < datetime.utcnow():
+                        continue
+                except Exception:
+                    pass
+            try:
+                members_resp = (
+                    supabase
+                    .table('room_members')
+                    .select('users(user_id, user_name, full_name, avatar_url)')
+                    .eq('room_id', room['room_id'])
+                    .execute()
+                )
+                room['members'] = [m['users'] for m in members_resp.data]
+            except Exception:
+                room['members'] = []
+
+            avatar_path = room.get('avatar_url')
+            if avatar_path and not avatar_path.startswith('http'):
+                room['avatar_url'] = supabase.storage.from_('avatars').get_public_url(avatar_path)
+
             result_rooms.append(room)
 
         return jsonify(result_rooms)
@@ -62,29 +135,48 @@ def get_my_rooms(current_user_id):
 @token_required
 def create_room(current_user_id):
     try:
-        data = request.get_json()
-        
+        if request.content_type and request.content_type.startswith('multipart/form-data'):
+            data = request.form.to_dict()
+            avatar_file = request.files.get('avatar')
+        else:
+            data = request.get_json() or {}
+            avatar_file = None
+
         if not data.get('room_name'):
             return jsonify({'error': 'Room name is required'}), 400
-        
+
         invite_code = generate_code()
         room_data = {
             'owner_id': current_user_id,
             'room_name': data['room_name'],
             'description': data.get('description'),
             'invite_code': invite_code,
-            'expired_at': data.get('expired_at')
+            'expired_at': data.get('expired_at'),
+            'room_mode': data.get('room_mode', 'public')
         }
-        
+
+        if avatar_file:
+            ext = os.path.splitext(avatar_file.filename)[1] or '.jpg'
+            unique_name = f"room_{current_user_id}_{uuid.uuid4().hex}{ext}"
+            file_bytes = avatar_file.read()
+            supabase.storage.from_('avatars').upload(unique_name, file_bytes, {
+                'content-type': avatar_file.mimetype
+            })
+            room_data['avatar_url'] = unique_name
+
         response = supabase.table('rooms').insert(room_data).execute()
         room = response.data[0]
-        
+
+        avatar_path = room.get('avatar_url')
+        if avatar_path and not avatar_path.startswith('http'):
+            room['avatar_url'] = supabase.storage.from_('avatars').get_public_url(avatar_path)
+
         # Add owner as member
         supabase.table('room_members').insert({
             'room_id': room['room_id'],
             'user_id': current_user_id
         }).execute()
-        
+
         return jsonify(room), 201
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -117,7 +209,12 @@ def get_room(current_user_id, room_id):
         if not response.data:
             return jsonify({'error': 'Room not found'}), 404
 
-        return jsonify(response.data[0])
+        room = response.data[0]
+        avatar_path = room.get('avatar_url')
+        if avatar_path and not avatar_path.startswith('http'):
+            room['avatar_url'] = supabase.storage.from_('avatars').get_public_url(avatar_path)
+
+        return jsonify(room)
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -179,6 +276,10 @@ def join_room_by_code(current_user_id):
             return jsonify({'error': 'Invalid invite code'}), 404
         
         room = room_response.data[0]
+
+        avatar_path = room.get('avatar_url')
+        if avatar_path and not avatar_path.startswith('http'):
+            room['avatar_url'] = supabase.storage.from_('avatars').get_public_url(avatar_path)
         
         # Check if room is expired
         if room['expired_at'] and datetime.fromisoformat(room['expired_at'].replace('Z', '+00:00')) < datetime.utcnow():

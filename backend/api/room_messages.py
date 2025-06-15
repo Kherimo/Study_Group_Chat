@@ -91,3 +91,42 @@ def delete_room_message(current_user_id, room_id, message_id):
         return jsonify({'message': 'Message deleted successfully'})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
+@room_messages_bp.route('/rooms/<room_id>/messages/latest', methods=['GET'])
+@token_required
+def get_latest_message(current_user_id, room_id):
+    """Return the most recent message of a room"""
+    try:
+        # Check membership
+        member_check = (
+            supabase
+            .table('room_members')
+            .select('*')
+            .eq('room_id', room_id)
+            .eq('user_id', current_user_id)
+            .execute()
+        )
+        if not member_check.data:
+            return jsonify({'error': 'Access denied'}), 403
+
+        response = (
+            supabase
+            .table('room_messages')
+            .select('*, users(user_name, full_name, avatar_url)')
+            .eq('room_id', room_id)
+            .order('sent_at', desc=True)
+            .limit(1)
+            .execute()
+        )
+        if not response.data:
+            return jsonify({})
+        message = response.data[0]
+        user = message.get('users') or {}
+        avatar_path = user.get('avatar_url')
+        if avatar_path and not avatar_path.startswith('http'):
+            user['avatar_url'] = supabase.storage.from_('avatars').get_public_url(avatar_path)
+            message['users'] = user
+
+        return jsonify(message)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500

@@ -10,6 +10,8 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.studygroupchat.R
 import com.example.studygroupchat.model.room.Room
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 
 class RoomAdapter(
@@ -28,25 +30,16 @@ class RoomAdapter(
         val btnJoin: Button = itemView.findViewById(R.id.btnJoin)
         val tvMember: TextView = itemView.findViewById(R.id.tvmember)
         val tvTime: TextView = itemView.findViewById(R.id.tvtime)
+    }
 
-//        fun bind(room: Room) {
-//            courseTitle.text = room.roomName
-//            courseDescription.text = room.description
-//            courseStatus.text = if (room.isActive) "Đang học" else "Tạm dừng"
-//            courseStatus.setBackgroundResource(if (room.isActive) R.drawable.bg_status_active else R.drawable.bg_status_pause)
-//            courseStatus.setTextColor(
-//                ContextCompat.getColor(
-//                    itemView.context,
-//                    if (room.isActive) R.color.green_600 else R.color.orange_600
-//                )
-//            )
-//            courseMember.text = room.memberCount.toString()
-//            courseMember.visibility = if (room.showMemberCount) View.VISIBLE else View.GONE
-//
-//            btnJoin.setOnClickListener {
-//                // xử lý khi click vào nút tham gia
-//            }
-//        }
+    private fun formatCreatedAt(raw: String?): String {
+        if (raw.isNullOrBlank()) return ""
+        return try {
+            val dt = LocalDateTime.parse(raw, DateTimeFormatter.ISO_DATE_TIME)
+            dt.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))
+        } catch (e: Exception) {
+            raw ?: ""
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RoomViewHolder {
@@ -65,18 +58,18 @@ class RoomAdapter(
         val textColorRes = if (room.isActive) R.color.green_600 else R.color.orange_600
         val backgroundRes = if (room.isActive) R.drawable.bg_status_active else R.drawable.bg_status_pause
 
-    // Áp dụng màu chữ cho textStatus
-            holder.courseStatus.setTextColor(
-                ContextCompat.getColor(holder.itemView.context, textColorRes)
-            )
+        // Áp dụng màu chữ cho textStatus
+        holder.courseStatus.setTextColor(
+            ContextCompat.getColor(holder.itemView.context, textColorRes)
+        )
 
-    // Áp dụng background cho courseStatus
+        // Áp dụng background cho courseStatus
         holder.courseStatus.setBackgroundResource(backgroundRes)
 
         // Hiển thị các view theo điều kiện
         if (isJoinRoom) {
             holder.courseMember.text = room.members?.size?.toString() ?: "0"
-            holder.tvTimeCreate.text = room.createdAt
+            holder.tvTimeCreate.text = "Tạo ngày: ${formatCreatedAt(room.createdAt)}"
             holder.courseMember.visibility = View.VISIBLE
             holder.courseStatus.visibility = View.GONE
             holder.tvTime.visibility = View.GONE

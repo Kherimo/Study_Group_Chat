@@ -35,4 +35,17 @@ class RoomMessageRepository(private val apiService: RoomMessageApiService) {
                 Result.failure(e)
             }
         }
+
+    suspend fun getLastRoomMessage(roomId: String): Result<RoomMessage?> = withContext(Dispatchers.IO) {
+        try {
+            val response = apiService.getLastMessage(roomId)
+            if (response.isSuccessful) {
+                Result.success(response.body())
+            } else {
+                Result.failure(Exception("Failed to get last message: ${response.code()}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }

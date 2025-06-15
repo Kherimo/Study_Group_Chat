@@ -42,7 +42,9 @@ class JoinRoomFragment : Fragment() {
         editCodeRoom = view.findViewById(R.id.editcodeRoom)
         val btnJoin = view.findViewById<MaterialButton>(R.id.btnJoin)
 
-        adapter = RoomAdapter(emptyList(), isJoinRoom = true)
+        adapter = RoomAdapter(emptyList(), isJoinRoom = true) { room ->
+            room.inviteCode?.let { viewModel.joinRoom(it) }
+        }
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
 
@@ -65,6 +67,6 @@ class JoinRoomFragment : Fragment() {
             }
         }
 
-        viewModel.fetchMyRooms()
+        viewModel.fetchPublicRooms()
     }
 }
