@@ -58,6 +58,29 @@ def get_my_rooms(current_user_id):
             if avatar_path and not avatar_path.startswith('http'):
                 room['avatar_url'] = supabase.storage.from_('avatars').get_public_url(avatar_path)
 
+            try:
+                latest_resp = (
+                    supabase
+                    .table('room_messages')
+                    .select('*, users(user_name, full_name, avatar_url)')
+                    .eq('room_id', room['room_id'])
+                    .order('sent_at', desc=True)
+                    .limit(1)
+                    .execute()
+                )
+                if latest_resp.data:
+                    message = latest_resp.data[0]
+                    user = message.get('users') or {}
+                    avatar_path = user.get('avatar_url')
+                    if avatar_path and not avatar_path.startswith('http'):
+                        user['avatar_url'] = supabase.storage.from_('avatars').get_public_url(avatar_path)
+                        message['users'] = user
+                    room['latest_message'] = message
+                else:
+                    room['latest_message'] = None
+            except Exception:
+                room['latest_message'] = None
+
             result_rooms.append(room)
 
         return jsonify(result_rooms)

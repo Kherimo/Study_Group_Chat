@@ -40,6 +40,8 @@ class GroupChatActivity : AppCompatActivity() {
 
     private var groupId: String? = null
     private var groupName: String? = null
+    private var groupMode: String? = null
+    private var memberCount: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,9 +53,16 @@ class GroupChatActivity : AppCompatActivity() {
 // Lấy dữ liệu từ Intent
         groupId = intent.getStringExtra("groupId")
         groupName = intent.getStringExtra("groupName")
+        groupMode = intent.getStringExtra("groupMode")
+        memberCount = intent.getIntExtra("memberCount", 0)
 
         supportActionBar?.title = groupName ?: "Tên nhóm"
-        supportActionBar?.subtitle = "Lớp học Toán 10A"
+        val modeText = when (groupMode) {
+            "public" -> "Công khai"
+            "private" -> "Riêng tư"
+            else -> groupMode ?: ""
+        }
+        supportActionBar?.subtitle = "$modeText • ${memberCount} thành viên"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
 
@@ -64,15 +73,17 @@ class GroupChatActivity : AppCompatActivity() {
         messageList = mutableListOf()
 
         messageAdapter = MessageAdapter(messageList)
-        recyclerMessages.layoutManager = LinearLayoutManager(this)
+        recyclerMessages.layoutManager = LinearLayoutManager(this).apply {
+            stackFromEnd = true
+        }
         recyclerMessages.adapter = messageAdapter
 
         etMessage.setOnClickListener {
-            recyclerMessages.scrollToPosition(messageList.size - 1)
+            scrollToBottom()
         }
         etMessage.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
-                recyclerMessages.scrollToPosition(messageList.size - 1)
+                scrollToBottom()
             }
         }
 
@@ -88,7 +99,7 @@ class GroupChatActivity : AppCompatActivity() {
             messageList.clear()
             messageList.addAll(messages)
             messageAdapter.notifyDataSetChanged()
-            recyclerMessages.scrollToPosition(messageList.size - 1)
+            scrollToBottom()
         }
 
         groupId?.let { viewModel.fetchRoomMessages(it) }
@@ -100,6 +111,10 @@ class GroupChatActivity : AppCompatActivity() {
                 etMessage.text.clear()
             }
         }
+    }
+
+    private fun scrollToBottom() {
+        recyclerMessages.scrollToPosition(messageList.size - 1)
     }
 
     // Xử lý nút back trên thanh toolbar

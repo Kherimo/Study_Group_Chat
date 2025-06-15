@@ -16,7 +16,6 @@ import com.example.studygroupchat.adapter.GroupAdapter
 import com.example.studygroupchat.api.ApiConfig
 import com.example.studygroupchat.model.Group
 import com.example.studygroupchat.repository.RoomRepository
-import com.example.studygroupchat.repository.RoomMessageRepository
 import com.example.studygroupchat.viewmodel.RoomViewModel
 import com.example.studygroupchat.viewmodel.RoomViewModelFactory
 import kotlinx.coroutines.launch
@@ -31,7 +30,6 @@ class ChatFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var groupAdapter: GroupAdapter
     private val groupList = mutableListOf<Group>()
-    private val messageRepo = RoomMessageRepository(ApiConfig.roomMessageApiService)
 
     private val viewModel: RoomViewModel by viewModels {
         RoomViewModelFactory(RoomRepository(ApiConfig.roomApiService))
@@ -50,6 +48,8 @@ class ChatFragment : Fragment() {
             val intent = Intent(requireContext(), GroupChatActivity::class.java)
             intent.putExtra("groupId", group.id)
             intent.putExtra("groupName", group.name)
+            intent.putExtra("groupMode", group.roomMode)
+            intent.putExtra("memberCount", group.memberCount)
             startActivity(intent)
         }
 
@@ -59,19 +59,23 @@ class ChatFragment : Fragment() {
             viewLifecycleOwner.lifecycleScope.launch {
                 groupList.clear()
                 for (room in rooms) {
-                    val lastResult = messageRepo.getLastRoomMessage(room.roomId.toString())
-                    val last = lastResult.getOrNull()
+                    val last = room.latestMessage
                     val timeText = formatRelativeTime(last?.sentAt)
+                    val timestamp = parseTimestamp(last?.sentAt)
                     groupList.add(
                         Group(
                             room.roomId.toString(),
                             room.roomName,
                             last?.content ?: "",
                             room.avatarUrl,
-                            timeText
+                            timeText,
+                            timestamp,
+                            room.roomMode,
+                            room.members?.size ?: 0
                         )
                     )
                 }
+                groupList.sortByDescending { it.lastMessageTimestamp ?: Long.MIN_VALUE }
                 groupAdapter.notifyDataSetChanged()
             }
         }
@@ -102,6 +106,22 @@ class ChatFragment : Fragment() {
             }
         } catch (e: Exception) {
             ""
+        }
+    }
+
+    private fun parseTimestamp(raw: String?): Long? {
+        if (raw.isNullOrBlank()) return null
+        return try {
+            val instant = try {
+                Instant.parse(raw)
+            } catch (e: Exception) {
+                LocalDateTime.parse(raw, DateTimeFormatter.ISO_DATE_TIME)
+                    .atZone(ZoneId.systemDefault())
+                    .toInstant()
+            }
+            instant.toEpochMilli()
+        } catch (e: Exception) {
+            null
         }
     }
 }

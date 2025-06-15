@@ -3,14 +3,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:padding="8dp">
+
+    <TextView
+        android:id="@+id/tvDateHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="15/06/2025"
+        android:textColor="#64748B"
+        android:textSize="12sp"
+        android:gravity="center"
+        android:visibility="gone"
+        android:paddingVertical="4dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
 
     <ImageView
         android:id="@+id/imgAvatar"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_gravity="bottom"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_gravity="center_vertical"
         android:src="@drawable/baseline_account_circle_24"
         android:scaleType="centerCrop"
         android:background="@drawable/bg_circle"/>
@@ -29,7 +46,7 @@
             android:textSize="12sp"
             android:textColor="#64748B"
             android:layout_marginBottom="2dp"
-            android:layout_marginStart="10dp"/>
+            android:layout_marginStart="5dp"/>
 
         <FrameLayout
             android:layout_width="wrap_content"
@@ -45,7 +62,7 @@
                 android:id="@+id/tvMessage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Đây là một tin nhắn mẫu."
+                android:text="hi"
                 android:textColor="#1E293B"
                 android:textSize="15sp"
                 android:visibility="visible"/> <!-- Hiển thị  -->
@@ -102,6 +119,20 @@
                 </LinearLayout>
             </LinearLayout>
         </FrameLayout>
+
+        <TextView
+            android:id="@+id/tvTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="15:03"
+            android:textSize="10sp"
+            android:textColor="#64748B"
+            android:paddingStart="5dp"
+            android:layout_gravity="start"
+            android:layout_marginTop="2dp" />
+
+    </LinearLayout>
+
 
     </LinearLayout>
 

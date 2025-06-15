@@ -42,7 +42,10 @@ data class Room(
 
     // JOIN từ bảng room_members (nếu API cung cấp)
     @SerializedName("members")
-    val members: List<User>? = null
+    val members: List<User>? = null,
+
+    @SerializedName("latest_message")
+    val latestMessage: RoomMessage? = null
 ) {
     // ✅ Tính toán trạng thái hoạt động
     val isActive: Boolean

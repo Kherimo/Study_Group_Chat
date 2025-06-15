@@ -50,7 +50,7 @@ class RoomAdapter(
     override fun onBindViewHolder(holder: RoomViewHolder, position: Int) {
         val room = roomList[position]
 //        holder.courseTitle.text = room.roomName
-        holder.courseTitle.text = room.roomName + " (Mã mời: " + room.inviteCode + ")"
+        holder.courseTitle.text = room.roomName
         holder.courseDescription.text = room.description ?: ""
         holder.courseStatus.text = if (room.isActive) "Đang học" else "Đã dừng"
 
