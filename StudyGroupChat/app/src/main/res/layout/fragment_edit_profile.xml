@@ -21,7 +21,6 @@
             android:paddingHorizontal="20dp"
             android:gravity="center_vertical">
 
-            <!-- Thêm nút Back/Close nếu cần -->
             <ImageView
                 android:id="@+id/btnCancel"
                 android:layout_width="32dp"
@@ -62,9 +61,9 @@
                 android:id="@+id/tabLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/background_block"
                 app:tabMode="fixed"
-                app:tabGravity="fill" />
+                app:tabGravity="fill"
+                android:contentDescription="Các tùy chọn chỉnh sửa hồ sơ" />
 
             <!-- ViewPager để hiển thị nội dung tab -->
             <androidx.viewpager2.widget.ViewPager2
@@ -84,10 +83,8 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnSave"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="8dp"
                     android:text="Lưu thay đổi"
                     android:textAllCaps="false"
                     android:textSize="16sp"

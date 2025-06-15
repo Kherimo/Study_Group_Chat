@@ -32,6 +32,17 @@ class RoomViewModel(private val repository: RoomRepository) : ViewModel() {
         }
     }
 
+    fun fetchPublicRooms() {
+        viewModelScope.launch {
+            _isLoading.value = true
+            val result = repository.getPublicRooms()
+            result.onSuccess {
+                _rooms.value = it
+            }
+            _isLoading.value = false
+        }
+    }
+
     fun getRoom(roomId: String) {
         viewModelScope.launch {
             _isLoading.value = true
@@ -46,8 +57,7 @@ class RoomViewModel(private val repository: RoomRepository) : ViewModel() {
             val result = repository.joinRoom(inviteCode)
             _joinResult.value = result
             if (result.isSuccess) {
-                // refresh room list after successful join
-                fetchMyRooms()
+                fetchPublicRooms()
             }
             _isLoading.value = false
         }

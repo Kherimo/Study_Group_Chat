@@ -20,22 +20,19 @@
         app:menu="@menu/bottom_nav_menu"
         android:theme="@style/ThemeOverlay.Material3.Dark.ActionBar"
         />
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="@drawable/background_root_item">
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerMessages"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="8dp"/>
-        </ScrollView>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerMessages"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/background_root_item"
+        android:padding="8dp"/>
 
     <LinearLayout
         android:orientation="horizontal"
-        android:padding="8dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:gravity="center"
         android:background="#FFFFFF"
         android:layout_width="match_parent"

@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-# import logging
+import logging
 import os
 from api.authen import authen_bp
 from api.autho import autho_bp

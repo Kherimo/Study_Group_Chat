@@ -1,11 +1,13 @@
 package com.example.studygroupchat.ui.fragments
 
 import android.app.DatePickerDialog
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -15,16 +17,27 @@ import com.example.studygroupchat.databinding.FragmentCreateRoomBinding
 import com.example.studygroupchat.viewmodel.CreateRoomViewModel
 import com.example.studygroupchat.viewmodel.CreateRoomViewModelFactory
 import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
 class CreateRoomFragment : Fragment() {
     private var _binding: FragmentCreateRoomBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: CreateRoomViewModel by viewModels { 
+    private val viewModel: CreateRoomViewModel by viewModels {
         CreateRoomViewModelFactory(ApiConfig.roomApiService)
     }
     private var selectedDate: Date? = null
+    private var selectedPart: MultipartBody.Part? = null
+    private var inviteCode: String = generateInviteCode()
+
+    private val pickImageLauncher =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            uri?.let { handleImageSelected(it) }
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,6 +50,7 @@ class CreateRoomFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        updateInviteCodeDisplay()
         setupListeners()
         observeViewModel()
     }
@@ -48,6 +62,23 @@ class CreateRoomFragment : Fragment() {
 
         binding.editdate.setOnClickListener {
             showDatePicker()
+        }
+
+        binding.imgRoomAvatar.setOnClickListener {
+            pickImageLauncher.launch("image/*")
+        }
+
+        binding.tvChangePhoto.setOnClickListener {
+            pickImageLauncher.launch("image/*")
+        }
+
+        binding.tvCopyCode.setOnClickListener {
+            copyInviteCode()
+        }
+
+        binding.ivChangeCode.setOnClickListener {
+            inviteCode = generateInviteCode()
+            updateInviteCodeDisplay()
         }
 
         binding.btCreateRoom.setOnClickListener {
@@ -81,6 +112,26 @@ class CreateRoomFragment : Fragment() {
         }
     }
 
+    private fun handleImageSelected(uri: Uri) {
+        binding.imgRoomAvatar.setImageURI(uri)
+        val file = File(requireContext().cacheDir, "room_avatar")
+        val input = requireContext().contentResolver.openInputStream(uri)
+        file.outputStream().use { out ->
+            input?.copyTo(out)
+        }
+        val requestBody = file.asRequestBody("image/*".toMediaTypeOrNull())
+        selectedPart = MultipartBody.Part.createFormData("avatar", file.name, requestBody)
+    }
+
+    private fun generateInviteCode(length: Int = 8): String {
+        val chars = (('A'..'Z') + ('0'..'9')).joinToString("")
+        return (1..length).map { chars.random() }.joinToString("")
+    }
+
+    private fun updateInviteCodeDisplay() {
+        binding.tvCode.text = inviteCode
+    }
+
     private fun createRoom() {
         val roomName = binding.editNameRoom.text.toString()
         val description = binding.editdescribe.text.toString()
@@ -101,8 +152,16 @@ class CreateRoomFragment : Fragment() {
             return
         }
 
+        val roomMode = if (binding.radioPublic.isChecked) "public" else "private"
 
-        viewModel.createRoom(roomName, description, expiredAt)
+        viewModel.createRoom(selectedPart, roomName, description, roomMode, expiredAt)
+    }
+
+    private fun copyInviteCode() {
+        val clipboard = requireContext().getSystemService(android.content.Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
+        val clip = android.content.ClipData.newPlainText("Invite Code", inviteCode)
+        clipboard.setPrimaryClip(clip)
+        Toast.makeText(requireContext(), "Đã sao chép mã mời", Toast.LENGTH_SHORT).show()
     }
 
     private fun observeViewModel() {

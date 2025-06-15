@@ -8,20 +8,40 @@ import android.widget.EditText
 import android.widget.ImageButton
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.activity.viewModels
 import com.example.studygroupchat.adapter.MessageAdapter
-import com.example.studygroupchat.model.Message
+import com.example.studygroupchat.api.ApiConfig
+import com.example.studygroupchat.model.room.RoomMessage
+import com.example.studygroupchat.repository.RoomMessageRepository
+import com.example.studygroupchat.repository.UserRepository
+import com.example.studygroupchat.viewmodel.RoomMessageViewModel
+import com.example.studygroupchat.viewmodel.RoomMessageViewModelFactory
+import com.example.studygroupchat.viewmodel.UserViewModel
+import com.example.studygroupchat.viewmodel.UserViewModelFactory
 import com.google.android.material.appbar.MaterialToolbar
 
 class GroupChatActivity : AppCompatActivity() {
 
-    private lateinit var messageList: MutableList<Message>
+    private lateinit var messageList: MutableList<RoomMessage>
     private lateinit var messageAdapter: MessageAdapter
     private lateinit var recyclerMessages: RecyclerView
     private lateinit var etMessage: EditText
     private lateinit var btnSend: ImageButton
 
+    private val userViewModel: UserViewModel by viewModels {
+        UserViewModelFactory(UserRepository(ApiConfig.userApiService))
+    }
+
+    private var currentUserId: Int = 0
+
+    private val viewModel: RoomMessageViewModel by viewModels {
+        RoomMessageViewModelFactory(RoomMessageRepository(ApiConfig.roomMessageApiService))
+    }
+
     private var groupId: String? = null
     private var groupName: String? = null
+    private var groupMode: String? = null
+    private var memberCount: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,9 +53,16 @@ class GroupChatActivity : AppCompatActivity() {
 // Lấy dữ liệu từ Intent
         groupId = intent.getStringExtra("groupId")
         groupName = intent.getStringExtra("groupName")
+        groupMode = intent.getStringExtra("groupMode")
+        memberCount = intent.getIntExtra("memberCount", 0)
 
         supportActionBar?.title = groupName ?: "Tên nhóm"
-        supportActionBar?.subtitle = "Lớp học Toán 10A"
+        val modeText = when (groupMode) {
+            "public" -> "Công khai"
+            "private" -> "Riêng tư"
+            else -> groupMode ?: ""
+        }
+        supportActionBar?.subtitle = "$modeText • ${memberCount} thành viên"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
 
@@ -43,27 +70,51 @@ class GroupChatActivity : AppCompatActivity() {
         etMessage = findViewById(R.id.etMessage)
         btnSend = findViewById(R.id.btnSend)
 
-        messageList = mutableListOf(
-            Message("A", "Xin chào mọi người"),
-            Message("B", "Chào bạn"),
-        )
+        messageList = mutableListOf()
 
         messageAdapter = MessageAdapter(messageList)
-        recyclerMessages.layoutManager = LinearLayoutManager(this)
+        recyclerMessages.layoutManager = LinearLayoutManager(this).apply {
+            stackFromEnd = true
+        }
         recyclerMessages.adapter = messageAdapter
+
+        etMessage.setOnClickListener {
+            scrollToBottom()
+        }
+        etMessage.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                scrollToBottom()
+            }
+        }
+
+        userViewModel.user.observe(this) { user ->
+            currentUserId = user.userId
+            messageAdapter.currentUserId = currentUserId
+            messageAdapter.notifyDataSetChanged()
+        }
+
+        userViewModel.fetchCurrentUser()
+
+        viewModel.messages.observe(this) { messages ->
+            messageList.clear()
+            messageList.addAll(messages)
+            messageAdapter.notifyDataSetChanged()
+            scrollToBottom()
+        }
+
+        groupId?.let { viewModel.fetchRoomMessages(it) }
 
         btnSend.setOnClickListener {
             val content = etMessage.text.toString().trim()
             if (content.isNotEmpty()) {
-                val message = Message("You", content)
-                messageList.add(message)
-                messageAdapter.notifyItemInserted(messageList.size - 1)
-                recyclerMessages.scrollToPosition(messageList.size - 1)
+                groupId?.let { viewModel.sendRoomMessage(it, content) }
                 etMessage.text.clear()
-
-                // TODO: gửi message lên server nếu cần
             }
         }
+    }
+
+    private fun scrollToBottom() {
+        recyclerMessages.scrollToPosition(messageList.size - 1)
     }
 
     // Xử lý nút back trên thanh toolbar

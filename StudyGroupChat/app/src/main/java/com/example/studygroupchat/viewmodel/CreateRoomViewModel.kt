@@ -5,25 +5,35 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.studygroupchat.api.RoomApiService
-import com.example.studygroupchat.model.room.CreateRoomRequest
 import com.example.studygroupchat.model.room.Room
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
 
 class CreateRoomViewModel(private val roomApiService: RoomApiService) : ViewModel() {
     private val _createRoomResult = MutableLiveData<Result<Room>>()
     val createRoomResult: LiveData<Result<Room>> = _createRoomResult
 
-    fun createRoom(roomName: String, description: String?, expiredAt: String?) {
+    fun createRoom(
+        file: MultipartBody.Part?,
+        roomName: String,
+        description: String?,
+        roomMode: String,
+        expiredAt: String?
+    ) {
         viewModelScope.launch {
             try {
-                val request = CreateRoomRequest(
-                    roomName = roomName,
-                    description = description,
-                    expiredAt = expiredAt
+                val response = roomApiService.createRoom(
+                    file,
+                    roomName.toRequestBody("text/plain".toMediaTypeOrNull()),
+                    description?.toRequestBody("text/plain".toMediaTypeOrNull()),
+                    roomMode.toRequestBody("text/plain".toMediaTypeOrNull()),
+                    expiredAt?.toRequestBody("text/plain".toMediaTypeOrNull())
                 )
-                val response = roomApiService.createRoom(request)
                 if (response.isSuccessful) {
                     response.body()?.let {
                         _createRoomResult.value = Result.success(it)

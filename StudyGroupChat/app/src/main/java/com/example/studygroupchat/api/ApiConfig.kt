@@ -48,6 +48,10 @@ object ApiConfig {
         getRetrofit(context).create(RoomApiService::class.java)
     }
 
+    val roomMessageApiService: RoomMessageApiService by lazy {
+        getRetrofit(context).create(RoomMessageApiService::class.java)
+    }
+
     val userApiService: UserApiService by lazy {
         getRetrofit(context).create(UserApiService::class.java)
     }

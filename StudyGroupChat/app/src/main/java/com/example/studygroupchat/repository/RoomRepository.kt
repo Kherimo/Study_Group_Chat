@@ -20,6 +20,20 @@ class RoomRepository(private val apiService: RoomApiService) {
         }
     }
 
+    suspend fun getPublicRooms(): Result<List<Room>> = withContext(Dispatchers.IO) {
+        try {
+            val response = apiService.getPublicRooms()
+            if (response.isSuccessful) {
+                response.body()?.let { Result.success(it) }
+                    ?: Result.failure(Exception("Empty response body"))
+            } else {
+                Result.failure(Exception("Failed to get rooms: ${response.code()}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
     suspend fun getRoom(roomId: String): Result<Room> = withContext(Dispatchers.IO) {
         try {
             val response = apiService.getRoom(roomId)
