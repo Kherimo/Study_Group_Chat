@@ -15,6 +15,7 @@ import com.example.studygroupchat.R
 import com.example.studygroupchat.adapter.RoomAdapter
 import com.example.studygroupchat.api.ApiConfig
 import com.example.studygroupchat.repository.RoomRepository
+import com.example.studygroupchat.StudyGroupChatApplication
 import com.example.studygroupchat.viewmodel.RoomViewModel
 import com.example.studygroupchat.viewmodel.RoomViewModelFactory
 import com.google.android.material.button.MaterialButton
@@ -26,7 +27,13 @@ class JoinRoomFragment : Fragment() {
     private lateinit var progressBar: ProgressBar
     private lateinit var editCodeRoom: EditText
     private val viewModel: RoomViewModel by viewModels {
-        RoomViewModelFactory(RoomRepository(ApiConfig.roomApiService))
+        val app = requireActivity().application as StudyGroupChatApplication
+        RoomViewModelFactory(
+            RoomRepository(
+                ApiConfig.roomApiService,
+                app.database.roomDao()
+            )
+        )
     }
 
     override fun onCreateView(

@@ -14,6 +14,7 @@ import com.example.studygroupchat.api.ApiConfig
 import com.example.studygroupchat.model.room.RoomMessage
 import com.example.studygroupchat.repository.RoomMessageRepository
 import com.example.studygroupchat.repository.UserRepository
+import com.example.studygroupchat.StudyGroupChatApplication
 import com.example.studygroupchat.viewmodel.RoomMessageViewModel
 import com.example.studygroupchat.viewmodel.RoomMessageViewModelFactory
 import com.example.studygroupchat.viewmodel.UserViewModel
@@ -29,13 +30,25 @@ class GroupChatActivity : AppCompatActivity() {
     private lateinit var btnSend: ImageButton
 
     private val userViewModel: UserViewModel by viewModels {
-        UserViewModelFactory(UserRepository(ApiConfig.userApiService))
+        val app = application as StudyGroupChatApplication
+        UserViewModelFactory(
+            UserRepository(
+                ApiConfig.userApiService,
+                app.database.userDao()
+            )
+        )
     }
 
     private var currentUserId: Int = 0
 
     private val viewModel: RoomMessageViewModel by viewModels {
-        RoomMessageViewModelFactory(RoomMessageRepository(ApiConfig.roomMessageApiService))
+        val app = application as StudyGroupChatApplication
+        RoomMessageViewModelFactory(
+            RoomMessageRepository(
+                ApiConfig.roomMessageApiService,
+                app.database.messageDao()
+            )
+        )
     }
 
     private var groupId: String? = null

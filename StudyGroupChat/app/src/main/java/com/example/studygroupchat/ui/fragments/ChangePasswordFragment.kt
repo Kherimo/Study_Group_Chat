@@ -10,13 +10,20 @@ import androidx.fragment.app.viewModels
 import com.example.studygroupchat.R
 import com.example.studygroupchat.api.ApiConfig
 import com.example.studygroupchat.repository.UserRepository
+import com.example.studygroupchat.StudyGroupChatApplication
 import com.example.studygroupchat.viewmodel.UserViewModel
 import com.example.studygroupchat.viewmodel.UserViewModelFactory
 
 class ChangePasswordFragment : Fragment() {
 
     private val viewModel: UserViewModel by viewModels({ requireParentFragment() }) {
-        UserViewModelFactory(UserRepository(ApiConfig.userApiService))
+        val app = requireActivity().application as StudyGroupChatApplication
+        UserViewModelFactory(
+            UserRepository(
+                ApiConfig.userApiService,
+                app.database.userDao()
+            )
+        )
     }
 
     private lateinit var edtCurrent: EditText
