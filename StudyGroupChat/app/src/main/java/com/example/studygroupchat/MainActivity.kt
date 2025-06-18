@@ -5,9 +5,16 @@ import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
 import androidx.activity.viewModels
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.widget.Toast
+import androidx.core.content.getSystemService
+import com.example.studygroupchat.utils.NetworkWatcher
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import android.widget.ProgressBar
+import com.example.studygroupchat.StudyGroupChatApplication
 import com.example.studygroupchat.ui.LoginActivity
 import com.example.studygroupchat.ui.fragments.AIChatFragment
 import com.example.studygroupchat.ui.fragments.ChatFragment
@@ -30,6 +37,8 @@ class MainActivity : BaseActivity() {
     private lateinit var fab: FloatingActionButton
     private lateinit var bottomAppBar: BottomAppBar
     private lateinit var bottomNav: BottomNavigationView
+    private lateinit var syncProgressBar: ProgressBar
+    private var networkWatcher: NetworkWatcher? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +55,18 @@ class MainActivity : BaseActivity() {
                 // Đã đăng nhập => hiển thị giao diện chính
                 setContentView(R.layout.activity_main)
                 setupMainUI()
+                val app = application as StudyGroupChatApplication
+                if (!isNetworkAvailable()) {
+                    networkWatcher = NetworkWatcher(this@MainActivity) {
+                        lifecycleScope.launch {
+                            syncProgressBar.visibility = View.VISIBLE
+                            app.syncManager.syncAll()
+                            syncProgressBar.visibility = View.GONE
+                            networkWatcher?.unregister()
+                        }
+                    }
+                    networkWatcher?.register()
+                }
 
                 viewModel.startAutoRefreshToken()
 
@@ -53,6 +74,8 @@ class MainActivity : BaseActivity() {
                 fab = findViewById(R.id.floatingActionButton)
                 bottomAppBar = findViewById(R.id.bottomAppBar)
                 bottomNav = findViewById(R.id.bottom_nav)
+                syncProgressBar = findViewById(R.id.syncProgressBar)
+
 
                 // Lắng nghe back stack để hiện lại bottom khi quay về
                 supportFragmentManager.addOnBackStackChangedListener {
@@ -135,5 +158,16 @@ class MainActivity : BaseActivity() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, fragment)
             .commit()
+    }
+    private fun isNetworkAvailable(): Boolean {
+        val cm = getSystemService<ConnectivityManager>() ?: return false
+        val network = cm.activeNetwork ?: return false
+        val caps = cm.getNetworkCapabilities(network) ?: return false
+        return caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        networkWatcher?.unregister()
     }
 }
