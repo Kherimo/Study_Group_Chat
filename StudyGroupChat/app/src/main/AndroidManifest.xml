@@ -18,6 +18,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ui.fragments.MemberListActivity"
+            android:exported="false" />
+        <activity
             android:name=".BaseActivity"
             android:exported="false" />
         <activity
@@ -36,8 +39,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustPan"
-            />
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.LoginActivity"
             android:exported="false" />
@@ -47,7 +49,6 @@
         <activity
             android:name=".ui.fragments.GroupChatActivity"
             android:exported="false" />
-
     </application>
 
 </manifest>

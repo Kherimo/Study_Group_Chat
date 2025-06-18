@@ -52,19 +52,25 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_margin="20dp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="20dp"
             android:layout_weight="1"
             android:background="@drawable/background_block"
             android:orientation="vertical"
 
             >
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerGroupList"
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="80dp">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerGroupList"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
 
-                tools:listitem="@layout/item_chat_group" />
+                    tools:listitem="@layout/item_chat" />
+            </ScrollView>
+
 
         </LinearLayout>
     </LinearLayout>

@@ -60,14 +60,14 @@
                 android:layout_weight="1"
                 android:fillViewport="true"
                 android:clipToPadding="false"
-                android:paddingBottom="15dp">
+                android:layout_marginTop="20dp"
+                android:paddingBottom="20dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:paddingHorizontal="20dp"
-                    android:paddingTop="20dp">
+                    android:paddingHorizontal="20dp">
 
                     <!-- Ảnh phòng -->
                     <LinearLayout

@@ -1,0 +1,6 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/menu_members"
+        android:title="Thành viên"
+        android:icon="@drawable/outline_more_vert_24"
+        app:showAsAction="always"/>
+</menu>

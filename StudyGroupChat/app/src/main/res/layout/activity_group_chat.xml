@@ -17,7 +17,6 @@
         android:titleTextColor="@android:color/white"
         android:subtitleTextColor="@android:color/white"
         android:elevation="4dp"
-        app:menu="@menu/bottom_nav_menu"
         android:theme="@style/ThemeOverlay.Material3.Dark.ActionBar"
         />
 
@@ -34,16 +33,16 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:gravity="center"
-        android:background="#FFFFFF"
+        android:background="@drawable/bg_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >
-        <ImageButton
+        <TextView
             android:id="@+id/btnFile"
             android:layout_width="wrap_content"
             android:background="@android:color/transparent"
             android:layout_height="wrap_content"
-            android:src="@drawable/outline_attach_file_24"
+            android:drawableStart="@drawable/outline_attach_file_24"
             android:contentDescription="add file"
             />
 
@@ -53,16 +52,17 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:hint="Nhập tin nhắn..."
-            android:background="@drawable/bg_edittext"
+            android:background="@null"
             android:textSize="16sp"
             android:padding="15dp"
             android:layout_marginRight="5dp"/>
 
-        <ImageButton
+        <TextView
+
             android:id="@+id/btnSend"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_send"
+            android:drawableStart="@drawable/ic_send"
             android:background="@android:color/transparent"
             android:contentDescription="Gửi"/>
     </LinearLayout>

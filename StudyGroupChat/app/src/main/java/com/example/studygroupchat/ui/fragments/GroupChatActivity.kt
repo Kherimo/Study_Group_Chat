@@ -1,11 +1,14 @@
 package com.example.studygroupchat.ui.fragments
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
 
 import com.example.studygroupchat.R
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.activity.viewModels
@@ -26,7 +29,7 @@ class GroupChatActivity : AppCompatActivity() {
     private lateinit var messageAdapter: MessageAdapter
     private lateinit var recyclerMessages: RecyclerView
     private lateinit var etMessage: EditText
-    private lateinit var btnSend: ImageButton
+    private lateinit var btnSend: TextView
 
     private val userViewModel: UserViewModel by viewModels {
         UserViewModelFactory(UserRepository(ApiConfig.userApiService))
@@ -49,6 +52,7 @@ class GroupChatActivity : AppCompatActivity() {
 
         val toolbar = findViewById<MaterialToolbar>(R.id.toolbarGroupChat)
         setSupportActionBar(toolbar)
+
 
 // Lấy dữ liệu từ Intent
         groupId = intent.getStringExtra("groupId")
@@ -122,4 +126,19 @@ class GroupChatActivity : AppCompatActivity() {
         finish()
         return true
     }
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.toolbar_menu, menu)
+
+        // Lấy menu item
+        val memberItem = menu.findItem(R.id.menu_members)
+
+        // Gọi trực tiếp luôn hành động (không chờ click)
+        memberItem.setOnMenuItemClickListener {
+            startActivity(Intent(this, MemberListActivity::class.java))
+            true
+        }
+
+        return true
+    }
+
 }

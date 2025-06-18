@@ -63,14 +63,6 @@
                         android:textColor="#1E293B"
                         android:textSize="20sp"
                         android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/viewAllMyCourse"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Xem tất cả"
-                        android:textColor="#4F46E5"
-                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <!-- RecyclerView bây giờ sẽ lấp đầy LinearLayout cha của nó -->
@@ -84,7 +76,7 @@
                     android:clipToPadding="false"
                     android:paddingStart="5dp"
                     android:paddingEnd="5dp"
-                    android:paddingBottom="10dp"
+                    android:paddingBottom="90dp"
                     tools:itemCount="3"
                     tools:listitem="@layout/item_course" />
 

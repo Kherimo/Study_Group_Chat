@@ -3,11 +3,13 @@ package com.example.studygroupchat
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.FrameLayout
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.studygroupchat.ui.LoginActivity
+import com.example.studygroupchat.ui.fragments.AIChatFragment
 import com.example.studygroupchat.ui.fragments.ChatFragment
 import com.example.studygroupchat.ui.fragments.CreateRoomFragment
 import com.example.studygroupchat.ui.fragments.EditProfileFragment
@@ -69,6 +71,19 @@ class MainActivity : BaseActivity() {
                     }
                 }
 
+                //AI Chat
+
+                val fabAI = findViewById<FloatingActionButton>(R.id.fabAI)
+                val container = findViewById<FrameLayout>(R.id.aiChatContainer)
+
+                fabAI.setOnClickListener {
+                    hideFabButton()
+                    container.visibility = View.VISIBLE
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.aiChatContainer, AIChatFragment())
+                        .commit()
+                }
+
 
                 fab.setOnClickListener {
                     fab.visibility = View.GONE
@@ -106,6 +121,15 @@ class MainActivity : BaseActivity() {
             true
         }
     }
+
+    fun showFabButton() {
+        findViewById<FloatingActionButton>(R.id.fabAI).visibility = View.VISIBLE
+    }
+
+    fun hideFabButton() {
+        findViewById<FloatingActionButton>(R.id.fabAI).visibility = View.GONE
+    }
+
 
     private fun loadFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()

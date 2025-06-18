@@ -15,6 +15,24 @@
 
         />
 
+    <!-- Chat AI container -->
+    <FrameLayout
+        android:id="@+id/aiChatContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+    <!-- Nút trợ lý AI nổi -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAI"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="100dp"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/bot"
+        android:contentDescription="AI Trợ lý"
+        android:backgroundTint="#8B5CF6" />
+
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/bottomAppBar"
         android:layout_width="match_parent"
