@@ -2,6 +2,7 @@ package com.example.studygroupchat.model.room
 
 import com.example.studygroupchat.model.user.User
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class RoomMessage(
     @SerializedName("message_id")
@@ -18,4 +19,4 @@ data class RoomMessage(
     // Thông tin người gửi (khi JOIN bảng users)
     @SerializedName("users")
     val sender: User? = null
-)
+): Serializable

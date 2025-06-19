@@ -4,6 +4,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import com.example.studygroupchat.model.user.User
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -46,7 +47,7 @@ data class Room(
 
     @SerializedName("latest_message")
     val latestMessage: RoomMessage? = null
-) {
+):Serializable {
     // ✅ Tính toán trạng thái hoạt động
     val isActive: Boolean
         @RequiresApi(Build.VERSION_CODES.O)

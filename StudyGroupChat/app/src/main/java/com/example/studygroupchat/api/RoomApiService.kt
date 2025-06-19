@@ -40,4 +40,8 @@ interface RoomApiService {
 
     @GET("api/rooms/{roomId}/members")
     suspend fun getRoomMembers(@Path("roomId") roomId: String): Response<List<RoomMember>>
+
+    @GET("rooms/{id}")
+    suspend fun getRoomById(@Path("id") roomId: Int): Room
+
 }

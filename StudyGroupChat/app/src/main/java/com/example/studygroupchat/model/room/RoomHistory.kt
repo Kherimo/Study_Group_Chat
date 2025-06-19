@@ -1,6 +1,7 @@
 package com.example.studygroupchat.model.room
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class RoomHistory(
     @SerializedName("user_id")
@@ -11,4 +12,4 @@ data class RoomHistory(
     val joinedAt: String,
     @SerializedName("left_at")
     val leftAt: String?
-)
+): Serializable

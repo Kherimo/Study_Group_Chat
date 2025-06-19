@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.fragments.ShareRoomFragment">
+
+    <?xml version="1.0" encoding="utf-8"?>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <Toolbar
+            android:id="@+id/toolbarShareLinkRoom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_root"
+            />
+        <LinearLayout
+            android:id="@+id/layout_group_invite"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="#FFFFFF"
+            android:padding="16dp"
+            android:gravity="center">
+            <ImageView
+                android:layout_width="110dp"
+                android:layout_height="110dp"
+                android:src="@drawable/baseline_groups_24"
+                android:scaleType="centerCrop"
+                android:background="@drawable/bg_circle"
+                android:padding="10dp"/>
+            <!-- Tiêu đề -->
+            <TextView
+                android:id="@+id/tvGroupTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Quản trị dự án phần mềm"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="8dp" />
+
+            <!-- Mô tả -->
+            <TextView
+                android:id="@+id/tvGroupDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mời mọi người tham gia nhóm bằng mã QR hoặc mã phòng dưới đây:"
+                android:textSize="14sp"
+                android:textColor="#555"
+                android:gravity="center"
+                android:layout_marginBottom="16dp" />
+
+            <!-- QR Code -->
+            <ImageView
+                android:id="@+id/imgQRCode"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_marginBottom="16dp"
+                android:src="@drawable/baseline_qr_code_scanner_24"
+                android:scaleType="fitCenter" />
+
+
+            <TextView
+                android:id="@+id/tvGroupCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingVertical="15dp"
+                android:paddingHorizontal="30dp"
+                android:text="ABC123XYZ"
+                android:textAlignment="center"
+                android:background="@drawable/bg_blue"
+                android:textSize="16sp"
+                android:textColor="#1976D2"
+                android:textStyle="bold"
+                android:layout_marginBottom="24dp"/>
+
+            <!-- Các nút -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginTop="8dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginHorizontal="12dp"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/btnCopy"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:padding="10dp"
+                        android:background="@drawable/bg_circle"
+                        android:src="@drawable/baseline_content_copy_24"
+                        android:contentDescription="Sao chép link" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Sao chép mã"
+                        android:textSize="12sp"
+                        android:gravity="center" />
+                </LinearLayout>
+
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginHorizontal="12dp"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/btnDownloadQR"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:padding="10dp"
+                        android:background="@drawable/bg_circle"
+                        android:src="@drawable/outline_download_24"
+                        android:contentDescription="Lưu mã QR" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Lưu mã QR"
+                        android:textSize="12sp"
+                        android:gravity="center" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+
+</FrameLayout>

@@ -1,6 +1,7 @@
 package com.example.studygroupchat.model.user
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class User(
     @SerializedName("user_id")
@@ -19,7 +20,7 @@ data class User(
     val avatarUrl: String?,
     @SerializedName("created_at")
     val createdAt: String
-)
+): Serializable
 data class UpdateUserRequest(
     @SerializedName("full_name")
     val fullName: String? = null,
