@@ -16,8 +16,13 @@ import com.example.studygroupchat.adapter.GroupAdapter
 import com.example.studygroupchat.api.ApiConfig
 import com.example.studygroupchat.model.Group
 import com.example.studygroupchat.repository.RoomRepository
+import com.example.studygroupchat.repository.RoomMessageRepository
+import com.example.studygroupchat.repository.UserRepository
+import com.example.studygroupchat.StudyGroupChatApplication
 import com.example.studygroupchat.viewmodel.RoomViewModel
 import com.example.studygroupchat.viewmodel.RoomViewModelFactory
+import com.example.studygroupchat.viewmodel.UserViewModel
+import com.example.studygroupchat.viewmodel.UserViewModelFactory
 import kotlinx.coroutines.launch
 import java.time.Duration
 import java.time.Instant
@@ -30,9 +35,27 @@ class ChatFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var groupAdapter: GroupAdapter
     private val groupList = mutableListOf<Group>()
+    private lateinit var messageRepository: RoomMessageRepository
+    private var currentUserId: Int = 0
 
     private val viewModel: RoomViewModel by viewModels {
-        RoomViewModelFactory(RoomRepository(ApiConfig.roomApiService))
+        val app = requireActivity().application as StudyGroupChatApplication
+        RoomViewModelFactory(
+            RoomRepository(
+                ApiConfig.roomApiService,
+                app.database.roomDao()
+            )
+        )
+    }
+
+    private val userViewModel: UserViewModel by viewModels {
+        val app = requireActivity().application as StudyGroupChatApplication
+        UserViewModelFactory(
+            UserRepository(
+                ApiConfig.userApiService,
+                app.database.userDao()
+            )
+        )
     }
 
     override fun onCreateView(
@@ -40,6 +63,12 @@ class ChatFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_chat, container, false)
+
+        val app = requireActivity().application as StudyGroupChatApplication
+        messageRepository = RoomMessageRepository(
+            ApiConfig.roomMessageApiService,
+            app.database.messageDao()
+        )
 
         recyclerView = view.findViewById(R.id.recyclerGroupList)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -55,18 +84,35 @@ class ChatFragment : Fragment() {
 
         recyclerView.adapter = groupAdapter
 
+        userViewModel.user.observe(viewLifecycleOwner) { user ->
+            currentUserId = user.userId
+        }
+        userViewModel.fetchCurrentUser()
+
         viewModel.rooms.observe(viewLifecycleOwner) { rooms ->
             viewLifecycleOwner.lifecycleScope.launch {
                 groupList.clear()
                 for (room in rooms) {
-                    val last = room.latestMessage
+                    var last = room.latestMessage
+                    if (last == null) {
+                        last = messageRepository.getLastRoomMessage(room.roomId.toString()).getOrNull()
+                    }
                     val timeText = formatRelativeTime(last?.sentAt)
                     val timestamp = parseTimestamp(last?.sentAt)
+                    val senderName = when {
+                        last?.senderId == currentUserId -> "Bạn"
+                        else -> last?.sender?.fullName ?: last?.sender?.userName ?: ""
+                    }
+                    val messageText = if (last != null && senderName.isNotEmpty()) {
+                        "$senderName: ${last.content ?: ""}"
+                    } else {
+                        last?.content ?: ""
+                    }
                     groupList.add(
                         Group(
                             room.roomId.toString(),
                             room.roomName,
-                            last?.content ?: "",
+                            messageText,
                             room.avatarUrl,
                             timeText,
                             timestamp,

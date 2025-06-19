@@ -79,15 +79,21 @@ class RoomAdapter(
             holder.btnJoin.setOnClickListener { onJoinClick?.invoke(room) }
 
         } else {
-            val memberCount = room.members?.size ?: 0
-            val ownerName = room.owner?.fullName ?: room.owner?.userName ?: ""
-            holder.tvMember.text = "$ownerName • $memberCount thành viên"
+            val memberCount = room.members?.size
+            val ownerName = room.owner?.fullName ?: room.owner?.userName
+
+            if (memberCount != null && ownerName != null) {
+                holder.tvMember.text = "$ownerName • ${memberCount} thành viên"
+                holder.tvMember.visibility = View.VISIBLE
+            } else {
+                holder.tvMember.visibility = View.GONE
+            }
+
             holder.courseMember.visibility = View.GONE
             holder.tvTimeCreate.visibility = View.GONE
             holder.btnJoin.visibility = View.GONE
             holder.courseStatus.visibility = View.VISIBLE
             holder.tvTime.visibility = View.VISIBLE
-            holder.tvMember.visibility = View.VISIBLE
         }
     }
 

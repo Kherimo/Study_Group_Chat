@@ -4,10 +4,11 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.getSystemService
 import androidx.lifecycle.lifecycleScope
 import com.example.studygroupchat.MainActivity
 import com.example.studygroupchat.R
@@ -19,48 +20,53 @@ import kotlinx.coroutines.launch
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {
 
-    private val SPLASH_DELAY: Long = 1000
     private val viewModel: AuthViewModel by viewModels()
+    private lateinit var progressBar: android.widget.ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
-        Handler(Looper.getMainLooper()).postDelayed({
-            // BẮT ĐẦU PHẦN LOGIC MỚI
+        progressBar = findViewById(R.id.progressBar)
 
-            // 1. Kiểm tra trạng thái Onboarding trước tiên
-            val sharedPref = getSharedPreferences("onboarding_prefs", Context.MODE_PRIVATE)
-            val isOnboardingFinished = sharedPref.getBoolean("isFinished", false)
+        // Kiểm tra trạng thái Onboarding trước tiên
+        val sharedPref = getSharedPreferences("onboarding_prefs", Context.MODE_PRIVATE)
+        val isOnboardingFinished = sharedPref.getBoolean("isFinished", false)
 
-            if (!isOnboardingFinished) {
-                // Nếu chưa xem Onboarding -> Chuyển đến OnboardingActivity
-                startActivity(Intent(this, OnboardingActivity::class.java))
-                finish() // Kết thúc SplashActivity
-            } else {
-                // Nếu đã xem Onboarding -> Tiếp tục logic kiểm tra đăng nhập như cũ của bạn
-                checkUserLoginStatus()
-            }
-            // KẾT THÚC PHẦN LOGIC MỚI
-
-        }, SPLASH_DELAY)
+        if (!isOnboardingFinished) {
+            startActivity(Intent(this, OnboardingActivity::class.java))
+            finish()
+        } else {
+            checkUserLoginStatus()
+        }
     }
 
     private fun checkUserLoginStatus() {
         lifecycleScope.launch {
             val userData = viewModel.getTokenData().first()
-            val targetActivity = if (userData.accessToken.isNotEmpty()) {
-                // Đã đăng nhập -> Vào Home
+            val targetActivity: Class<*> = if (userData.accessToken.isNotEmpty()) {
+                if (isNetworkAvailable()) {
+                    progressBar.visibility = android.view.View.VISIBLE
+                    val app = application as com.example.studygroupchat.StudyGroupChatApplication
+                    app.syncManager.syncAll()
+                    progressBar.visibility = android.view.View.GONE
+                }
                 MainActivity::class.java
             } else {
-                // Chưa đăng nhập -> Vào Login
                 LoginActivity::class.java
             }
 
             startActivity(Intent(this@SplashActivity, targetActivity).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             })
-            finish() // Kết thúc SplashActivity
+            finish()
         }
+    }
+
+    private fun isNetworkAvailable(): Boolean {
+        val cm = getSystemService<ConnectivityManager>() ?: return false
+        val network = cm.activeNetwork ?: return false
+        val caps = cm.getNetworkCapabilities(network) ?: return false
+        return caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 }

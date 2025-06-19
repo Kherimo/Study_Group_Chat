@@ -13,6 +13,7 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.example.studygroupchat.api.ApiConfig
 import com.example.studygroupchat.repository.UserRepository
+import com.example.studygroupchat.StudyGroupChatApplication
 import com.example.studygroupchat.viewmodel.UserViewModel
 import com.example.studygroupchat.viewmodel.UserViewModelFactory
 import androidx.fragment.app.viewModels
@@ -26,7 +27,13 @@ class EditProfileFragment : Fragment() {
     private lateinit var viewPager: ViewPager2
     private lateinit var adapter: ViewPagerAdapter
     private val userViewModel: UserViewModel by viewModels {
-        UserViewModelFactory(UserRepository(ApiConfig.userApiService))
+        val app = requireActivity().application as StudyGroupChatApplication
+        UserViewModelFactory(
+            UserRepository(
+                ApiConfig.userApiService,
+                app.database.userDao()
+            )
+        )
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

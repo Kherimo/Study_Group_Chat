@@ -14,6 +14,7 @@ import com.example.studygroupchat.R
 import com.example.studygroupchat.adapter.RoomAdapter
 import com.example.studygroupchat.api.ApiConfig
 import com.example.studygroupchat.repository.RoomRepository
+import com.example.studygroupchat.StudyGroupChatApplication
 import com.example.studygroupchat.viewmodel.RoomViewModel
 import com.example.studygroupchat.viewmodel.RoomViewModelFactory
 
@@ -23,8 +24,15 @@ class HomeFragment : Fragment() {
     private lateinit var adapter: RoomAdapter
     private lateinit var progressBar: ProgressBar
     private val viewModel: RoomViewModel by viewModels {
-        RoomViewModelFactory(RoomRepository(ApiConfig.roomApiService))
+        val app = requireActivity().application as StudyGroupChatApplication
+        RoomViewModelFactory(
+            RoomRepository(
+                ApiConfig.roomApiService,
+                app.database.roomDao()
+            )
+        )
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
