@@ -3,10 +3,13 @@ package com.example.studygroupchat.repository
 import com.example.studygroupchat.api.RoomApiService
 import com.example.studygroupchat.data.local.RoomDao
 import com.example.studygroupchat.data.local.RoomEntity
+import com.example.studygroupchat.model.room.CreateRoomRequest
 import com.example.studygroupchat.model.room.Room
 import com.example.studygroupchat.model.user.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 
 class RoomRepository(
     private val apiService: RoomApiService,
@@ -75,6 +78,35 @@ class RoomRepository(
             Result.failure(e)
         }
     }
+
+    suspend fun updateRoom(
+        roomId: String,
+        file: MultipartBody.Part?,
+        name: RequestBody?,
+        description: RequestBody?,
+        mode: RequestBody?,
+        expiredAt: RequestBody?
+    ): Result<Room> = withContext(Dispatchers.IO) {
+        try {
+            val response = apiService.updateRoom(
+                roomId,
+                file,
+                name,
+                description,
+                mode,
+                expiredAt
+            )
+            if (response.isSuccessful) {
+                response.body()?.let { Result.success(it) }
+                    ?: Result.failure(Exception("Empty response body"))
+            } else {
+                Result.failure(Exception("Failed to update room: ${'$'}{response.code()}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
 
     suspend fun getCachedRooms(): List<Room> = withContext(Dispatchers.IO) {
         roomDao.getRooms().map { it.toModel() }

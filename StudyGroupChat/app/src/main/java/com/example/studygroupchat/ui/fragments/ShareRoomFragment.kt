@@ -1,60 +1,70 @@
 package com.example.studygroupchat.ui.fragments
 
+import android.graphics.Bitmap
+import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import com.example.studygroupchat.R
+import com.example.studygroupchat.model.room.Room
+import com.google.android.material.appbar.MaterialToolbar
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.qrcode.QRCodeWriter
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [ShareRoomFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class ShareRoomFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private var room: Room? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+        room = arguments?.getSerializable(ARG_ROOM) as? Room
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_share_room, container, false)
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ShareRoomFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ShareRoomFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val toolbar = view.findViewById<MaterialToolbar>(R.id.toolbarShareLinkRoom)
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_left)
+        toolbar.setNavigationOnClickListener { parentFragmentManager.popBackStack() }
+
+        room?.let { r ->
+            view.findViewById<TextView>(R.id.tvGroupTitle).text = r.roomName
+            view.findViewById<TextView>(R.id.tvGroupCode).text = r.inviteCode ?: ""
+            r.inviteCode?.let { code ->
+                val link = "studygroupchat://join?code=$code"
+                val bitmap = generateQrBitmap(link)
+                view.findViewById<ImageView>(R.id.imgQRCode).setImageBitmap(bitmap)
             }
+        }
+    }
+
+    private fun generateQrBitmap(content: String): Bitmap {
+        val writer = QRCodeWriter()
+        val bitMatrix = writer.encode(content, BarcodeFormat.QR_CODE, 400, 400)
+        val width = bitMatrix.width
+        val height = bitMatrix.height
+        val bmp = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
+        for (x in 0 until width) {
+            for (y in 0 until height) {
+                bmp.setPixel(x, y, if (bitMatrix[x, y]) Color.BLACK else Color.WHITE)
+            }
+        }
+        return bmp
+    }
+
+    companion object {
+        private const val ARG_ROOM = "room"
+        fun newInstance(room: Room) = ShareRoomFragment().apply {
+            arguments = Bundle().apply { putSerializable(ARG_ROOM, room) }
+        }
     }
 }

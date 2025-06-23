@@ -29,8 +29,16 @@ interface RoomApiService {
     @GET("api/rooms/{roomId}")
     suspend fun getRoom(@Path("roomId") roomId: String): Response<Room>
 
+    @Multipart
     @PUT("api/rooms/{roomId}")
-    suspend fun updateRoom(@Path("roomId") roomId: String, @Body request: CreateRoomRequest): Response<Room>
+    suspend fun updateRoom(
+        @Path("roomId") roomId: String,
+        @Part avatar: MultipartBody.Part?,
+        @Part("room_name") roomName: RequestBody?,
+        @Part("description") description: RequestBody?,
+        @Part("room_mode") roomMode: RequestBody?,
+        @Part("expired_at") expiredAt: RequestBody?
+    ): Response<Room>
 
     @DELETE("api/rooms/{roomId}")
     suspend fun deleteRoom(@Path("roomId") roomId: String): Response<Unit>

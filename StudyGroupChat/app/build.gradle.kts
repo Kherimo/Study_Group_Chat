@@ -55,11 +55,12 @@ dependencies {
 
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
-//    implementation("com.google.android.material:material:1.11.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
 
     // Image loading
     implementation("com.github.bumptech.glide:glide:4.16.0")
+    // QR code generation
+    implementation("com.journeyapps:zxing-android-embedded:4.3.0")
 
     // Activity KTX for viewModels()
     implementation("androidx.activity:activity-ktx:1.7.2")

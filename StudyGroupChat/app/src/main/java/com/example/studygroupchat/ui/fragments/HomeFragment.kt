@@ -14,21 +14,35 @@ import com.example.studygroupchat.R
 import com.example.studygroupchat.adapter.RoomAdapter
 import com.example.studygroupchat.api.ApiConfig
 import com.example.studygroupchat.repository.RoomRepository
+import com.example.studygroupchat.repository.UserRepository
 import com.example.studygroupchat.StudyGroupChatApplication
 import com.example.studygroupchat.viewmodel.RoomViewModel
 import com.example.studygroupchat.viewmodel.RoomViewModelFactory
+import com.example.studygroupchat.viewmodel.UserViewModel
+import com.example.studygroupchat.viewmodel.UserViewModelFactory
 
 class HomeFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: RoomAdapter
     private lateinit var progressBar: ProgressBar
+    private var currentUserId: Int = 0
     private val viewModel: RoomViewModel by viewModels {
         val app = requireActivity().application as StudyGroupChatApplication
         RoomViewModelFactory(
             RoomRepository(
                 ApiConfig.roomApiService,
                 app.database.roomDao()
+            )
+        )
+    }
+
+    private val userViewModel: UserViewModel by viewModels {
+        val app = requireActivity().application as StudyGroupChatApplication
+        UserViewModelFactory(
+            UserRepository(
+                ApiConfig.userApiService,
+                app.database.userDao()
             )
         )
     }
@@ -44,9 +58,25 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         recyclerView = view.findViewById(R.id.recyclerView)
         progressBar = view.findViewById(R.id.progressBar)
-        adapter = RoomAdapter(emptyList(), isJoinRoom = false)
+        adapter = RoomAdapter(emptyList(), isJoinRoom = false, onJoinClick = null) { room ->
+            val fragment = GroupDetailFragment()
+            fragment.arguments = Bundle().apply {
+                putSerializable("room", room)
+                putString("roomId", room.roomId.toString())
+                putBoolean("isOwner", room.ownerId == currentUserId)
+            }
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit()
+        }
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
+
+        userViewModel.user.observe(viewLifecycleOwner) { user ->
+            currentUserId = user.userId
+        }
+        userViewModel.fetchCurrentUser()
 
         viewModel.rooms.observe(viewLifecycleOwner) { rooms ->
             adapter.updateData(rooms)
