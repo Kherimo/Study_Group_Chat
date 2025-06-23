@@ -17,6 +17,7 @@ import com.example.studygroupchat.adapter.MemberAdapter
 import com.example.studygroupchat.model.room.Room
 import com.example.studygroupchat.model.room.RoomMember
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.button.MaterialButton
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -38,18 +39,22 @@ class GroupDetailFragment : Fragment() {
         toolbar.title = "Chi tiết nhóm"
 
         toolbar.setNavigationOnClickListener {
-            // Quay lại Fragment trước đó
-            parentFragmentManager.popBackStack()
+            navigateHome()
         }
 
-        toolbar.inflateMenu(R.menu.toolbar_menu)
+        val room = arguments?.getSerializable("room") as? Room
+        val isOwner = arguments?.getBoolean("isOwner", false) == true
+        if (isOwner) {
+            toolbar.inflateMenu(R.menu.toolbar_menu)
+        }
 
         toolbar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.menu_members -> {
                     val fragment = GroupManagerFragment()
+                    fragment.arguments = Bundle().apply { putSerializable("room", room) }
                     parentFragmentManager.beginTransaction()
-                        .replace(R.id.fragment_container, fragment) // container ID trong Activity
+                        .replace(R.id.fragment_container, fragment)
                         .addToBackStack(null)
                         .commit()
                     true
@@ -59,7 +64,6 @@ class GroupDetailFragment : Fragment() {
         }
 
 
-        val room = arguments?.getSerializable("room") as? Room
         if (room == null) {
             Toast.makeText(requireContext(), "Không tìm thấy thông tin nhóm", Toast.LENGTH_SHORT).show()
             parentFragmentManager.popBackStack()
@@ -109,6 +113,17 @@ class GroupDetailFragment : Fragment() {
 
             recyclerViewMember.adapter = adapter
             recyclerViewMember.layoutManager = LinearLayoutManager(requireContext())
+
+            val shareButton = view.findViewById<MaterialButton>(R.id.shareGroup)
+            shareButton.setOnClickListener {
+                val fragment = ShareRoomFragment().apply {
+                    arguments = Bundle().apply { putSerializable("room", r) }
+                }
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .addToBackStack(null)
+                    .commit()
+            }
         }
 
     }
@@ -122,6 +137,13 @@ class GroupDetailFragment : Fragment() {
         } catch (e: Exception) {
             "Không rõ"
         }
+    }
+
+    private fun navigateHome() {
+        parentFragmentManager.popBackStack(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, HomeFragment())
+            .commit()
     }
 
 //    private fun showMemberOptions(member: RoomMember) {

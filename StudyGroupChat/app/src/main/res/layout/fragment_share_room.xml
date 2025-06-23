@@ -5,17 +5,15 @@
     android:layout_height="match_parent"
     tools:context=".ui.fragments.ShareRoomFragment">
 
-    <?xml version="1.0" encoding="utf-8"?>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        <Toolbar
+        <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbarShareLinkRoom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/background_root"
-            />
+            android:background="@drawable/background_root" />
         <LinearLayout
             android:id="@+id/layout_group_invite"
             android:layout_width="match_parent"

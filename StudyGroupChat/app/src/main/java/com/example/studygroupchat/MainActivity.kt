@@ -20,10 +20,13 @@ import com.example.studygroupchat.ui.fragments.AIChatFragment
 import com.example.studygroupchat.ui.fragments.ChatFragment
 import com.example.studygroupchat.ui.fragments.CreateRoomFragment
 import com.example.studygroupchat.ui.fragments.EditProfileFragment
+import com.example.studygroupchat.ui.fragments.GroupDetailFragment
+import com.example.studygroupchat.ui.fragments.GroupManagerFragment
 import com.example.studygroupchat.ui.fragments.HomeFragment
 import com.example.studygroupchat.ui.fragments.JoinRoomFragment
 import com.example.studygroupchat.ui.fragments.ProfileFragment
 import com.example.studygroupchat.viewmodel.AuthViewModel
+import android.net.Uri
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -39,9 +42,11 @@ class MainActivity : BaseActivity() {
     private lateinit var bottomNav: BottomNavigationView
     private lateinit var syncProgressBar: ProgressBar
     private var networkWatcher: NetworkWatcher? = null
+    private var deepLinkCode: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        deepLinkCode = intent?.data?.getQueryParameter("code")
 
         lifecycleScope.launch {
             val userData = viewModel.getTokenData().first()
@@ -55,6 +60,7 @@ class MainActivity : BaseActivity() {
                 // Đã đăng nhập => hiển thị giao diện chính
                 setContentView(R.layout.activity_main)
                 setupMainUI()
+                deepLinkCode?.let { openJoinFromLink(it) }
                 val app = application as StudyGroupChatApplication
                 if (!isNetworkAvailable()) {
                     networkWatcher = NetworkWatcher(this@MainActivity) {
@@ -80,7 +86,10 @@ class MainActivity : BaseActivity() {
                 // Lắng nghe back stack để hiện lại bottom khi quay về
                 supportFragmentManager.addOnBackStackChangedListener {
                     val isFullScreenFragmentVisible = supportFragmentManager.fragments.any {
-                        it is CreateRoomFragment || it is EditProfileFragment
+                        it is CreateRoomFragment ||
+                                it is EditProfileFragment ||
+                                it is GroupDetailFragment ||
+                                it is GroupManagerFragment
                     }
 
                     if (isFullScreenFragmentVisible) {
@@ -151,6 +160,14 @@ class MainActivity : BaseActivity() {
 
     fun hideFabButton() {
         findViewById<FloatingActionButton>(R.id.fabAI).visibility = View.GONE
+    }
+
+    private fun openJoinFromLink(code: String) {
+        val fragment = JoinRoomFragment.newInstance(code)
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 
 

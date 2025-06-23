@@ -14,6 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.studygroupchat.R
 import com.example.studygroupchat.api.ApiConfig
 import com.example.studygroupchat.databinding.FragmentCreateRoomBinding
+import com.example.studygroupchat.ui.fragments.GroupDetailFragment
 import com.example.studygroupchat.viewmodel.CreateRoomViewModel
 import com.example.studygroupchat.viewmodel.CreateRoomViewModelFactory
 import kotlinx.coroutines.launch
@@ -170,7 +171,17 @@ class CreateRoomFragment : Fragment() {
                 result.fold(
                     onSuccess = { room ->
                         Toast.makeText(requireContext(), "Tạo phòng thành công", Toast.LENGTH_SHORT).show()
-                        requireActivity().onBackPressed()
+                        val fragment = GroupDetailFragment().apply {
+                            arguments = Bundle().apply {
+                                putSerializable("room", room)
+                                putString("roomId", room.roomId.toString())
+                                putBoolean("isOwner", true)
+                            }
+                        }
+                        parentFragmentManager.beginTransaction()
+                            .replace(R.id.fragment_container, fragment)
+                            .addToBackStack(null)
+                            .commit()
                     },
                     onFailure = { error ->
                         Toast.makeText(requireContext(), "Vui lòng kiểm tra mạng hoặc server không sẵn sàng.", Toast.LENGTH_SHORT).show()

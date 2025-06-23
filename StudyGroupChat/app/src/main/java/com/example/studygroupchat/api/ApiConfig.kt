@@ -13,6 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiConfig {
     // Thay đổi BASE_URL tại đây
+    // Deploy: https://study-group-chat.onrender.com/
     private const val BASE_URL = "https://study-group-chat.onrender.com/"
 
     private val loggingInterceptor = HttpLoggingInterceptor().apply {

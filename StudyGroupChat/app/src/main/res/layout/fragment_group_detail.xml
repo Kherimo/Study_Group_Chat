@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
         <!-- Toolbar -->
-        <androidx.appcompat.widget.Toolbar
+        <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbargroudDetail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -24,10 +24,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fillViewport="true">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
                 <!-- Ảnh đại diện nhóm -->
                 <ImageView
@@ -131,31 +131,31 @@
                     </LinearLayout>
 
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:paddingHorizontal="15dp"
-                        android:layout_marginTop="5dp">
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/shareGroup"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:text="Link nhóm"
-                            android:layout_marginRight="10dp"
-                            android:textAllCaps="false"
-                            android:textColor="#3B82F6"
-                            android:layout_weight="1"
-                            android:textSize="14sp"
-                            app:icon="@drawable/outline_link_24"
-                            app:iconTint="#3B82F6"
-                            app:iconGravity="textStart"
-                            app:iconPadding="10dp"
-                            app:cornerRadius="12dp"
-                            app:strokeWidth="1dp"
-                            app:strokeColor="#A4C4FA"
-                            android:backgroundTint="#EFF6FF"
-                            android:paddingVertical="10dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="15dp"
+            android:layout_marginTop="5dp">
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/shareGroup"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Mã QR"
+                android:layout_marginRight="10dp"
+                android:textAllCaps="false"
+                android:textColor="#3B82F6"
+                android:layout_weight="1"
+                android:textSize="14sp"
+                app:icon="@drawable/baseline_qr_code_scanner_24"
+                app:iconTint="#3B82F6"
+                app:iconGravity="textStart"
+                app:iconPadding="10dp"
+                app:cornerRadius="12dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="#A4C4FA"
+                android:backgroundTint="#EFF6FF"
+                android:paddingVertical="10dp"/>
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/leavetheGroup"

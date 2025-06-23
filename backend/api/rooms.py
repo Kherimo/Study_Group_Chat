@@ -248,19 +248,54 @@ def get_room(current_user_id, room_id):
 def update_room(current_user_id, room_id):
     try:
         # Check if user is owner
-        room_check = supabase.table('rooms').select('owner_id').eq('room_id', room_id).execute()
+        room_check = (
+            supabase
+            .table('rooms')
+            .select('owner_id, avatar_url')
+            .eq('room_id', room_id)
+            .execute()
+        )
         if not room_check.data or room_check.data[0]['owner_id'] != current_user_id:
             return jsonify({'error': 'Access denied'}), 403
-        
-        data = request.get_json()
-        allowed_fields = ['room_name', 'description', 'expired_at']
+
+        if request.content_type and request.content_type.startswith('multipart/form-data'):
+            data = request.form.to_dict()
+            avatar_file = request.files.get('avatar')
+        else:
+            data = request.get_json() or {}
+            avatar_file = None
+
+        allowed_fields = ['room_name', 'description', 'expired_at', 'room_mode']
         update_data = {k: v for k, v in data.items() if k in allowed_fields}
-        
+
+        if avatar_file:
+            ext = os.path.splitext(avatar_file.filename)[1] or '.jpg'
+            unique_name = f"room_{current_user_id}_{uuid.uuid4().hex}{ext}"
+            file_bytes = avatar_file.read()
+            supabase.storage.from_('avatars').upload(unique_name, file_bytes, {
+                'content-type': avatar_file.mimetype
+            })
+            update_data['avatar_url'] = unique_name
+
         if not update_data:
             return jsonify({'error': 'No valid fields to update'}), 400
-        
-        response = supabase.table('rooms').update(update_data).eq('room_id', room_id).execute()
-        return jsonify(response.data[0])
+
+        response = (
+            supabase
+            .table('rooms')
+            .update(update_data)
+            .eq('room_id', room_id)
+            .execute()
+        )
+        if not response.data:
+            return jsonify({'error': 'Room not found'}), 404
+
+        room = response.data[0]
+        avatar_path = room.get('avatar_url')
+        if avatar_path and not avatar_path.startswith('http'):
+            room['avatar_url'] = supabase.storage.from_('avatars').get_public_url(avatar_path)
+
+        return jsonify(room)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 

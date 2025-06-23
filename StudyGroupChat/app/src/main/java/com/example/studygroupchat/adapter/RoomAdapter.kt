@@ -17,7 +17,8 @@ import java.time.format.DateTimeFormatter
 class RoomAdapter(
     private var roomList: List<Room>,
     private val isJoinRoom: Boolean,
-    private val onJoinClick: ((Room) -> Unit)? = null
+    private val onJoinClick: ((Room) -> Unit)? = null,
+    private val onItemClick: ((Room) -> Unit)? = null
 ) :  // true nếu ở JoinRoomFragment
     RecyclerView.Adapter<RoomAdapter.RoomViewHolder>() {
 
@@ -78,30 +79,32 @@ class RoomAdapter(
             holder.btnJoin.visibility = View.VISIBLE
             holder.btnJoin.setOnClickListener { onJoinClick?.invoke(room) }
 
+    } else {
+        val memberCount = room.members?.size
+        val ownerName = room.owner?.fullName ?: room.owner?.userName
+
+        if (memberCount != null && ownerName != null) {
+            holder.tvMember.text = "$ownerName • ${memberCount} thành viên"
+            holder.tvMember.visibility = View.VISIBLE
         } else {
-            val memberCount = room.members?.size
-            val ownerName = room.owner?.fullName ?: room.owner?.userName
-
-            if (memberCount != null && ownerName != null) {
-                holder.tvMember.text = "$ownerName • ${memberCount} thành viên"
-                holder.tvMember.visibility = View.VISIBLE
-            } else {
-                holder.tvMember.visibility = View.GONE
-            }
-
-            holder.courseMember.visibility = View.GONE
-            holder.tvTimeCreate.visibility = View.GONE
-            holder.btnJoin.visibility = View.GONE
-            holder.courseStatus.visibility = View.VISIBLE
-            holder.tvTime.visibility = View.VISIBLE
+            holder.tvMember.visibility = View.GONE
         }
+
+        holder.courseMember.visibility = View.GONE
+        holder.tvTimeCreate.visibility = View.GONE
+        holder.btnJoin.visibility = View.GONE
+        holder.courseStatus.visibility = View.VISIBLE
+        holder.tvTime.visibility = View.VISIBLE
     }
 
+    holder.itemView.setOnClickListener { onItemClick?.invoke(room) }
+}
 
-    override fun getItemCount(): Int = roomList.size
 
-    fun updateData(newList: List<Room>) {
-        roomList = newList
-        notifyDataSetChanged()
-    }
+override fun getItemCount(): Int = roomList.size
+
+fun updateData(newList: List<Room>) {
+    roomList = newList
+    notifyDataSetChanged()
+}
 }

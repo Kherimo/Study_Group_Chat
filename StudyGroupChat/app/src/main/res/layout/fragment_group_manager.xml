@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
         <!--     App bar -->
-        <androidx.appcompat.widget.Toolbar
+        <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -38,6 +38,7 @@
                     android:layout_marginBottom="16dp">
 
                     <ImageView
+                        android:id="@+id/imgRoomAvatar"
                         android:layout_width="90dp"
                         android:layout_height="90dp"
                         android:layout_gravity="center"
@@ -47,6 +48,7 @@
                         android:scaleType="centerCrop" />
 
                     <ImageView
+                        android:id="@+id/imgChangeAvatar"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:layout_gravity="bottom|end"
@@ -66,10 +68,11 @@
                     >
 
                     <EditText
+                        android:id="@+id/editGroupName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Web"
                         android:background="@null"
+                        android:hint="Tên nhóm"
                         android:textSize="20sp"
                         android:textStyle="bold" />
 
@@ -114,6 +117,25 @@
                         android:textColor="#4D4D4D"/>
                 </LinearLayout>
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Giới thiệu"
+                    android:textStyle="bold"/>
+
+                <EditText
+                    android:id="@+id/editDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/bg_edittext"
+                    android:hint="Giới thiệu về nhóm"
+                    android:inputType="textMultiLine"
+                    android:minLines="3"
+                    android:padding="8dp"
+                    android:gravity="top" />
+
                 <!-- Quản lý nhóm -->
                 <TextView
                     android:layout_height="wrap_content"
@@ -124,6 +146,7 @@
                     android:layout_marginBottom="8dp" />
 
                 <LinearLayout
+                    android:id="@+id/layoutExtend"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -153,6 +176,7 @@
                             android:layout_height="wrap_content" />
 
                         <TextView
+                            android:id="@+id/tvExpireDate"
                             android:text="Nhóm sẽ hết hạn vào 15/12/2024"
                             android:textSize="12sp"
                             android:textColor="#666"
@@ -161,6 +185,7 @@
                     </LinearLayout>
 
                     <TextView
+                        android:id="@+id/btnExtend"
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
                         android:text="Gia hạn"
@@ -239,7 +264,7 @@
                                 android:id="@+id/radioPublic"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:checked="true" />
+                                />
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
