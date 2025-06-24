@@ -18,6 +18,9 @@ class RoomViewModel(private val repository: RoomRepository) : ViewModel() {
     private val _joinResult = MutableLiveData<Result<Room>>()
     val joinResult: LiveData<Result<Room>> = _joinResult
 
+    private val _leaveResult = MutableLiveData<Result<Unit>>()
+    val leaveResult: LiveData<Result<Unit>> = _leaveResult
+
     private val _selectedRoom = MutableLiveData<Result<Room>>()
     val selectedRoom: LiveData<Result<Room>> = _selectedRoom
 
@@ -58,6 +61,18 @@ class RoomViewModel(private val repository: RoomRepository) : ViewModel() {
             _joinResult.value = result
             if (result.isSuccess) {
                 fetchPublicRooms()
+            }
+            _isLoading.value = false
+        }
+    }
+
+    fun leaveRoom(roomId: String) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            val result = repository.leaveRoom(roomId)
+            _leaveResult.value = result
+            if (result.isSuccess) {
+                fetchMyRooms()
             }
             _isLoading.value = false
         }

@@ -46,6 +46,9 @@ interface RoomApiService {
     @POST("api/rooms/join")
     suspend fun joinRoom(@Body request: Map<String, String>): Response<JoinRoomResponse>
 
+    @POST("api/rooms/{roomId}/leave")
+    suspend fun leaveRoom(@Path("roomId") roomId: String): Response<Unit>
+
     @GET("api/rooms/{roomId}/members")
     suspend fun getRoomMembers(@Path("roomId") roomId: String): Response<List<RoomMember>>
 

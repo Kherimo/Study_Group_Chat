@@ -64,15 +64,51 @@ class RoomRepository(
             Result.failure(e)
         }
     }
-
     suspend fun joinRoom(inviteCode: String): Result<Room> = withContext(Dispatchers.IO) {
         try {
             val response = apiService.joinRoom(mapOf("invite_code" to inviteCode))
             if (response.isSuccessful) {
-                response.body()?.room?.let { Result.success(it) }
-                    ?: Result.failure(Exception("Empty response body"))
+                response.body()?.room?.let { return@withContext Result.success(it) }
+                return@withContext Result.failure(Exception("Empty response body"))
             } else {
-                Result.failure(Exception("Failed to join room: ${'$'}{response.code()}"))
+                // Some cases return 400 even though the user is already a member
+                val error = response.errorBody()?.string()
+                if (error?.contains("Already a member") == true) {
+                    val myRoomsRes = apiService.getMyRooms()
+                    if (myRoomsRes.isSuccessful) {
+                        val room = myRoomsRes.body()?.find { it.inviteCode == inviteCode }
+                        if (room != null) {
+                            return@withContext Result.success(room)
+                        }
+                    }
+                }
+                return@withContext Result.failure(Exception("Failed to join room: ${'$'}{response.code()}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun leaveRoom(roomId: String): Result<Unit> = withContext(Dispatchers.IO) {
+        try {
+            val response = apiService.leaveRoom(roomId)
+            if (response.isSuccessful) {
+                Result.success(Unit)
+            } else {
+                Result.failure(Exception("Failed to leave room: ${'$'}{response.code()}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun deleteRoom(roomId: String): Result<Unit> = withContext(Dispatchers.IO) {
+        try {
+            val response = apiService.deleteRoom(roomId)
+            if (response.isSuccessful) {
+                Result.success(Unit)
+            } else {
+                Result.failure(Exception("Failed to delete room: ${'$'}{response.code()}"))
             }
         } catch (e: Exception) {
             Result.failure(e)

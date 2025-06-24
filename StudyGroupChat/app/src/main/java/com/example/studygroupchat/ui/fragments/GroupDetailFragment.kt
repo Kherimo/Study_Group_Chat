@@ -2,6 +2,7 @@ package com.example.studygroupchat.ui.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,14 +15,29 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.studygroupchat.R
 import com.example.studygroupchat.adapter.MemberAdapter
+import com.example.studygroupchat.api.ApiConfig
 import com.example.studygroupchat.model.room.Room
 import com.example.studygroupchat.model.room.RoomMember
+import com.example.studygroupchat.repository.RoomRepository
+import com.example.studygroupchat.StudyGroupChatApplication
+import com.example.studygroupchat.viewmodel.RoomViewModel
+import com.example.studygroupchat.viewmodel.RoomViewModelFactory
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 class GroupDetailFragment : Fragment() {
+
+    private val viewModel: RoomViewModel by viewModels {
+        val app = requireActivity().application as StudyGroupChatApplication
+        RoomViewModelFactory(
+            RoomRepository(
+                ApiConfig.roomApiService,
+                app.database.roomDao()
+            )
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -101,50 +117,80 @@ class GroupDetailFragment : Fragment() {
                 )
             } ?: emptyList()
 
-            val myUserId = r.owner?.userId ?: 0
-            val recyclerViewMember = view.findViewById<RecyclerView>(R.id.recyclerViewMember)
+        val myUserId = r.owner?.userId ?: 0
+        val recyclerViewMember = view.findViewById<RecyclerView>(R.id.recyclerViewMember)
 
-            val adapter = MemberAdapter(
-                roomMembers,
-                currentUserId = myUserId,
-                onMoreClick = null,      // Không cần xử lý click trong Detail
-                showMenu = false         // ❌ Ẩn nút menu 3 chấm
-            )
+        val adapter = MemberAdapter(
+            roomMembers,
+            currentUserId = myUserId,
+            onMoreClick = null,      // Không cần xử lý click trong Detail
+            showMenu = false         // ❌ Ẩn nút menu 3 chấm
+        )
 
-            recyclerViewMember.adapter = adapter
-            recyclerViewMember.layoutManager = LinearLayoutManager(requireContext())
+        recyclerViewMember.adapter = adapter
+        recyclerViewMember.layoutManager = LinearLayoutManager(requireContext())
 
-            val shareButton = view.findViewById<MaterialButton>(R.id.shareGroup)
-            shareButton.setOnClickListener {
-                val fragment = ShareRoomFragment().apply {
-                    arguments = Bundle().apply { putSerializable("room", r) }
-                }
-                parentFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, fragment)
-                    .addToBackStack(null)
-                    .commit()
+        val shareButton = view.findViewById<MaterialButton>(R.id.shareGroup)
+        shareButton.setOnClickListener {
+            val fragment = ShareRoomFragment().apply {
+                arguments = Bundle().apply { putSerializable("room", r) }
+            }
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit()
+        }
+
+        val messageButton = view.findViewById<MaterialButton>(R.id.btnmess)
+        messageButton.setOnClickListener {
+            val intent = android.content.Intent(requireContext(), GroupChatActivity::class.java).apply {
+                putExtra("groupId", r.roomId.toString())
+                putExtra("groupName", r.roomName)
+                putExtra("groupMode", r.roomMode)
+                putExtra("memberCount", r.members?.size ?: 0)
+            }
+            startActivity(intent)
+        }
+
+        val leaveButton = view.findViewById<MaterialButton>(R.id.leavetheGroup)
+        if (isOwner) {
+            leaveButton.visibility = View.GONE
+        } else {
+            leaveButton.setOnClickListener {
+                viewModel.leaveRoom(r.roomId.toString())
             }
         }
-
     }
-    fun formatCreatedAt(raw: String?): String {
-        if (raw.isNullOrBlank()) return "Không rõ"
-        return try {
-            val inputFormat = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", java.util.Locale.getDefault())
-            val outputFormat = java.text.SimpleDateFormat("dd/MM/yyyy HH:mm", java.util.Locale.getDefault())
-            val date = inputFormat.parse(raw)
-            outputFormat.format(date!!)
-        } catch (e: Exception) {
-            "Không rõ"
+
+    viewModel.leaveResult.observe(viewLifecycleOwner) { result ->
+        result.onSuccess {
+            Toast.makeText(requireContext(), "Đã rời nhóm", Toast.LENGTH_SHORT).show()
+            navigateHome()
+        }
+        result.onFailure {
+            Toast.makeText(requireContext(), "Rời nhóm thất bại", Toast.LENGTH_SHORT).show()
         }
     }
 
-    private fun navigateHome() {
-        parentFragmentManager.popBackStack(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, HomeFragment())
-            .commit()
+}
+fun formatCreatedAt(raw: String?): String {
+    if (raw.isNullOrBlank()) return "Không rõ"
+    return try {
+        val inputFormat = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", java.util.Locale.getDefault())
+        val outputFormat = java.text.SimpleDateFormat("dd/MM/yyyy HH:mm", java.util.Locale.getDefault())
+        val date = inputFormat.parse(raw)
+        outputFormat.format(date!!)
+    } catch (e: Exception) {
+        "Không rõ"
     }
+}
+
+private fun navigateHome() {
+    parentFragmentManager.popBackStack(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
+    parentFragmentManager.beginTransaction()
+        .replace(R.id.fragment_container, HomeFragment())
+        .commit()
+}
 
 //    private fun showMemberOptions(member: RoomMember) {
 //        val popup = PopupMenu(requireContext(), requireView().findViewById(R.id.recyclerViewMember))

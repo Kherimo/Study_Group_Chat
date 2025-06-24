@@ -87,6 +87,42 @@ def get_my_rooms(current_user_id):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@rooms_bp.route('/rooms/<room_id>/leave', methods=['POST'])
+@token_required
+def leave_room(current_user_id, room_id):
+    try:
+        room_check = (
+            supabase
+            .table('rooms')
+            .select('owner_id')
+            .eq('room_id', room_id)
+            .execute()
+        )
+        if not room_check.data:
+            return jsonify({'error': 'Room not found'}), 404
+        if room_check.data[0]['owner_id'] == current_user_id:
+            return jsonify({'error': 'Room owner cannot leave'}), 400
+
+        member_check = (
+            supabase
+            .table('room_members')
+            .select('*')
+            .eq('room_id', room_id)
+            .eq('user_id', current_user_id)
+            .execute()
+        )
+        if not member_check.data:
+            return jsonify({'error': 'Not a member of this room'}), 400
+
+        supabase.table('room_members').delete().eq('room_id', room_id).eq('user_id', current_user_id).execute()
+
+        supabase.table('room_history').update({'left_at': datetime.utcnow().isoformat()}) \
+            .eq('room_id', room_id).eq('user_id', current_user_id).execute()
+
+        return jsonify({'message': 'Left room successfully'})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 
 @rooms_bp.route('/rooms/public', methods=['GET'])
 @token_required
