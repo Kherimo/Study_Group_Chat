@@ -125,21 +125,27 @@ class GroupManagerFragment : Fragment() {
         tvExpireDate.setOnClickListener { showDatePicker() }
 
         toolbar.setOnMenuItemClickListener {
-            if (it.itemId == R.id.action_save) {
-                val id = room?.roomId?.toString() ?: return@setOnMenuItemClickListener true
-                val mode = if (radioPublic.isChecked) "public" else "private"
-                val expired = selectedDate?.let { formatDateForApi(it) } ?: room?.expiredAt
-                viewModel.updateRoom(
-                    id,
-                    selectedPart,
-                    editName.text.toString(),
-                    editDescription.text.toString(),
-                    mode,
-                    expired
-                )
-                true
-            } else {
-                false
+            when (it.itemId) {
+                R.id.action_save -> {
+                    val id = room?.roomId?.toString() ?: return@setOnMenuItemClickListener true
+                    val mode = if (radioPublic.isChecked) "public" else "private"
+                    val expired = selectedDate?.let { formatDateForApi(it) } ?: room?.expiredAt
+                    viewModel.updateRoom(
+                        id,
+                        selectedPart,
+                        editName.text.toString(),
+                        editDescription.text.toString(),
+                        mode,
+                        expired
+                    )
+                    true
+                }
+                R.id.action_delete -> {
+                    val id = room?.roomId?.toString() ?: return@setOnMenuItemClickListener true
+                    viewModel.deleteRoom(id)
+                    true
+                }
+                else -> false
             }
         }
 
@@ -150,6 +156,16 @@ class GroupManagerFragment : Fragment() {
             }
             result.onFailure {
                 Toast.makeText(requireContext(), "Cập nhật thất bại", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        viewModel.deleteResult.observe(viewLifecycleOwner) { result ->
+            result.onSuccess {
+                Toast.makeText(requireContext(), "Đã xoá nhóm", Toast.LENGTH_SHORT).show()
+                navigateHome()
+            }
+            result.onFailure {
+                Toast.makeText(requireContext(), "Xoá nhóm thất bại", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -198,5 +214,12 @@ class GroupManagerFragment : Fragment() {
     private fun formatDateForApi(date: Date): String {
         val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
         return format.format(date)
+    }
+
+    private fun navigateHome() {
+        parentFragmentManager.popBackStack(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, HomeFragment())
+            .commit()
     }
 }

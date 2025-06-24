@@ -83,6 +83,25 @@ class EditProfileFragment : Fragment() {
                 fragment.changePassword()
             }
         }
+        userViewModel.updateResult.observe(viewLifecycleOwner) { result ->
+            result.onSuccess {
+                android.widget.Toast.makeText(requireContext(), "\u0110\u00E3 c\u1EADp nh\u1EADt h\u1ED3 s\u01A1", android.widget.Toast.LENGTH_SHORT).show()
+                parentFragmentManager.popBackStack()
+            }
+            result.onFailure {
+                android.widget.Toast.makeText(requireContext(), "C\u1EADp nh\u1EADt th\u1EA5t b\u1EA1i", android.widget.Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        userViewModel.passwordResult.observe(viewLifecycleOwner) { result ->
+            result.onSuccess {
+                android.widget.Toast.makeText(requireContext(), "\u0110\u00E3 c\u1EADp nh\u1EADt m\u1EADt kh\u1EA9u", android.widget.Toast.LENGTH_SHORT).show()
+                parentFragmentManager.popBackStack()
+            }
+            result.onFailure {
+                android.widget.Toast.makeText(requireContext(), "C\u1EADp nh\u1EADt th\u1EA5t b\u1EA1i", android.widget.Toast.LENGTH_SHORT).show()
+            }
+        }
     }
     private fun handleCancel() {
         //quay về màn hình trước đó trong Navigation component

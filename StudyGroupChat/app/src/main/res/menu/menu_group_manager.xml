@@ -3,4 +3,9 @@
         android:id="@+id/action_save"
         android:title="Lưu"
         android:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_delete"
+        android:title="Xóa nhóm"
+        android:showAsAction="never" />
 </menu>

@@ -21,6 +21,9 @@ class ManageRoomViewModel(private val repository: RoomRepository) : ViewModel() 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
+    private val _deleteResult = MutableLiveData<Result<Unit>>()
+    val deleteResult: LiveData<Result<Unit>> = _deleteResult
+
     fun fetchRoom(roomId: String) {
         viewModelScope.launch {
             _isLoading.value = true
@@ -50,6 +53,15 @@ class ManageRoomViewModel(private val repository: RoomRepository) : ViewModel() 
             )
             result.onSuccess { _room.value = it }
             _updateResult.value = result
+            _isLoading.value = false
+        }
+    }
+
+    fun deleteRoom(roomId: String) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            val result = repository.deleteRoom(roomId)
+            _deleteResult.value = result
             _isLoading.value = false
         }
     }
