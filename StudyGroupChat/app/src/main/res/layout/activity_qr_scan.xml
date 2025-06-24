@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.QRScanActivity">
+
+    <!-- View camera để quét mã QR -->
+    <com.journeyapps.barcodescanner.DecoratedBarcodeView
+        android:id="@+id/barcode_scanner"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:zxing_use_texture_view="true" />
+
+    <!-- Header chứa các nút điều khiển -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="55dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="20dp">
+
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:padding="6dp"
+            android:src="@drawable/ic_arrow_left"
+            app:tint="@android:color/white" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:id="@+id/btnGallery"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:contentDescription="Mở thư viện ảnh"
+            android:padding="6dp"
+            android:src="@drawable/outline_image_24"
+            app:tint="@android:color/white" />
+
+    </LinearLayout>
+
+    <!-- Hướng dẫn cho người dùng -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="100dp"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="8dp"
+        android:text="Di chuyển camera đến vùng có mã QR"
+        android:textColor="@android:color/white"
+        android:textSize="14sp" />
+
+</FrameLayout>

@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,7 +21,6 @@ import com.example.studygroupchat.repository.RoomRepository
 import com.example.studygroupchat.StudyGroupChatApplication
 import com.example.studygroupchat.viewmodel.RoomViewModel
 import com.example.studygroupchat.viewmodel.RoomViewModelFactory
-import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -49,33 +47,21 @@ class GroupDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val toolbar = view.findViewById<MaterialToolbar>(R.id.toolbargroudDetail)
+        val btnBack = view.findViewById<ImageView>(R.id.btnBack)
+        btnBack.setOnClickListener { navigateHome() }
 
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_left) // icon quay lại
-        toolbar.title = "Chi tiết nhóm"
-
-        toolbar.setNavigationOnClickListener {
-            navigateHome()
-        }
-
+        val btnMembers = view.findViewById<ImageView>(R.id.btnMembers)
         val room = arguments?.getSerializable("room") as? Room
         val isOwner = arguments?.getBoolean("isOwner", false) == true
         if (isOwner) {
-            toolbar.inflateMenu(R.menu.toolbar_menu)
-        }
-
-        toolbar.setOnMenuItemClickListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.menu_members -> {
-                    val fragment = GroupManagerFragment()
-                    fragment.arguments = Bundle().apply { putSerializable("room", room) }
-                    parentFragmentManager.beginTransaction()
-                        .replace(R.id.fragment_container, fragment)
-                        .addToBackStack(null)
-                        .commit()
-                    true
-                }
-                else -> false
+            btnMembers.visibility = View.VISIBLE
+            btnMembers.setOnClickListener {
+                val fragment = GroupManagerFragment()
+                fragment.arguments = Bundle().apply { putSerializable("room", room) }
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .addToBackStack(null)
+                    .commit()
             }
         }
 
@@ -103,7 +89,7 @@ class GroupDetailFragment : Fragment() {
             if (!r.avatarUrl.isNullOrEmpty()) {
                 Glide.with(requireContext())
                     .load(r.avatarUrl)
-                    .placeholder(R.drawable.baseline_account_circle_24)
+                    .placeholder(R.drawable.baseline_groups_24)
                     .into(ivGroupImage)
             }
 

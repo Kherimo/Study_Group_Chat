@@ -21,8 +21,8 @@ import com.example.studygroupchat.model.room.Room
 import com.example.studygroupchat.repository.RoomRepository
 import com.example.studygroupchat.viewmodel.ManageRoomViewModel
 import com.example.studygroupchat.viewmodel.ManageRoomViewModelFactory
-import com.google.android.material.appbar.MaterialToolbar
 import com.bumptech.glide.Glide
+import com.google.android.material.button.MaterialButton
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -68,11 +68,11 @@ class GroupManagerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val toolbar = view.findViewById<MaterialToolbar>(R.id.toolbar)
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_left)
-        toolbar.title = "Quản lý nhóm"
-        toolbar.inflateMenu(R.menu.menu_group_manager)
-        toolbar.setNavigationOnClickListener { parentFragmentManager.popBackStack() }
+        val btnBack = view.findViewById<ImageView>(R.id.btnBack)
+        val btnSave = view.findViewById<TextView>(R.id.btnSave)
+        val btnDelete = view.findViewById<MaterialButton>(R.id.btnDelete)
+
+        btnBack.setOnClickListener { parentFragmentManager.popBackStack() }
 
         editName = view.findViewById(R.id.editGroupName)
         editDescription = view.findViewById(R.id.editDescription)
@@ -124,29 +124,23 @@ class GroupManagerFragment : Fragment() {
         btnExtend.setOnClickListener { showDatePicker() }
         tvExpireDate.setOnClickListener { showDatePicker() }
 
-        toolbar.setOnMenuItemClickListener {
-            when (it.itemId) {
-                R.id.action_save -> {
-                    val id = room?.roomId?.toString() ?: return@setOnMenuItemClickListener true
-                    val mode = if (radioPublic.isChecked) "public" else "private"
-                    val expired = selectedDate?.let { formatDateForApi(it) } ?: room?.expiredAt
-                    viewModel.updateRoom(
-                        id,
-                        selectedPart,
-                        editName.text.toString(),
-                        editDescription.text.toString(),
-                        mode,
-                        expired
-                    )
-                    true
-                }
-                R.id.action_delete -> {
-                    val id = room?.roomId?.toString() ?: return@setOnMenuItemClickListener true
-                    viewModel.deleteRoom(id)
-                    true
-                }
-                else -> false
-            }
+        btnSave.setOnClickListener {
+            val id = room?.roomId?.toString() ?: return@setOnClickListener
+            val mode = if (radioPublic.isChecked) "public" else "private"
+            val expired = selectedDate?.let { formatDateForApi(it) } ?: room?.expiredAt
+            viewModel.updateRoom(
+                id,
+                selectedPart,
+                editName.text.toString(),
+                editDescription.text.toString(),
+                mode,
+                expired
+            )
+        }
+
+        btnDelete.setOnClickListener {
+            val id = room?.roomId?.toString() ?: return@setOnClickListener
+            viewModel.deleteRoom(id)
         }
 
         viewModel.updateResult.observe(viewLifecycleOwner) { result ->

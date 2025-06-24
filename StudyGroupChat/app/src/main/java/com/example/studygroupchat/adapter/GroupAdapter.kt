@@ -36,10 +36,10 @@ class GroupAdapter(
         group.avatarUrl?.let {
             Glide.with(holder.itemView.context)
                 .load(it)
-                .placeholder(R.drawable.baseline_account_circle_24)
+                .placeholder(R.drawable.baseline_groups_24)
                 .circleCrop()
                 .into(holder.avatar)
-        } ?: holder.avatar.setImageResource(R.drawable.baseline_account_circle_24)
+        } ?: holder.avatar.setImageResource(R.drawable.baseline_groups_24)
         holder.itemView.setOnClickListener { onClick(group) }
     }
 

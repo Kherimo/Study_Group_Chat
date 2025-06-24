@@ -59,6 +59,9 @@
         <activity
             android:name=".ui.fragments.GroupChatActivity"
             android:exported="false" />
+        <activity
+            android:name=".ui.QRScanActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

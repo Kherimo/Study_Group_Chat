@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import android.widget.ProgressBar
+import com.example.studygroupchat.ui.fragments.ShareRoomFragment
 import com.example.studygroupchat.StudyGroupChatApplication
 import com.example.studygroupchat.ui.LoginActivity
 import com.example.studygroupchat.ui.fragments.AIChatFragment
@@ -89,7 +90,8 @@ class MainActivity : BaseActivity() {
                         it is CreateRoomFragment ||
                                 it is EditProfileFragment ||
                                 it is GroupDetailFragment ||
-                                it is GroupManagerFragment
+                                it is GroupManagerFragment ||
+                                it is ShareRoomFragment
                     }
 
                     if (isFullScreenFragmentVisible) {

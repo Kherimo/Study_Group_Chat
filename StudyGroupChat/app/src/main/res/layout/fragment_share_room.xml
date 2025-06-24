@@ -1,56 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background_root"
     tools:context=".ui.fragments.ShareRoomFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbarShareLinkRoom"
+
+        <!-- Header -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/background_root" />
+            android:layout_marginTop="55dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="20dp">
+
+            <ImageView
+                android:id="@+id/btnBack"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="@drawable/bg_circle"
+                android:padding="6dp"
+                android:src="@drawable/ic_arrow_left" />
+
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Mời vào nhóm"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <!-- Spacer để căn giữa tiêu đề -->
+            <View
+                android:layout_width="32dp"
+                android:layout_height="32dp" />
+        </LinearLayout>
+
+        <!-- Khối nội dung chính -->
         <LinearLayout
             android:id="@+id/layout_group_invite"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="20dp"
+            android:background="@color/md_theme_onPrimary"
+            android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:background="#FFFFFF"
-            android:padding="16dp"
-            android:gravity="center">
+            android:padding="24dp">
+
             <ImageView
+                android:id="@+id/imgGroupAvatar"
                 android:layout_width="110dp"
                 android:layout_height="110dp"
-                android:src="@drawable/baseline_groups_24"
-                android:scaleType="centerCrop"
+                android:layout_marginTop="40dp"
                 android:background="@drawable/bg_circle"
-                android:padding="10dp"/>
+                android:padding="10dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/baseline_groups_24" />
+
             <!-- Tiêu đề -->
             <TextView
                 android:id="@+id/tvGroupTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Quản trị dự án phần mềm"
-                android:textSize="20sp"
-                android:textStyle="bold"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
                 android:gravity="center"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="8dp" />
+                android:text="Quản trị dự án phần mềm"
+                android:textColor="#1E293B"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <!-- Mô tả -->
             <TextView
                 android:id="@+id/tvGroupDescription"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Mời mọi người tham gia nhóm bằng mã QR hoặc mã phòng dưới đây:"
-                android:textSize="14sp"
-                android:textColor="#555"
+                android:layout_marginBottom="16dp"
                 android:gravity="center"
-                android:layout_marginBottom="16dp" />
+                android:text="Mời mọi người tham gia nhóm bằng mã QR hoặc mã phòng dưới đây:"
+                android:textColor="#64748B"
+                android:textSize="14sp" />
 
             <!-- QR Code -->
             <ImageView
@@ -74,25 +114,24 @@
                 android:textSize="16sp"
                 android:textColor="#1976D2"
                 android:textStyle="bold"
-                android:layout_marginBottom="24dp"/>
+                android:layout_marginBottom="16dp"/>
 
             <!-- Các nút -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center"
-                android:layout_marginTop="8dp">
+                android:gravity="center">
 
                 <LinearLayout
+                    android:id="@+id/btnCopy"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:layout_marginHorizontal="12dp"
+                    android:layout_marginHorizontal="20dp"
                     android:gravity="center">
 
                     <ImageView
-                        android:id="@+id/btnCopy"
                         android:layout_width="45dp"
                         android:layout_height="45dp"
                         android:padding="10dp"
@@ -103,22 +142,21 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
                         android:text="Sao chép mã"
                         android:textSize="12sp"
                         android:gravity="center" />
                 </LinearLayout>
 
-
-
                 <LinearLayout
+                    android:id="@+id/btnDownloadQR"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:layout_marginHorizontal="12dp"
+                    android:layout_marginHorizontal="20dp"
                     android:gravity="center">
 
                     <ImageView
-                        android:id="@+id/btnDownloadQR"
                         android:layout_width="45dp"
                         android:layout_height="45dp"
                         android:padding="10dp"
@@ -129,6 +167,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
                         android:text="Lưu mã QR"
                         android:textSize="12sp"
                         android:gravity="center" />
@@ -136,6 +175,5 @@
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-
 
 </FrameLayout>

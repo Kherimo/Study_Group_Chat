@@ -1,362 +1,399 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/background_root"
+    android:orientation="vertical"
     tools:context=".ui.fragments.GroupManagerFragment">
+
+    <!-- Header -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-        <!--     App bar -->
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="55dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="20dp">
+
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/bg_circle"
+            android:padding="6dp"
+            android:src="@drawable/ic_arrow_left" />
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Quản lý nhóm"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/btnSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="Lưu"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <!-- Khối nội dung chính -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        android:layout_weight="1"
+        android:background="@color/md_theme_onPrimary"
+        android:fillViewport="true">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/background_root"
-            android:elevation="4dp"
-            android:theme="@style/ThemeOverlay.Material3.Dark.ActionBar" />
-        <!-- Nội dung scroll -->
-        <androidx.core.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:fillViewport="true">
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Ảnh bìa -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+                android:layout_marginBottom="16dp">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/imgRoomAvatar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/baseline_groups_24"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Medium" />
+
+                <ImageView
+                    android:id="@+id/imgChangeAvatar"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="bottom|end"
+                    android:layout_margin="12dp"
+                    android:background="@drawable/bg_circle_"
+                    android:padding="6dp"
+                    android:src="@drawable/outline_photo_camera_24" />
+            </FrameLayout>
+
+            <!-- Tên nhóm -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-
-                <!-- Cover image -->
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="160dp"
-                    android:background="@drawable/bg_item"
-                    android:layout_marginBottom="16dp">
-
-                    <ImageView
-                        android:id="@+id/imgRoomAvatar"
-                        android:layout_width="90dp"
-                        android:layout_height="90dp"
-                        android:layout_gravity="center"
-                        android:padding="10dp"
-                        android:src="@drawable/baseline_groups_24"
-                        android:background="@drawable/bg_circle"
-                        android:scaleType="centerCrop" />
-
-                    <ImageView
-                        android:id="@+id/imgChangeAvatar"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_gravity="bottom|end"
-                        android:layout_margin="16dp"
-                        android:padding="5dp"
-                        android:src="@drawable/outline_photo_camera_24"
-                        android:background="@drawable/bg_circle_" />
-                </FrameLayout>
-
-                <!-- Group name + edit -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:layout_marginBottom="8dp"
-                    android:orientation="horizontal"
-                    >
-
-                    <EditText
-                        android:id="@+id/editGroupName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@null"
-                        android:hint="Tên nhóm"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
-
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_marginStart="8dp"
-                        android:src="@drawable/baseline_border_color_24" />
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center"
-                    android:paddingLeft="15dp">
-                    <TextView
-                        android:id="@+id/tvTypeGroup"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Nhóm công khai"
-                        android:textSize="13sp"
-                        android:textStyle="bold"
-                        android:textColor="#4D4D4D"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="-"
-                        android:layout_marginHorizontal="5dp"/>
-                    <TextView
-                        android:id="@+id/tvTotalMember"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="60"
-                        android:textSize="13sp"
-                        android:textStyle="bold"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=" thành viên"
-                        android:textSize="13sp"
-                        android:textStyle="bold"
-                        android:textColor="#4D4D4D"/>
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Giới thiệu"
-                    android:textStyle="bold"/>
+                android:gravity="center"
+                android:layout_marginBottom="4dp"
+                android:orientation="horizontal">
 
                 <EditText
-                    android:id="@+id/editDescription"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:background="@drawable/bg_edittext"
-                    android:hint="Giới thiệu về nhóm"
-                    android:inputType="textMultiLine"
-                    android:minLines="3"
-                    android:padding="8dp"
-                    android:gravity="top" />
-
-                <!-- Quản lý nhóm -->
-                <TextView
-                    android:layout_height="wrap_content"
+                    android:id="@+id/editGroupName"
                     android:layout_width="wrap_content"
-                    android:text="Quản lý nhóm"
-                    android:textStyle="bold"
-                    android:textSize="18sp"
-                    android:layout_marginBottom="8dp" />
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:hint="Tên nhóm"
+                    android:textColor="#1E293B"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="8dp"
+                    android:src="@drawable/baseline_border_color_24"
+                    app:tint="#64748B" />
+            </LinearLayout>
+
+            <!-- Trạng thái nhóm -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/tvTypeGroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Nhóm công khai"
+                    android:textColor="#64748B"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" • "
+                    android:textColor="#64748B"/>
+                <TextView
+                    android:id="@+id/tvTotalMember"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="60 thành viên"
+                    android:textColor="#64748B"/>
+            </LinearLayout>
+
+            <!-- Giới thiệu -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Giới thiệu"
+                android:textColor="#1E293B"
+                android:textStyle="bold"/>
+
+            <EditText
+                android:id="@+id/editDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/bg_edittext"
+                android:gravity="top"
+                android:hint="Giới thiệu về nhóm"
+                android:inputType="textMultiLine"
+                android:minLines="3"
+                android:padding="12dp" />
+
+            <!-- Quản lý nhóm -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Quản lý nhóm"
+                android:textColor="#1E293B"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp" />
+
+            <!-- Gia hạn nhóm -->
+            <LinearLayout
+                android:id="@+id/layoutExtend"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingVertical="15dp"
+                android:paddingHorizontal="16dp"
+                android:background="@drawable/bg_edittext"
+                android:layout_marginBottom="12dp"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/outline_calendar_month_24"
+                    android:layout_marginEnd="12dp" />
 
                 <LinearLayout
-                    android:id="@+id/layoutExtend"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:text="Gia hạn nhóm"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/tvExpireDate"
+                        android:text="Nhóm sẽ hết hạn vào 15/12/2024"
+                        android:textSize="12sp"
+                        android:textColor="#666"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/btnExtend"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="Gia hạn"
+                    android:textColor="#16A34A"
+                    android:textStyle="bold"
+                    android:background="@drawable/bg_blue"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="4dp"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <!-- Cài đặt riêng tư -->
+            <LinearLayout
+                android:id="@+id/changeTypeGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_vertical"
+                android:padding="12dp"
+                android:background="@drawable/bg_edittext"
+                android:layout_marginBottom="12dp">
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:paddingVertical="15dp"
-                    android:paddingHorizontal="16dp"
-                    android:background="@drawable/bg_edittext"
-                    android:layout_marginBottom="8dp"
                     android:gravity="center_vertical">
-
                     <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/outline_calendar_month_24"
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:src="@drawable/lock"
+                        android:scaleType="centerInside"
+                        android:background="@drawable/bg_circle"
+                        android:padding="10dp"
                         android:layout_marginEnd="12dp" />
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:layout_weight="1">
 
                         <TextView
-                            android:text="Gia hạn nhóm"
+                            android:id="@+id/tvlableEmail"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:textSize="14sp"
                             android:textStyle="bold"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
+                            android:text="Cài đặt riêng tư"
+                            android:textColor="#1E293B" />
 
                         <TextView
-                            android:id="@+id/tvExpireDate"
-                            android:text="Nhóm sẽ hết hạn vào 15/12/2024"
-                            android:textSize="12sp"
-                            android:textColor="#666"
+                            android:id="@+id/tvEmail"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            android:text="Thay đổi chế độ công khai/riêng tư"
+                            android:textSize="12sp"
+                            android:textColor="#6B7280"/>
                     </LinearLayout>
-
-                    <TextView
-                        android:id="@+id/btnExtend"
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
-                        android:text="Gia hạn"
-                        android:textColor="#16A34A"
-                        android:textStyle="bold"
-                        android:background="@drawable/bg_blue"
-                        android:paddingHorizontal="12dp"
-                        android:paddingVertical="4dp"
-                        android:textSize="12sp" />
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/changeTypeGroup"
+                <RadioGroup
+                    android:id="@+id/radioGroupRoomMode"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center_vertical|center_horizontal"
-                    android:padding="12dp"
-                    android:background="@drawable/bg_edittext"
-                    android:layout_marginBottom="12dp">
+                    android:layout_marginTop="12dp"
+                    android:orientation="vertical">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-                        <ImageView
-                            android:layout_width="44dp"
-                            android:layout_height="44dp"
-                            android:src="@drawable/lock"
-                            android:scaleType="centerInside"
-                            android:background="@drawable/bg_circle"
-                            android:padding="10dp"
-                            android:layout_marginEnd="12dp" />
-
-                        <LinearLayout
+                        android:orientation="horizontal"
+                        android:background="@drawable/bg_item"
+                        android:padding="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:gravity="center_vertical">
+                        <RadioButton
+                            android:id="@+id/radioPublic"
                             android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+                        <LinearLayout
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
                             android:layout_weight="1">
-
                             <TextView
-                                android:id="@+id/tvlableEmail"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:textSize="16sp"
+                                android:text="Công khai"
+                                android:textStyle="bold"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Mọi người có thể tìm thấy và tham gia phòng"
                                 android:textSize="14sp"
-                                android:textStyle="bold"
-                                android:text="Cài đặt riêng tư"
-                                android:textColor="#000000" />
-
-                            <TextView
-                                android:id="@+id/tvEmail"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Thay đổi chế độ công khai/riêng tư"
-                                android:textSize="12sp"
-                                android:textColor="#6B7280"/>
-
+                                android:textColor="#64748B"/>
                         </LinearLayout>
                     </LinearLayout>
 
-                    <RadioGroup
-                        android:id="@+id/radioGroupRoomMode"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:orientation="vertical">
-
+                        android:orientation="horizontal"
+                        android:background="@drawable/bg_item"
+                        android:padding="10dp"
+                        android:gravity="center_vertical">
+                        <RadioButton
+                            android:id="@+id/radioPrivate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
                         <LinearLayout
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:background="@drawable/bg_item"
-                            android:padding="10dp"
-                            android:layout_marginVertical="10dp"
-                            android:gravity="center_horizontal|center_vertical">
-                            <RadioButton
-                                android:id="@+id/radioPublic"
+                            android:orientation="vertical"
+                            android:layout_weight="1">
+                            <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                />
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical"
-
-                                android:layout_weight="1">
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:textSize="16sp"
-                                    android:text="Công khai"
-                                    android:textStyle="bold"/>
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Mọi người có thể tìm thấy và tham gia phòng"
-                                    android:textSize="14sp"
-                                    android:lines="2"
-                                    android:textColor="#64748B"/>
-
-                            </LinearLayout>
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:background="@drawable/bg_item"
-                            android:padding="10dp"
-                            android:gravity="center_horizontal|center_vertical">
-                            <RadioButton
-                                android:id="@+id/radioPrivate"
+                                android:textSize="16sp"
+                                android:text="Riêng tư"
+                                android:textStyle="bold"/>
+                            <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                />
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical"
-
-                                android:layout_weight="1">
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:textSize="16sp"
-                                    android:text="Riêng tư"
-                                    android:textStyle="bold"/>
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Chỉ những người có mã mời hoặc QR mới tham gia được"
-                                    android:textSize="14sp"
-                                    android:textColor="#64748B"/>
-
-                            </LinearLayout>
+                                android:text="Chỉ những người có mã mời mới tham gia được"
+                                android:textSize="14sp"
+                                android:textColor="#64748B"/>
                         </LinearLayout>
-                    </RadioGroup>
+                    </LinearLayout>
+                </RadioGroup>
+            </LinearLayout>
 
-                </LinearLayout>
-
+            <!-- Quản lý thành viên -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal">
-                    <!-- Quản lý thành viên -->
                     <TextView
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
-                        android:text="Quản lý thành viên"
-                        android:textStyle="bold"
-                        android:textSize="18sp"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginBottom="8dp" />
-                    <View
                         android:layout_width="0dp"
-                        android:layout_height="1dp"
-                        android:layout_weight="1"/>
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="Thành viên"
+                        android:textColor="#1E293B"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
                     <SearchView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:queryHint="Tìm kiếm..."
+                        android:iconifiedByDefault="true"/>
                 </LinearLayout>
-
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_members"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    tools:listitem="@layout/item_member"
-                    android:nestedScrollingEnabled="false" />
+                    android:layout_marginTop="8dp"
+                    android:nestedScrollingEnabled="false"
+                    tools:itemCount="3"
+                    tools:listitem="@layout/item_member" />
             </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
 
-    </LinearLayout>
+            <!-- Nút xóa nhóm -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDelete"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Xóa nhóm"
+                android:textColor="#EF4444"
+                app:icon="@drawable/outline_delete_24"
+                app:iconTint="#EF4444"
+                app:strokeColor="#FEE2E2" />
 
-</FrameLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</LinearLayout>
