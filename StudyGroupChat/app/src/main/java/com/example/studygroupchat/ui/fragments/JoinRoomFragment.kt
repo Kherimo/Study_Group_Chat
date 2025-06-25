@@ -19,6 +19,7 @@ import com.example.studygroupchat.adapter.RoomAdapter
 import com.example.studygroupchat.api.ApiConfig
 import com.example.studygroupchat.repository.RoomRepository
 import com.example.studygroupchat.StudyGroupChatApplication
+import com.example.studygroupchat.ui.QRScanActivity
 import com.example.studygroupchat.viewmodel.RoomViewModel
 import com.example.studygroupchat.viewmodel.RoomViewModelFactory
 import com.example.studygroupchat.ui.fragments.GroupDetailFragment
@@ -102,6 +103,7 @@ class JoinRoomFragment : Fragment() {
             options.setPrompt(getString(R.string.scan_qr_prompt))
             options.setBeepEnabled(false)
             options.setDesiredBarcodeFormats(ScanOptions.QR_CODE)
+            options.setCaptureActivity(QRScanActivity::class.java)
             scanLauncher.launch(options)
         }
 

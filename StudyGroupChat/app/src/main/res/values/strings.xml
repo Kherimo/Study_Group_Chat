@@ -3,4 +3,8 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="scan_qr_prompt">Quét mã QR</string>
+    <string name="copied_invite_code">Đã sao chép mã mời</string>
+    <string name="saved_qr_success">Đã lưu mã QR</string>
+    <string name="scan_qr_image">Quét từ ảnh</string>
+    <string name="no_qr_found">Không tìm thấy mã QR trong ảnh</string>
 </resources>
