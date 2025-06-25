@@ -1,114 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#80000000"
     tools:context=".ui.fragments.AIChatFragment">
 
     <com.google.android.material.card.MaterialCardView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_margin="16dp"
+        android:layout_marginHorizontal="16dp"
         app:cardCornerRadius="16dp"
-        app:cardElevation="8dp"
-        android:backgroundTint="@android:color/white">
+        app:cardElevation="8dp">
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            >
+            android:orientation="vertical">
 
+            <!-- Header -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:background="#8B5CF6"
-                android:padding="15dp"
-                android:gravity="center_vertical|center_horizontal">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/bot"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="12dp">
+
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
                     android:background="@drawable/bg_circle"
-                    android:padding="5dp"/>
+                    android:padding="6dp"
+                    android:src="@drawable/bot" />
+
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginLeft="10dp">
+                    android:layout_weight="1"
+                    android:layout_marginStart="12dp"
+                    android:orientation="vertical">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="AI trợ lý"
-                        android:textSize="16sp"
+                        android:text="AI Trợ lý"
                         android:textColor="#FFFFFF"
-                        android:textStyle="bold"/>
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Đang hoạt động"
-                        android:textColor="#E0E7FF"/>
+                        android:textColor="#E0E7FF"
+                        android:textSize="12sp" />
                 </LinearLayout>
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1"/>
+
                 <ImageButton
                     android:id="@+id/btnCloseChatAI"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:background="@drawable/bg_close_chatbox"
-                    android:src="@drawable/baseline_close_24"
-                    android:contentDescription="Đóng" />
-
+                    android:contentDescription="Đóng"
+                    android:src="@drawable/baseline_close_24" />
 
             </LinearLayout>
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:background="#F5F5F5"
-                >
-                <LinearLayout
-                    android:id="@+id/layoutResponse"
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingHorizontal="15dp" />
-            </ScrollView>
 
+            <!-- Khung chat -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvMessages"
+                android:layout_width="match_parent"
+                android:layout_height="350dp"
+                android:padding="8dp"
+                android:background="#F8FAFC"
+                android:clipToPadding="false"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_chat_ai"/>
+
+            <!-- Khung nhập liệu -->
             <LinearLayout
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingVertical="12dp"
-                android:gravity="center_vertical|center_horizontal"
+                android:background="#F8FAFC"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
                 android:paddingHorizontal="10dp"
-                android:background="#FFFFFF">
+                android:paddingVertical="8dp">
+
                 <EditText
                     android:id="@+id/etMessage"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:hint="Hỏi AI..."
-                    android:textSize="18dp"
-                    android:padding="10dp"
-                    android:background="@drawable/bg_item"/>
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_item"
+                    android:hint="Hỏi AI bất cứ điều gì..."
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="12dp"
+                    android:textSize="16sp" />
+
                 <ImageButton
                     android:id="@+id/btnSend"
-                    android:src="@drawable/ic_send"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:background="?selectableItemBackgroundBorderless" />
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="8dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_send" />
             </LinearLayout>
 
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
-
-
 
 </FrameLayout>

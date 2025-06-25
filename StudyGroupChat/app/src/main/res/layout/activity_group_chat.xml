@@ -11,7 +11,7 @@
         android:id="@+id/toolbarGroupChat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/background_root"
+        android:background="@color/md_theme_primary"
         android:title="Thành viên"
         android:subtitle="Lớp học Toán 10A"
         android:titleTextColor="@android:color/white"
