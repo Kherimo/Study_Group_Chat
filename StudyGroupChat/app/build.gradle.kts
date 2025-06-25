@@ -103,4 +103,7 @@ dependencies {
     // Google Generative AI
     // https://mvnrepository.com/artifact/com.google.ai.client.generativeai/generativeai
     implementation("com.google.ai.client.generativeai:generativeai:0.2.0")
+
+    //jitsi meet
+    implementation("org.jitsi.react:jitsi-meet-sdk:9.2.1")
 }
