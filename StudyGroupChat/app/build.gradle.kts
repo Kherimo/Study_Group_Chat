@@ -15,6 +15,9 @@ android {
         versionCode = 1
         versionName = "1.0"
 
+        val geminiApiKey: String = project.findProperty("GEMINI_API_KEY") as? String ?: ""
+        buildConfigField("String", "GEMINI_API_KEY", "\"$geminiApiKey\"")
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -27,8 +30,9 @@ android {
             )
         }
     }
-    
+
     buildFeatures {
+        buildConfig = true
         viewBinding = true
     }
     
@@ -95,4 +99,8 @@ dependencies {
 
     // OkHttp logging interceptor
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+
+    // Google Generative AI
+    // https://mvnrepository.com/artifact/com.google.ai.client.generativeai/generativeai
+    implementation("com.google.ai.client.generativeai:generativeai:0.2.0")
 }

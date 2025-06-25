@@ -53,7 +53,7 @@ class RoomAdapter(
 //        holder.courseTitle.text = room.roomName
         holder.courseTitle.text = room.roomName
         holder.courseDescription.text = room.description ?: ""
-        holder.courseStatus.text = if (room.isActive) "Đang học" else "Đã dừng"
+        holder.courseStatus.text = if (room.isActive) "Hoạt động" else "Tạm dừng"
 
         // Xử lý trạng thái màu chữ và background
         val textColorRes = if (room.isActive) R.color.green_600 else R.color.orange_600
