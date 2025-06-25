@@ -18,9 +18,15 @@ import com.example.studygroupchat.api.ApiConfig
 import com.example.studygroupchat.model.room.Room
 import com.example.studygroupchat.model.room.RoomMember
 import com.example.studygroupchat.repository.RoomRepository
+import com.example.studygroupchat.repository.UserRepository
 import com.example.studygroupchat.StudyGroupChatApplication
 import com.example.studygroupchat.viewmodel.RoomViewModel
 import com.example.studygroupchat.viewmodel.RoomViewModelFactory
+import com.example.studygroupchat.viewmodel.UserViewModel
+import com.example.studygroupchat.viewmodel.UserViewModelFactory
+import org.jitsi.meet.sdk.JitsiMeetActivity
+import org.jitsi.meet.sdk.JitsiMeetConferenceOptions
+import org.jitsi.meet.sdk.JitsiMeetUserInfo
 import com.google.android.material.button.MaterialButton
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -37,6 +43,16 @@ class GroupDetailFragment : Fragment() {
         )
     }
 
+    private val userViewModel: UserViewModel by viewModels {
+        val app = requireActivity().application as StudyGroupChatApplication
+        UserViewModelFactory(
+            UserRepository(
+                ApiConfig.userApiService,
+                app.database.userDao()
+            )
+        )
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -46,6 +62,12 @@ class GroupDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        var displayName = ""
+        userViewModel.user.observe(viewLifecycleOwner) { user ->
+            displayName = user.fullName ?: user.userName
+        }
+        userViewModel.fetchCurrentUser()
 
         val btnBack = view.findViewById<ImageView>(R.id.btnBack)
         btnBack.setOnClickListener { navigateHome() }
@@ -116,49 +138,66 @@ class GroupDetailFragment : Fragment() {
         recyclerViewMember.adapter = adapter
         recyclerViewMember.layoutManager = LinearLayoutManager(requireContext())
 
-        val shareButton = view.findViewById<MaterialButton>(R.id.shareGroup)
-        shareButton.setOnClickListener {
-            val fragment = ShareRoomFragment().apply {
-                arguments = Bundle().apply { putSerializable("room", r) }
+            val shareButton = view.findViewById<MaterialButton>(R.id.shareGroup)
+            shareButton.setOnClickListener {
+                val fragment = ShareRoomFragment().apply {
+                    arguments = Bundle().apply { putSerializable("room", r) }
+                }
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .addToBackStack(null)
+                    .commit()
             }
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .addToBackStack(null)
-                .commit()
-        }
 
-        val messageButton = view.findViewById<MaterialButton>(R.id.btnmess)
-        messageButton.setOnClickListener {
-            val intent = android.content.Intent(requireContext(), GroupChatActivity::class.java).apply {
-                putExtra("groupId", r.roomId.toString())
-                putExtra("groupName", r.roomName)
-                putExtra("groupMode", r.roomMode)
-                putExtra("memberCount", r.members?.size ?: 0)
+            val messageButton = view.findViewById<MaterialButton>(R.id.btnmess)
+            messageButton.setOnClickListener {
+                val intent = android.content.Intent(requireContext(), GroupChatActivity::class.java).apply {
+                    putExtra("groupId", r.roomId.toString())
+                    putExtra("groupName", r.roomName)
+                    putExtra("groupMode", r.roomMode)
+                    putExtra("memberCount", r.members?.size ?: 0)
+                }
+                startActivity(intent)
             }
-            startActivity(intent)
-        }
 
-        val leaveButton = view.findViewById<MaterialButton>(R.id.leavetheGroup)
-        if (isOwner) {
-            leaveButton.visibility = View.GONE
-        } else {
-            leaveButton.setOnClickListener {
-                viewModel.leaveRoom(r.roomId.toString())
+            val joinButton = view.findViewById<MaterialButton>(R.id.btnjointhegroup)
+            joinButton.setOnClickListener {
+                val code = r.inviteCode
+                if (!code.isNullOrBlank()) {
+                    val userInfo = JitsiMeetUserInfo().apply { displayName = displayName }
+                    val options = JitsiMeetConferenceOptions.Builder()
+                        .setRoom(code)
+                        .setUserInfo(userInfo)
+                        .setFeatureFlag("welcomepage.enabled", false)
+                        .setFeatureFlag("prejoinpage.enabled", false)
+                        .build()
+                    JitsiMeetActivity.launch(requireContext(), options)
+                } else {
+                    Toast.makeText(requireContext(), "Không tìm thấy mã phòng", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            val leaveButton = view.findViewById<MaterialButton>(R.id.leavetheGroup)
+            if (isOwner) {
+                leaveButton.visibility = View.GONE
+            } else {
+                leaveButton.setOnClickListener {
+                    viewModel.leaveRoom(r.roomId.toString())
+                }
             }
         }
-    }
 
-    viewModel.leaveResult.observe(viewLifecycleOwner) { result ->
-        result.onSuccess {
-            Toast.makeText(requireContext(), "Đã rời nhóm", Toast.LENGTH_SHORT).show()
-            navigateHome()
-        }
-        result.onFailure {
-            Toast.makeText(requireContext(), "Rời nhóm thất bại", Toast.LENGTH_SHORT).show()
-        }
-    }
+            viewModel.leaveResult.observe(viewLifecycleOwner) { result ->
+                result.onSuccess {
+                    Toast.makeText(requireContext(), "Đã rời nhóm", Toast.LENGTH_SHORT).show()
+                    navigateHome()
+                }
+                result.onFailure {
+                    Toast.makeText(requireContext(), "Rời nhóm thất bại", Toast.LENGTH_SHORT).show()
+                }
+            }
 
-}
+        }
 fun formatCreatedAt(raw: String?): String {
     if (raw.isNullOrBlank()) return "Không rõ"
     return try {
