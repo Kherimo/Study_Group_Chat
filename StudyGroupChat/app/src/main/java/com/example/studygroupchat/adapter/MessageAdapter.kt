@@ -5,6 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.net.Uri
+import com.bumptech.glide.request.RequestOptions
 import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -31,6 +33,12 @@ class MessageAdapter(
         val imgAvatar: ImageView = itemView.findViewById(R.id.imgAvatar)
         val tvTime: TextView = itemView.findViewById(R.id.tvTime)
         val tvDateHeader: TextView = itemView.findViewById(R.id.tvDateHeader)
+        val imgContent: ImageView = itemView.findViewById(R.id.imgContent)
+        val imgVideoThumbnail: ImageView = itemView.findViewById(R.id.imgVideoThumbnail)
+        val btnPlayVideo: ImageView = itemView.findViewById(R.id.btnPlayVideo)
+        val fileContainer: View = itemView.findViewById(R.id.fileContainer)
+        val tvFileName: TextView = itemView.findViewById(R.id.tvFileName)
+        val tvFileSize: TextView = itemView.findViewById(R.id.tvFileSize)
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -51,6 +59,54 @@ class MessageAdapter(
     override fun onBindViewHolder(holder: MessageViewHolder, position: Int) {
         val message = messageList[position]
         holder.tvMessage.text = message.content ?: ""
+        holder.imgContent.visibility = View.GONE
+        holder.imgVideoThumbnail.visibility = View.GONE
+        holder.btnPlayVideo.visibility = View.GONE
+        holder.fileContainer.visibility = View.GONE
+
+        when (message.messageType) {
+            "image" -> {
+                holder.imgContent.visibility = View.VISIBLE
+                Glide.with(holder.itemView.context)
+                    .load(message.fileUrl)
+                    .fitCenter()
+                    .into(holder.imgContent)
+                holder.tvMessage.visibility = if (message.content.isNullOrBlank()) View.GONE else View.VISIBLE
+            }
+            "video" -> {
+                holder.imgVideoThumbnail.visibility = View.VISIBLE
+                holder.btnPlayVideo.visibility = View.VISIBLE
+                Glide.with(holder.itemView.context)
+                    .asBitmap()
+                    .load(message.fileUrl)
+                    .apply(RequestOptions().frame(1000))
+                    .into(holder.imgVideoThumbnail)
+                holder.tvMessage.visibility = if (message.content.isNullOrBlank()) View.GONE else View.VISIBLE
+                val clickListener = View.OnClickListener {
+                    message.fileUrl?.let { url ->
+                        val intent = android.content.Intent(android.content.Intent.ACTION_VIEW, Uri.parse(url))
+                        holder.itemView.context.startActivity(intent)
+                    }
+                }
+                holder.imgVideoThumbnail.setOnClickListener(clickListener)
+                holder.btnPlayVideo.setOnClickListener(clickListener)
+            }
+            "file" -> {
+                holder.fileContainer.visibility = View.VISIBLE
+                holder.tvFileName.text = message.fileName ?: "file"
+                holder.tvFileSize.text = message.fileSize?.let { formatSize(it) } ?: ""
+                holder.tvMessage.visibility = View.GONE
+                holder.fileContainer.setOnClickListener {
+                    message.fileUrl?.let { url ->
+                        val intent = android.content.Intent(android.content.Intent.ACTION_VIEW, Uri.parse(url))
+                        holder.itemView.context.startActivity(intent)
+                    }
+                }
+            }
+            else -> {
+                holder.tvMessage.visibility = View.VISIBLE
+            }
+        }
         val sender = message.sender
         holder.tvSenderName.text = sender?.fullName ?: sender?.userName ?: ""
         sender?.avatarUrl?.let {
@@ -120,27 +176,39 @@ class MessageAdapter(
         return dt.toLocalDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
     }
 
-    private fun sameDay(a: String, b: String): Boolean {
-        val d1 = LocalDate.parse(a.substring(0, 10))
-        val d2 = LocalDate.parse(b.substring(0, 10))
-        return d1 == d2
-    }
+        private fun sameDay(a: String, b: String): Boolean {
+            val d1 = LocalDate.parse(a.substring(0, 10))
+            val d2 = LocalDate.parse(b.substring(0, 10))
+            return d1 == d2
+        }
 
-    private fun sameSender(a: RoomMessage, b: RoomMessage): Boolean {
-        return a.senderId == b.senderId
-    }
+        private fun sameSender(a: RoomMessage, b: RoomMessage): Boolean {
+            return a.senderId == b.senderId
+        }
 
-    private fun parseInstant(raw: String): Long {
-        return LocalDateTime.parse(raw, DateTimeFormatter.ISO_DATE_TIME)
-            .atZone(ZoneId.systemDefault())
-            .toInstant()
-            .toEpochMilli()
-    }
+        private fun parseInstant(raw: String): Long {
+            return LocalDateTime.parse(raw, DateTimeFormatter.ISO_DATE_TIME)
+                .atZone(ZoneId.systemDefault())
+                .toInstant()
+                .toEpochMilli()
+        }
 
-    private fun closeTime(a: RoomMessage, b: RoomMessage): Boolean {
-        val diff = kotlin.math.abs(parseInstant(a.sentAt) - parseInstant(b.sentAt))
-        return diff <= Duration.ofMinutes(3).toMillis()
-    }
+        private fun closeTime(a: RoomMessage, b: RoomMessage): Boolean {
+            val diff = kotlin.math.abs(parseInstant(a.sentAt) - parseInstant(b.sentAt))
+            return diff <= Duration.ofMinutes(3).toMillis()
+        }
 
-    override fun getItemCount() = messageList.size
-}
+        private fun formatSize(size: Long): String {
+            val kb = size / 1024.0
+            val mb = kb / 1024.0
+            return if (mb >= 1) {
+                "%.1f MB".format(mb)
+            } else {
+                "%.1f KB".format(kb)
+            }
+        }
+
+
+
+        override fun getItemCount() = messageList.size
+    }

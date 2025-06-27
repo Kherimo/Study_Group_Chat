@@ -1,14 +1,15 @@
 package com.example.studygroupchat.ui.fragments
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
 
 import com.example.studygroupchat.R
 import android.widget.EditText
-import android.widget.ImageButton
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.activity.viewModels
@@ -23,6 +24,10 @@ import com.example.studygroupchat.viewmodel.RoomMessageViewModelFactory
 import com.example.studygroupchat.viewmodel.UserViewModel
 import com.example.studygroupchat.viewmodel.UserViewModelFactory
 import com.google.android.material.appbar.MaterialToolbar
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 
 class GroupChatActivity : AppCompatActivity() {
 
@@ -31,6 +36,7 @@ class GroupChatActivity : AppCompatActivity() {
     private lateinit var recyclerMessages: RecyclerView
     private lateinit var etMessage: EditText
     private lateinit var btnSend: TextView
+    private lateinit var btnFile: TextView
 
     private val userViewModel: UserViewModel by viewModels {
         val app = application as StudyGroupChatApplication
@@ -43,6 +49,12 @@ class GroupChatActivity : AppCompatActivity() {
     }
 
     private var currentUserId: Int = 0
+
+    private val filePickerLauncher = registerForActivityResult(
+        ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let { sendAttachment(it) }
+    }
 
     private val viewModel: RoomMessageViewModel by viewModels {
         val app = application as StudyGroupChatApplication
@@ -86,6 +98,7 @@ class GroupChatActivity : AppCompatActivity() {
         recyclerMessages = findViewById(R.id.recyclerMessages)
         etMessage = findViewById(R.id.etMessage)
         btnSend = findViewById(R.id.btnSend)
+        btnFile = findViewById(R.id.btnFile)
 
         messageList = mutableListOf()
 
@@ -128,10 +141,28 @@ class GroupChatActivity : AppCompatActivity() {
                 etMessage.text.clear()
             }
         }
+
+        btnFile.setOnClickListener {
+            filePickerLauncher.launch("*/*")
+        }
     }
 
     private fun scrollToBottom() {
         recyclerMessages.scrollToPosition(messageList.size - 1)
+    }
+
+    private fun sendAttachment(uri: Uri) {
+        val mime = contentResolver.getType(uri) ?: "application/octet-stream"
+        val typeValue = when {
+            mime.startsWith("image/") -> "image"
+            mime.startsWith("video/") -> "video"
+            else -> "file"
+        }
+        val bytes = contentResolver.openInputStream(uri)?.use { it.readBytes() } ?: return
+        val requestBody = bytes.toRequestBody(mime.toMediaTypeOrNull())
+        val filePart = MultipartBody.Part.createFormData("file", "attachment", requestBody)
+        val typeBody = typeValue.toRequestBody("text/plain".toMediaTypeOrNull())
+        groupId?.let { viewModel.sendRoomAttachment(it, filePart, typeBody) }
     }
 
     // Xử lý nút back trên thanh toolbar
@@ -147,7 +178,12 @@ class GroupChatActivity : AppCompatActivity() {
 
         // Gọi trực tiếp luôn hành động (không chờ click)
         memberItem.setOnMenuItemClickListener {
-            startActivity(Intent(this, MemberListActivity::class.java))
+            val intent = Intent(this, MemberListActivity::class.java).apply {
+                putExtra("groupId", groupId)
+                putExtra("groupName", groupName)
+                putExtra("memberCount", memberCount)
+            }
+            startActivity(intent)
             true
         }
 

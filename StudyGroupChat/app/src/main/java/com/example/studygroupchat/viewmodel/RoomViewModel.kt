@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.studygroupchat.model.room.Room
+import com.example.studygroupchat.model.room.RoomMember
 import com.example.studygroupchat.repository.RoomRepository
 import kotlinx.coroutines.launch
 
@@ -23,6 +24,9 @@ class RoomViewModel(private val repository: RoomRepository) : ViewModel() {
 
     private val _selectedRoom = MutableLiveData<Result<Room>>()
     val selectedRoom: LiveData<Result<Room>> = _selectedRoom
+
+    private val _members = MutableLiveData<List<RoomMember>>()
+    val members: LiveData<List<RoomMember>> = _members
 
     fun fetchMyRooms() {
         viewModelScope.launch {
@@ -50,6 +54,15 @@ class RoomViewModel(private val repository: RoomRepository) : ViewModel() {
         viewModelScope.launch {
             _isLoading.value = true
             _selectedRoom.value = repository.getRoom(roomId)
+            _isLoading.value = false
+        }
+    }
+
+    fun fetchRoomMembers(roomId: String) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            val result = repository.getRoomMembers(roomId)
+            result.onSuccess { _members.value = it }
             _isLoading.value = false
         }
     }

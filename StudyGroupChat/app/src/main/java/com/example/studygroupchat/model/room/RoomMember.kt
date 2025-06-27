@@ -12,6 +12,6 @@ data class RoomMember(
     val joinedAt: String,
 
     // Tùy theo API có trả thêm thông tin user không
-    @SerializedName("user")
+    @SerializedName("users")
     val user: User? = null
 )

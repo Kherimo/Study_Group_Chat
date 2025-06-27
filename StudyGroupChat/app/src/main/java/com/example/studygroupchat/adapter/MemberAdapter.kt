@@ -11,7 +11,8 @@ import com.example.studygroupchat.model.room.RoomMember
 
 class MemberAdapter(
     private var members: List<RoomMember>,
-    private val currentUserId: Int? = null, // ID người dùng hiện tại (nếu cần kiểm tra quyền)
+    private val currentUserId: Int? = null, // ID người dùng hiện tại để gắn nhãn "Bạn"
+    private val ownerId: Int? = null, // ID chủ phòng để hiển thị "Admin"
     private val onMoreClick: ((RoomMember) -> Unit)? = null,
     private val showMenu: Boolean = true
 ) : RecyclerView.Adapter<MemberAdapter.MemberViewHolder>() {

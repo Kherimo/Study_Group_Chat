@@ -53,6 +53,8 @@ class GroupDetailFragment : Fragment() {
         )
     }
 
+    private var currentUserId: Int = 0
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -66,6 +68,7 @@ class GroupDetailFragment : Fragment() {
         var displayName = ""
         userViewModel.user.observe(viewLifecycleOwner) { user ->
             displayName = user.fullName ?: user.userName
+            currentUserId = user.userId
         }
         userViewModel.fetchCurrentUser()
 
@@ -125,15 +128,17 @@ class GroupDetailFragment : Fragment() {
                 )
             } ?: emptyList()
 
-        val myUserId = r.owner?.userId ?: 0
-        val recyclerViewMember = view.findViewById<RecyclerView>(R.id.recyclerViewMember)
+            val ownerId = r.owner?.userId ?: 0
+            val currentId = userViewModel.user.value?.userId ?: 0
+            val recyclerViewMember = view.findViewById<RecyclerView>(R.id.recyclerViewMember)
 
-        val adapter = MemberAdapter(
-            roomMembers,
-            currentUserId = myUserId,
-            onMoreClick = null,      // Không cần xử lý click trong Detail
-            showMenu = false         // ❌ Ẩn nút menu 3 chấm
-        )
+            val adapter = MemberAdapter(
+                roomMembers,
+                currentUserId = currentId,
+                ownerId = ownerId,
+                onMoreClick = null,      // Không cần xử lý click trong Detail
+                showMenu = false         // ❌ Ẩn nút menu 3 chấm
+            )
 
         recyclerViewMember.adapter = adapter
         recyclerViewMember.layoutManager = LinearLayoutManager(requireContext())
