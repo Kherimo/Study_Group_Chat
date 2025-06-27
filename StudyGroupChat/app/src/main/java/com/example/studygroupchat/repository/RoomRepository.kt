@@ -158,6 +158,10 @@ class RoomRepository(
         }
     }
 
+    suspend fun getCachedRoomCount(): Int = withContext(Dispatchers.IO) {
+        roomDao.getRoomCount()
+    }
+
     suspend fun getCachedRooms(): List<Room> = withContext(Dispatchers.IO) {
         roomDao.getRooms().map { it.toModel() }
     }

@@ -18,6 +18,7 @@ import com.example.studygroupchat.repository.UserRepository
 import com.example.studygroupchat.StudyGroupChatApplication
 import com.example.studygroupchat.viewmodel.UserViewModel
 import com.example.studygroupchat.viewmodel.UserViewModelFactory
+import com.google.android.material.imageview.ShapeableImageView
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -40,7 +41,7 @@ class EditInfoFragment : Fragment() {
     private lateinit var editFullName: EditText
     private lateinit var editEmail: EditText
     private lateinit var editPhone: EditText
-    private lateinit var imgAvatar: ImageView
+    private lateinit var imgAvatar: ShapeableImageView
     private lateinit var tvChangePhoto: TextView
     private lateinit var editUserName: TextView
 

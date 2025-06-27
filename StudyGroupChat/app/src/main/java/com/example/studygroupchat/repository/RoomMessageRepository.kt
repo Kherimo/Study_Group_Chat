@@ -70,6 +70,14 @@ class RoomMessageRepository(
         }
     }
 
+    suspend fun getCachedMessageCount(): Int = withContext(Dispatchers.IO) {
+        messageDao.getMessageCount()
+    }
+
+    suspend fun getCachedMessageCountForUser(userId: Int): Int = withContext(Dispatchers.IO) {
+        messageDao.getMessageCountForSender(userId)
+    }
+
     suspend fun getLastRoomMessage(roomId: String): Result<RoomMessage?> = withContext(Dispatchers.IO) {
         try {
             val response = apiService.getLastMessage(roomId)

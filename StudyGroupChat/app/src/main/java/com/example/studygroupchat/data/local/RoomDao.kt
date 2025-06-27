@@ -10,6 +10,9 @@ interface RoomDao {
     @Query("SELECT * FROM rooms")
     suspend fun getRooms(): List<RoomEntity>
 
+    @Query("SELECT COUNT(*) FROM rooms")
+    suspend fun getRoomCount(): Int
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRooms(rooms: List<RoomEntity>)
 

@@ -7,17 +7,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import android.widget.ImageView
+import com.google.android.material.imageview.ShapeableImageView
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.example.studygroupchat.R
 import com.bumptech.glide.Glide
 import com.example.studygroupchat.api.ApiConfig
 import com.example.studygroupchat.repository.UserRepository
+import com.example.studygroupchat.repository.RoomRepository
+import com.example.studygroupchat.repository.RoomMessageRepository
 import com.example.studygroupchat.StudyGroupChatApplication
 import com.example.studygroupchat.viewmodel.UserViewModel
 import com.example.studygroupchat.viewmodel.UserViewModelFactory
 import com.example.studygroupchat.viewmodel.AuthViewModel
+import com.example.studygroupchat.viewmodel.StatsViewModel
+import com.example.studygroupchat.viewmodel.StatsViewModelFactory
 
 /**
  * Hiển thị thông tin người dùng hiện tại.
@@ -33,6 +37,14 @@ class ProfileFragment : Fragment() {
         )
     }
     private val authViewModel: AuthViewModel by activityViewModels()
+    private val statsViewModel: StatsViewModel by viewModels {
+        val app = requireActivity().application as StudyGroupChatApplication
+        StatsViewModelFactory(
+            UserRepository(ApiConfig.userApiService, app.database.userDao()),
+            RoomRepository(ApiConfig.roomApiService, app.database.roomDao()),
+            RoomMessageRepository(ApiConfig.roomMessageApiService, app.database.messageDao())
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,9 +58,11 @@ class ProfileFragment : Fragment() {
         val tvUsername = view.findViewById<TextView>(R.id.tvUsername)
         val tvEmail = view.findViewById<TextView>(R.id.tvEmail)
         val tvPhone = view.findViewById<TextView>(R.id.tvPhone)
-        val imgAvatar = view.findViewById<ImageView>(R.id.imgAvatar)
+        val imgAvatar = view.findViewById<ShapeableImageView>(R.id.imgAvatar)
         val btnLogout = view.findViewById<Button>(R.id.btnLogout)
         val btnEdit = view.findViewById<TextView>(R.id.btnEditProfile)
+        val tvRoomCount = view.findViewById<TextView>(R.id.tvCountClass)
+        val tvMessageCount = view.findViewById<TextView>(R.id.tvCountMessage)
 
         viewModel.user.observe(viewLifecycleOwner) { user ->
             tvUsername.text = user.fullName ?: user.userName
@@ -73,6 +87,15 @@ class ProfileFragment : Fragment() {
         btnLogout.setOnClickListener {
             authViewModel.logout()
         }
+
+        statsViewModel.roomCount.observe(viewLifecycleOwner) { count ->
+            tvRoomCount.text = count.toString()
+        }
+        statsViewModel.messageCount.observe(viewLifecycleOwner) { count ->
+            tvMessageCount.text = count.toString()
+        }
+
+        statsViewModel.loadStats()
 
     }
 }
