@@ -102,7 +102,7 @@ class MemberListActivity : AppCompatActivity() {
 
     private fun refreshAdapter() {
         if (memberAdapter == null) {
-            memberAdapter = MemberAdapter(members, currentUserId, ownerId, showMenu = false)
+            memberAdapter = MemberAdapter(members, currentUserId, ownerId, onMoreClick = null, showMenu = false)
             recyclerMembers.adapter = memberAdapter
         } else {
             memberAdapter?.updateData(members)

@@ -161,6 +161,18 @@ class RoomRepository(
     suspend fun getCachedRooms(): List<Room> = withContext(Dispatchers.IO) {
         roomDao.getRooms().map { it.toModel() }
     }
+    suspend fun removeMember(roomId: String, userId: String): Result<Unit> = withContext(Dispatchers.IO) {
+        try {
+            val response = apiService.removeMember(roomId, userId)
+            if (response.isSuccessful) {
+                Result.success(Unit)
+            } else {
+                Result.failure(Exception("Failed to remove member: ${'$'}{response.code()}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 
     private fun Room.toEntity() = RoomEntity(
         roomId,
