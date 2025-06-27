@@ -55,19 +55,39 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Hi"
+                android:maxWidth="240dp"
                 android:textColor="#1E293B"
                 android:textSize="15sp"
                 android:visibility="visible"/> <!-- Hiển thị  -->
 
-            <!-- 2. Nội dung tin nhắn HÌNH ẢNH / VIDEO THUMBNAIL -->
+            <!-- 2. Nội dung tin nhắn HÌNH ẢNH -->
             <ImageView
                 android:id="@+id/imgContent"
-                android:layout_width="240dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
-                android:scaleType="centerCrop"
+                android:maxWidth="240dp"
+                android:scaleType="fitCenter"
                 android:visibility="gone"
                 tools:src="@tools:sample/backgrounds/scenic" />
+
+            <!-- Thumbnail and playback for VIDEO -->
+            <ImageView
+                android:id="@+id/imgVideoThumbnail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:maxWidth="240dp"
+                android:scaleType="centerCrop"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/btnPlayVideo"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:src="@drawable/baseline_play_circle_24"
+                android:visibility="gone" />
 
             <!-- 3. Nội dung tin nhắn dạng FILE (PDF, DOCX, etc.) -->
             <LinearLayout

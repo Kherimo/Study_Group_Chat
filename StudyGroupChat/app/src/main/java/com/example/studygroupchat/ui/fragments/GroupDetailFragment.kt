@@ -53,6 +53,11 @@ class GroupDetailFragment : Fragment() {
         )
     }
 
+    private var currentUserId: Int = 0
+    private lateinit var recyclerViewMember: RecyclerView
+    private var memberAdapter: MemberAdapter? = null
+    private var members: List<RoomMember> = emptyList()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -66,6 +71,7 @@ class GroupDetailFragment : Fragment() {
         var displayName = ""
         userViewModel.user.observe(viewLifecycleOwner) { user ->
             displayName = user.fullName ?: user.userName
+            currentUserId = user.userId
         }
         userViewModel.fetchCurrentUser()
 
@@ -73,149 +79,150 @@ class GroupDetailFragment : Fragment() {
         btnBack.setOnClickListener { navigateHome() }
 
         val btnMembers = view.findViewById<ImageView>(R.id.btnMembers)
-        val room = arguments?.getSerializable("room") as? Room
-        val isOwner = arguments?.getBoolean("isOwner", false) == true
-        if (isOwner) {
-            btnMembers.visibility = View.VISIBLE
-            btnMembers.setOnClickListener {
-                val fragment = GroupManagerFragment()
-                fragment.arguments = Bundle().apply { putSerializable("room", room) }
-                parentFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, fragment)
-                    .addToBackStack(null)
-                    .commit()
-            }
-        }
 
+        recyclerViewMember = view.findViewById(R.id.recyclerViewMember)
+        recyclerViewMember.layoutManager = LinearLayoutManager(requireContext())
 
-        if (room == null) {
+        val roomId = arguments?.getString("roomId")
+        if (roomId == null) {
             Toast.makeText(requireContext(), "Không tìm thấy thông tin nhóm", Toast.LENGTH_SHORT).show()
             parentFragmentManager.popBackStack()
             return
         }
-        room?.let { r ->
 
-            // Hiển thị thông tin
-            view.findViewById<TextView>(R.id.tvgroupname).text = r.roomName
-            view.findViewById<TextView>(R.id.tvTotalMember).text = r.members?.size?.toString() ?: "0"
-            view.findViewById<TextView>(R.id.tvGroupDescription).text = r.description ?: "Không có mô tả"
-            view.findViewById<TextView>(R.id.tvgroupDay).text = "Tạo ngày: ${formatCreatedAt(r.createdAt)}"
-
-            view.findViewById<TextView>(R.id.tvTypeGroup).text = when (r.roomMode) {
-                "public" -> "Nhóm công khai"
-                "private" -> "Nhóm riêng tư"
-                else -> "Không xác định"
-            }
-
-            val ivGroupImage = view.findViewById<ImageView>(R.id.ivGroupImage)
-            if (!r.avatarUrl.isNullOrEmpty()) {
-                Glide.with(requireContext())
-                    .load(r.avatarUrl)
-                    .placeholder(R.drawable.baseline_groups_24)
-                    .into(ivGroupImage)
-            }
-
-            // ✅ Sửa lỗi ở đây — đưa vào trong `let`
-            val roomMembers = r.members?.map {
-                RoomMember(
-                    roomId = r.roomId,
-                    userId = it.userId,
-                    joinedAt = "", // nếu API không trả joinedAt
-                    user = it
-                )
-            } ?: emptyList()
-
-        val myUserId = r.owner?.userId ?: 0
-        val recyclerViewMember = view.findViewById<RecyclerView>(R.id.recyclerViewMember)
-
-        val adapter = MemberAdapter(
-            roomMembers,
-            currentUserId = myUserId,
-            onMoreClick = null,      // Không cần xử lý click trong Detail
-            showMenu = false         // ❌ Ẩn nút menu 3 chấm
-        )
-
-        recyclerViewMember.adapter = adapter
-        recyclerViewMember.layoutManager = LinearLayoutManager(requireContext())
-
-            val shareButton = view.findViewById<MaterialButton>(R.id.shareGroup)
-            shareButton.setOnClickListener {
-                val fragment = ShareRoomFragment().apply {
-                    arguments = Bundle().apply { putSerializable("room", r) }
+        viewModel.selectedRoom.observe(viewLifecycleOwner) { result ->
+            result.onSuccess { room ->
+                btnMembers.visibility = if (room.ownerId == currentUserId) View.VISIBLE else View.GONE
+                btnMembers.setOnClickListener {
+                    val fragment = GroupManagerFragment()
+                    fragment.arguments = Bundle().apply { putSerializable("room", room) }
+                    parentFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, fragment)
+                        .addToBackStack(null)
+                        .commit()
                 }
-                parentFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, fragment)
-                    .addToBackStack(null)
-                    .commit()
-            }
-
-            val messageButton = view.findViewById<MaterialButton>(R.id.btnmess)
-            messageButton.setOnClickListener {
-                val intent = android.content.Intent(requireContext(), GroupChatActivity::class.java).apply {
-                    putExtra("groupId", r.roomId.toString())
-                    putExtra("groupName", r.roomName)
-                    putExtra("groupMode", r.roomMode)
-                    putExtra("memberCount", r.members?.size ?: 0)
-                }
-                startActivity(intent)
-            }
-
-            val joinButton = view.findViewById<MaterialButton>(R.id.btnjointhegroup)
-            joinButton.setOnClickListener {
-                val code = r.inviteCode
-                if (!code.isNullOrBlank()) {
-                    val userInfo = JitsiMeetUserInfo().apply { displayName = displayName }
-                    val options = JitsiMeetConferenceOptions.Builder()
-                        .setRoom(code)
-                        .setUserInfo(userInfo)
-                        .setFeatureFlag("welcomepage.enabled", false)
-                        .setFeatureFlag("prejoinpage.enabled", false)
-                        .build()
-                    JitsiMeetActivity.launch(requireContext(), options)
-                } else {
-                    Toast.makeText(requireContext(), "Không tìm thấy mã phòng", Toast.LENGTH_SHORT).show()
-                }
-            }
-
-            val leaveButton = view.findViewById<MaterialButton>(R.id.leavetheGroup)
-            if (isOwner) {
-                leaveButton.visibility = View.GONE
-            } else {
-                leaveButton.setOnClickListener {
-                    viewModel.leaveRoom(r.roomId.toString())
-                }
+                updateRoomInfo(view, room, displayName)
             }
         }
 
-            viewModel.leaveResult.observe(viewLifecycleOwner) { result ->
-                result.onSuccess {
-                    Toast.makeText(requireContext(), "Đã rời nhóm", Toast.LENGTH_SHORT).show()
-                    navigateHome()
-                }
-                result.onFailure {
-                    Toast.makeText(requireContext(), "Rời nhóm thất bại", Toast.LENGTH_SHORT).show()
-                }
-            }
-
+        viewModel.members.observe(viewLifecycleOwner) { list ->
+            members = list
+            refreshAdapter()
+            view.findViewById<TextView>(R.id.tvTotalMember).text = list.size.toString()
         }
-fun formatCreatedAt(raw: String?): String {
-    if (raw.isNullOrBlank()) return "Không rõ"
-    return try {
-        val inputFormat = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", java.util.Locale.getDefault())
-        val outputFormat = java.text.SimpleDateFormat("dd/MM/yyyy HH:mm", java.util.Locale.getDefault())
-        val date = inputFormat.parse(raw)
-        outputFormat.format(date!!)
-    } catch (e: Exception) {
-        "Không rõ"
+
+        viewModel.leaveResult.observe(viewLifecycleOwner) { result ->
+            result.onSuccess {
+                Toast.makeText(requireContext(), "Đã rời nhóm", Toast.LENGTH_SHORT).show()
+                navigateHome()
+            }
+            result.onFailure {
+                Toast.makeText(requireContext(), "Rời nhóm thất bại", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        viewModel.getRoom(roomId)
+        viewModel.fetchRoomMembers(roomId)
     }
-}
 
-private fun navigateHome() {
-    parentFragmentManager.popBackStack(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
-    parentFragmentManager.beginTransaction()
-        .replace(R.id.fragment_container, HomeFragment())
-        .commit()
-}
+    private fun updateRoomInfo(view: View, room: Room, displayName: String) {
+        view.findViewById<TextView>(R.id.tvgroupname).text = room.roomName
+        view.findViewById<TextView>(R.id.tvGroupDescription).text = room.description ?: "Không có mô tả"
+        view.findViewById<TextView>(R.id.tvgroupDay).text = "Tạo ngày: ${formatCreatedAt(room.createdAt)}"
+        view.findViewById<TextView>(R.id.tvTypeGroup).text = when (room.roomMode) {
+            "public" -> "Nhóm công khai"
+            "private" -> "Nhóm riêng tư"
+            else -> "Không xác định"
+        }
+
+        val ivGroupImage = view.findViewById<ImageView>(R.id.ivGroupImage)
+        if (!room.avatarUrl.isNullOrEmpty()) {
+            Glide.with(this)
+                .load(room.avatarUrl)
+                .placeholder(R.drawable.baseline_groups_24)
+                .into(ivGroupImage)
+        }
+
+        refreshAdapter()
+
+        view.findViewById<MaterialButton>(R.id.shareGroup).setOnClickListener {
+            val fragment = ShareRoomFragment().apply {
+                arguments = Bundle().apply { putSerializable("room", room) }
+            }
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit()
+        }
+
+        view.findViewById<MaterialButton>(R.id.btnmess).setOnClickListener {
+            val intent = android.content.Intent(requireContext(), GroupChatActivity::class.java).apply {
+                putExtra("groupId", room.roomId.toString())
+                putExtra("groupName", room.roomName)
+                putExtra("groupMode", room.roomMode)
+                putExtra("memberCount", room.members?.size ?: members.size)
+            }
+            startActivity(intent)
+        }
+
+        view.findViewById<MaterialButton>(R.id.btnjointhegroup).setOnClickListener {
+            val code = room.inviteCode
+            if (!code.isNullOrBlank()) {
+                val userInfo = JitsiMeetUserInfo().apply { this.displayName = displayName }
+                val options = JitsiMeetConferenceOptions.Builder()
+                    .setRoom(code)
+                    .setUserInfo(userInfo)
+                    .setFeatureFlag("welcomepage.enabled", false)
+                    .setFeatureFlag("prejoinpage.enabled", false)
+                    .build()
+                JitsiMeetActivity.launch(requireContext(), options)
+            } else {
+                Toast.makeText(requireContext(), "Không tìm thấy mã phòng", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        val leaveButton = view.findViewById<MaterialButton>(R.id.leavetheGroup)
+        if (room.ownerId == currentUserId) {
+            leaveButton.visibility = View.GONE
+        } else {
+            leaveButton.setOnClickListener {
+                viewModel.leaveRoom(room.roomId.toString())
+            }
+        }
+    }
+
+    private fun refreshAdapter() {
+        if (memberAdapter == null) {
+            memberAdapter = MemberAdapter(
+                members,
+                currentUserId = currentUserId,
+                ownerId = viewModel.selectedRoom.value?.getOrNull()?.ownerId ?: 0,
+                onMoreClick = null,
+                showMenu = false
+            )
+            recyclerViewMember.adapter = memberAdapter
+        } else {
+            memberAdapter?.updateData(members)
+        }
+    }
+    fun formatCreatedAt(raw: String?): String {
+        if (raw.isNullOrBlank()) return "Không rõ"
+        return try {
+            val inputFormat = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", java.util.Locale.getDefault())
+            val outputFormat = java.text.SimpleDateFormat("dd/MM/yyyy HH:mm", java.util.Locale.getDefault())
+            val date = inputFormat.parse(raw)
+            outputFormat.format(date!!)
+        } catch (e: Exception) {
+            "Không rõ"
+        }
+    }
+
+    private fun navigateHome() {
+        parentFragmentManager.popBackStack(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, HomeFragment())
+            .commit()
+    }
 
 //    private fun showMemberOptions(member: RoomMember) {
 //        val popup = PopupMenu(requireContext(), requireView().findViewById(R.id.recyclerViewMember))

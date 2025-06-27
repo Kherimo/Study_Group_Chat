@@ -5,6 +5,7 @@ import com.example.studygroupchat.data.local.RoomDao
 import com.example.studygroupchat.data.local.RoomEntity
 import com.example.studygroupchat.model.room.CreateRoomRequest
 import com.example.studygroupchat.model.room.Room
+import com.example.studygroupchat.model.room.RoomMember
 import com.example.studygroupchat.model.user.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -143,9 +144,38 @@ class RoomRepository(
         }
     }
 
+    suspend fun getRoomMembers(roomId: String): Result<List<RoomMember>> = withContext(Dispatchers.IO) {
+        try {
+            val response = apiService.getRoomMembers(roomId)
+            if (response.isSuccessful) {
+                response.body()?.let { Result.success(it) }
+                    ?: Result.failure(Exception("Empty response body"))
+            } else {
+                Result.failure(Exception("Failed to get members: ${'$'}{response.code()}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun getCachedRoomCount(): Int = withContext(Dispatchers.IO) {
+        roomDao.getRoomCount()
+    }
 
     suspend fun getCachedRooms(): List<Room> = withContext(Dispatchers.IO) {
         roomDao.getRooms().map { it.toModel() }
+    }
+    suspend fun removeMember(roomId: String, userId: String): Result<Unit> = withContext(Dispatchers.IO) {
+        try {
+            val response = apiService.removeMember(roomId, userId)
+            if (response.isSuccessful) {
+                Result.success(Unit)
+            } else {
+                Result.failure(Exception("Failed to remove member: ${'$'}{response.code()}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 
     private fun Room.toEntity() = RoomEntity(

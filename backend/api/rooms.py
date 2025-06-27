@@ -414,3 +414,45 @@ def get_room_members(current_user_id, room_id):
         return jsonify(response.data)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
+@rooms_bp.route('/rooms/<room_id>/members/<user_id>', methods=['DELETE'])
+@token_required
+def remove_room_member(current_user_id, room_id, user_id):
+    try:
+        # Check if request user is owner of the room
+        room_check = (
+            supabase
+            .table('rooms')
+            .select('owner_id')
+            .eq('room_id', room_id)
+            .execute()
+        )
+        if not room_check.data:
+            return jsonify({'error': 'Room not found'}), 404
+        if room_check.data[0]['owner_id'] != current_user_id:
+            return jsonify({'error': 'Access denied'}), 403
+
+        # Do not allow removing the owner
+        if str(room_check.data[0]['owner_id']) == str(user_id):
+            return jsonify({'error': 'Cannot remove room owner'}), 400
+
+        # Check target membership
+        member_check = (
+            supabase
+            .table('room_members')
+            .select('*')
+            .eq('room_id', room_id)
+            .eq('user_id', user_id)
+            .execute()
+        )
+        if not member_check.data:
+            return jsonify({'error': 'User not a member'}), 404
+
+        supabase.table('room_members').delete().eq('room_id', room_id).eq('user_id', user_id).execute()
+
+        supabase.table('room_history').update({'left_at': datetime.utcnow().isoformat()}) \
+            .eq('room_id', room_id).eq('user_id', user_id).execute()
+
+        return jsonify({'message': 'Member removed successfully'})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500

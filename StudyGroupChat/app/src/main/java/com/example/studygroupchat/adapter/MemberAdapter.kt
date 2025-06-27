@@ -11,8 +11,9 @@ import com.example.studygroupchat.model.room.RoomMember
 
 class MemberAdapter(
     private var members: List<RoomMember>,
-    private val currentUserId: Int? = null, // ID người dùng hiện tại (nếu cần kiểm tra quyền)
-    private val onMoreClick: ((RoomMember) -> Unit)? = null,
+    private val currentUserId: Int? = null, // ID người dùng hiện tại để gắn nhãn "Bạn"
+    private val ownerId: Int? = null, // ID chủ phòng để hiển thị "Admin"
+    private val onMoreClick: ((RoomMember, View) -> Unit)? = null,
     private val showMenu: Boolean = true
 ) : RecyclerView.Adapter<MemberAdapter.MemberViewHolder>() {
 
@@ -42,21 +43,16 @@ class MemberAdapter(
         }
 
         // Tạm mặc định "Admin" nếu là chủ phòng
-        if (user?.userId == currentUserId) {
-            holder.tvRole.text = "Bạn"
-        } else if (user?.userId == members.firstOrNull()?.user?.userId) {
+        if (user?.userId == members.firstOrNull()?.user?.userId) {
             holder.tvRole.text = "Admin"
         } else {
             holder.tvRole.text = "Thành viên"
         }
 
-        holder.btnMore.setOnClickListener {
-            onMoreClick?.invoke(member)
-        }
-        if (showMenu) {
+        if (showMenu && user?.userId != ownerId) {
             holder.btnMore.visibility = View.VISIBLE
-            holder.btnMore.setOnClickListener {
-                onMoreClick?.invoke(member)
+            holder.btnMore.setOnClickListener { v ->
+                onMoreClick?.invoke(member, v)
             }
         } else {
             holder.btnMore.visibility = View.GONE

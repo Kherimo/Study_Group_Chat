@@ -2,7 +2,7 @@
     <item android:id="@+id/Removemember"
         android:title="Xóa khỏi nhóm"
         android:icon="@drawable/outline_more_vert_24" />
-    <item android:id="@+id/moveAdmin"
-        android:title="Chuyển quyền Admin"
-        android:icon="@drawable/outline_more_vert_24" />
+<!--    <item android:id="@+id/moveAdmin"-->
+<!--        android:title="Chuyển quyền Admin"-->
+<!--        android:icon="@drawable/outline_more_vert_24" />-->
 </menu>

@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.studygroupchat.model.room.RoomMessage
 import com.example.studygroupchat.repository.RoomMessageRepository
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import kotlinx.coroutines.launch
 
 class RoomMessageViewModel(private val repository: RoomMessageRepository) : ViewModel() {
@@ -35,6 +37,16 @@ class RoomMessageViewModel(private val repository: RoomMessageRepository) : View
             _sendResult.value = result
             if (result.isSuccess) {
                 // refresh messages
+                fetchRoomMessages(roomId)
+            }
+        }
+    }
+
+    fun sendRoomAttachment(roomId: String, filePart: MultipartBody.Part, type: RequestBody) {
+        viewModelScope.launch {
+            val result = repository.sendRoomAttachment(roomId, filePart, type)
+            _sendResult.value = result
+            if (result.isSuccess) {
                 fetchRoomMessages(roomId)
             }
         }

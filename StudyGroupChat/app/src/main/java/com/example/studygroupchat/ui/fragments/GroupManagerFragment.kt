@@ -21,6 +21,16 @@ import com.example.studygroupchat.model.room.Room
 import com.example.studygroupchat.repository.RoomRepository
 import com.example.studygroupchat.viewmodel.ManageRoomViewModel
 import com.example.studygroupchat.viewmodel.ManageRoomViewModelFactory
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.appcompat.widget.PopupMenu
+import com.example.studygroupchat.adapter.MemberAdapter
+import com.example.studygroupchat.model.room.RoomMember
+import com.example.studygroupchat.viewmodel.RoomViewModel
+import com.example.studygroupchat.viewmodel.RoomViewModelFactory
+import com.example.studygroupchat.repository.UserRepository
+import com.example.studygroupchat.viewmodel.UserViewModel
+import com.example.studygroupchat.viewmodel.UserViewModelFactory
 import com.bumptech.glide.Glide
 import com.google.android.material.button.MaterialButton
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -43,6 +53,12 @@ class GroupManagerFragment : Fragment() {
     private lateinit var btnExtend: TextView
     private var selectedDate: Date? = null
 
+    private lateinit var recyclerMembers: RecyclerView
+    private var memberAdapter: MemberAdapter? = null
+    private var members: List<RoomMember> = emptyList()
+    private var currentUserId: Int = 0
+    private var ownerId: Int = 0
+
     private val pickImageLauncher =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             uri?.let { handleImageSelected(it) }
@@ -54,6 +70,26 @@ class GroupManagerFragment : Fragment() {
             RoomRepository(
                 ApiConfig.roomApiService,
                 app.database.roomDao()
+            )
+        )
+    }
+
+    private val roomViewModel: RoomViewModel by viewModels {
+        val app = requireActivity().application as StudyGroupChatApplication
+        RoomViewModelFactory(
+            RoomRepository(
+                ApiConfig.roomApiService,
+                app.database.roomDao()
+            )
+        )
+    }
+
+    private val userViewModel: UserViewModel by viewModels {
+        val app = requireActivity().application as StudyGroupChatApplication
+        UserViewModelFactory(
+            UserRepository(
+                ApiConfig.userApiService,
+                app.database.userDao()
             )
         )
     }
@@ -84,6 +120,8 @@ class GroupManagerFragment : Fragment() {
         btnExtend = view.findViewById(R.id.btnExtend)
         val tvType = view.findViewById<TextView>(R.id.tvTypeGroup)
         val tvMember = view.findViewById<TextView>(R.id.tvTotalMember)
+        recyclerMembers = view.findViewById(R.id.rv_members)
+        recyclerMembers.layoutManager = LinearLayoutManager(requireContext())
 
         val room = arguments?.getSerializable("room") as? Room
         if (room != null) {
@@ -103,6 +141,7 @@ class GroupManagerFragment : Fragment() {
             }
             selectedDate = parseApiDate(room.expiredAt)
             updateDateDisplay()
+            ownerId = room.ownerId
         }
 
         imgAvatar.setOnClickListener { pickImageLauncher.launch("image/*") }
@@ -123,6 +162,37 @@ class GroupManagerFragment : Fragment() {
 
         btnExtend.setOnClickListener { showDatePicker() }
         tvExpireDate.setOnClickListener { showDatePicker() }
+
+        userViewModel.user.observe(viewLifecycleOwner) { user ->
+            currentUserId = user.userId
+            refreshAdapter()
+        }
+        userViewModel.fetchCurrentUser()
+
+        roomViewModel.members.observe(viewLifecycleOwner) { list ->
+            members = list
+            refreshAdapter()
+            tvMember.text = list.size.toString()
+        }
+        roomViewModel.selectedRoom.observe(viewLifecycleOwner) { result ->
+            result.onSuccess { info ->
+                ownerId = info.ownerId
+                refreshAdapter()
+            }
+        }
+        room?.roomId?.let { id ->
+            roomViewModel.getRoom(id.toString())
+            roomViewModel.fetchRoomMembers(id.toString())
+        }
+
+        roomViewModel.removeResult.observe(viewLifecycleOwner) { result ->
+            result.onSuccess {
+                Toast.makeText(requireContext(), "Đã xoá thành viên", Toast.LENGTH_SHORT).show()
+            }
+            result.onFailure {
+                Toast.makeText(requireContext(), "Xoá thành viên thất bại", Toast.LENGTH_SHORT).show()
+            }
+        }
 
         btnSave.setOnClickListener {
             val id = room?.roomId?.toString() ?: return@setOnClickListener
@@ -162,6 +232,39 @@ class GroupManagerFragment : Fragment() {
                 Toast.makeText(requireContext(), "Xoá nhóm thất bại", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private fun refreshAdapter() {
+        if (memberAdapter == null) {
+            memberAdapter = MemberAdapter(
+                members,
+                currentUserId = currentUserId,
+                ownerId = ownerId,
+                onMoreClick = { member, view -> showMemberOptions(view, member) },
+                showMenu = true
+            )
+            recyclerMembers.adapter = memberAdapter
+        } else {
+            memberAdapter?.updateData(members)
+        }
+    }
+
+    private fun showMemberOptions(anchor: View, member: RoomMember) {
+        val popup = PopupMenu(requireContext(), anchor)
+        popup.menuInflater.inflate(R.menu.member_options_menu, popup.menu)
+        popup.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.Removemember -> {
+                    val roomId = arguments?.getSerializable("room") as? Room
+                    roomId?.roomId?.toString()?.let { id ->
+                        roomViewModel.removeMember(id, member.userId.toString())
+                    }
+                    true
+                }
+                else -> false
+            }
+        }
+        popup.show()
     }
 
     private fun handleImageSelected(uri: Uri) {
